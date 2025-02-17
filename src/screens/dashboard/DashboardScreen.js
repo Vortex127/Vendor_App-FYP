@@ -12,12 +12,23 @@ import {
 import { LineChart } from "react-native-chart-kit";
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
+import { useAuth } from "../../contexts/AuthContext";
 
 const DashboardScreen = ({ navigation }) => {
   const { width, height } = useWindowDimensions();
   const [refreshing, setRefreshing] = useState(false);
   const [selectedPeriod, setSelectedPeriod] = useState('monthly');
   const isSmallDevice = width < 375;
+    const { user } = useAuth();
+
+    // Avatar Function
+    const fullName = user?.user_metadata?.fullName || "User";
+    const initials = fullName
+      .split(" ")
+      .map((n) => n[0])
+      .join("")
+      .toUpperCase();
+
 
   const weeklyData = {
     labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
@@ -100,12 +111,12 @@ const DashboardScreen = ({ navigation }) => {
   };
 
   const StatCard = ({ icon, label, value, trend, color, type }) => (
-    <TouchableOpacity 
+    <TouchableOpacity
       style={styles.statCardNew}
       onPress={() => handleStatCardPress(type)}
     >
       <LinearGradient
-        colors={[color + '15', color + '05']}
+        colors={[color + "15", color + "05"]}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
         style={styles.statGradient}
@@ -115,18 +126,38 @@ const DashboardScreen = ({ navigation }) => {
             <Ionicons name={icon} size={20} color={color} />
           </View>
           <View style={styles.statInfo}>
-            <Text style={styles.statLabel}>{label}</Text>
+            <Text style={styles.statLabel}>
+              {" "}
+              {label.split(" ").length > 1
+                ? label.split(" ").join("\n")
+                : label}
+            </Text>
             <Text style={[styles.statValue, { color }]}>{value}</Text>
           </View>
         </View>
         {trend && (
-          <View style={[styles.trendBadge, { backgroundColor: trend > 0 ? 'rgba(46, 213, 115, 0.15)' : 'rgba(255, 71, 87, 0.15)' }]}>
-            <Ionicons 
-              name={trend > 0 ? "trending-up" : "trending-down"} 
-              size={14} 
-              color={trend > 0 ? "#2ed573" : "#ff4757"} 
+          <View
+            style={[
+              styles.trendBadge,
+              {
+                backgroundColor:
+                  trend > 0
+                    ? "rgba(46, 213, 115, 0.15)"
+                    : "rgba(255, 71, 87, 0.15)",
+              },
+            ]}
+          >
+            <Ionicons
+              name={trend > 0 ? "trending-up" : "trending-down"}
+              size={14}
+              color={trend > 0 ? "#2ed573" : "#ff4757"}
             />
-            <Text style={[styles.trendText, { color: trend > 0 ? "#2ed573" : "#ff4757" }]}>
+            <Text
+              style={[
+                styles.trendText,
+                { color: trend > 0 ? "#2ed573" : "#ff4757" },
+              ]}
+            >
               {Math.abs(trend)}%
             </Text>
           </View>
@@ -146,7 +177,7 @@ const DashboardScreen = ({ navigation }) => {
       {/* Main Balance Card */}
       <View style={styles.balanceCard}>
         <LinearGradient
-          colors={['#FF6B6B', '#ff8585']}
+          colors={["#ff4500", "#cc3700"]}
           style={styles.balanceGradient}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 1 }}
@@ -156,37 +187,43 @@ const DashboardScreen = ({ navigation }) => {
               <Text style={styles.balanceLabel}>Total Balance</Text>
               <Text style={styles.balanceAmount}>$28,458.00</Text>
             </View>
-            <TouchableOpacity 
+            <TouchableOpacity
               style={styles.avatarContainer}
-              onPress={() => navigation.navigate('Profile')}
+              onPress={() => navigation.navigate("Profile")}
             >
               <Image
-                source={{ uri: "https://ui-avatars.com/api/?name=J&background=FF6B6B&color=fff" }}
+                source={{
+                  uri: `https://ui-avatars.com/api/?name=${initials}&background=ff4500&color=fff`,
+                }}
                 style={styles.avatar}
               />
             </TouchableOpacity>
           </View>
-          
+
           <View style={styles.quickActions}>
-            <TouchableOpacity 
+            <TouchableOpacity
               style={styles.actionButton}
               onPress={handleAddBalance}
             >
               <Ionicons name="add-circle-outline" size={24} color="#fff" />
               <Text style={styles.actionText}>Add</Text>
             </TouchableOpacity>
-            <TouchableOpacity 
+            <TouchableOpacity
               style={styles.actionButton}
               onPress={handleSendMoney}
             >
               <Ionicons name="arrow-up-circle-outline" size={24} color="#fff" />
               <Text style={styles.actionText}>Send</Text>
             </TouchableOpacity>
-            <TouchableOpacity 
+            <TouchableOpacity
               style={styles.actionButton}
               onPress={handleReceiveMoney}
             >
-              <Ionicons name="arrow-down-circle-outline" size={24} color="#fff" />
+              <Ionicons
+                name="arrow-down-circle-outline"
+                size={24}
+                color="#fff"
+              />
               <Text style={styles.actionText}>Receive</Text>
             </TouchableOpacity>
           </View>
@@ -235,21 +272,40 @@ const DashboardScreen = ({ navigation }) => {
       {/* Chart Section - Updated */}
       <View style={styles.chartContainer}>
         <View style={styles.chartHeader}>
-          <Text style={styles.chartTitle}>Revenue Overview</Text>
+          <View>
+            <Text style={styles.chartTitle}>Revenue</Text>
+            <Text style={styles.chartTitle}>Overview</Text>
+          </View>
           <View style={styles.periodSelector}>
             <TouchableOpacity
-              onPress={() => setSelectedPeriod('weekly')}
-              style={[styles.periodButton, selectedPeriod === 'weekly' && styles.periodButtonActive]}
+              onPress={() => setSelectedPeriod("weekly")}
+              style={[
+                styles.periodButton,
+                selectedPeriod === "weekly" && styles.periodButtonActive,
+              ]}
             >
-              <Text style={[styles.periodButtonText, selectedPeriod === 'weekly' && styles.periodButtonTextActive]}>
+              <Text
+                style={[
+                  styles.periodButtonText,
+                  selectedPeriod === "weekly" && styles.periodButtonTextActive,
+                ]}
+              >
                 Week
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={() => setSelectedPeriod('monthly')}
-              style={[styles.periodButton, selectedPeriod === 'monthly' && styles.periodButtonActive]}
+              onPress={() => setSelectedPeriod("monthly")}
+              style={[
+                styles.periodButton,
+                selectedPeriod === "monthly" && styles.periodButtonActive,
+              ]}
             >
-              <Text style={[styles.periodButtonText, selectedPeriod === 'monthly' && styles.periodButtonTextActive]}>
+              <Text
+                style={[
+                  styles.periodButtonText,
+                  selectedPeriod === "monthly" && styles.periodButtonTextActive,
+                ]}
+              >
                 Month
               </Text>
             </TouchableOpacity>
@@ -257,7 +313,7 @@ const DashboardScreen = ({ navigation }) => {
         </View>
         <LineChart
           data={chartData}
-          width={width - 48}
+          width={width - 50}
           height={180}
           chartConfig={{
             ...chartConfig,
@@ -276,8 +332,8 @@ const DashboardScreen = ({ navigation }) => {
       <View style={styles.activityContainer}>
         <View style={styles.sectionHeader}>
           <Text style={styles.sectionTitle}>Recent Activity</Text>
-          <TouchableOpacity 
-            onPress={() => navigation.navigate('AllActivities')}
+          <TouchableOpacity
+            onPress={() => navigation.navigate("AllActivities")}
             style={styles.seeAllButton}
           >
             <Text style={styles.seeAllText}>View All</Text>
@@ -291,10 +347,12 @@ const DashboardScreen = ({ navigation }) => {
           description="Wedding Reception - Sarah Johnson"
           time="2 hours ago"
           amount="$2,500"
-          onPress={() => navigation.navigate('BookingDetails', { 
-            bookingId: '1',
-            title: 'Wedding Reception - Sarah Johnson'
-          })}
+          onPress={() =>
+            navigation.navigate("BookingDetails", {
+              bookingId: "1",
+              title: "Wedding Reception - Sarah Johnson",
+            })
+          }
         />
         <ActivityItem
           type="payment"
@@ -302,10 +360,12 @@ const DashboardScreen = ({ navigation }) => {
           description="Corporate Event - Tech Corp"
           time="5 hours ago"
           amount="$1,800"
-          onPress={() => navigation.navigate('PaymentDetails', {
-            paymentId: '1',
-            title: 'Corporate Event - Tech Corp'
-          })}
+          onPress={() =>
+            navigation.navigate("PaymentDetails", {
+              paymentId: "1",
+              title: "Corporate Event - Tech Corp",
+            })
+          }
         />
         <ActivityItem
           type="review"
@@ -313,10 +373,12 @@ const DashboardScreen = ({ navigation }) => {
           description="Birthday Party - John Smith"
           time="Yesterday"
           rating={4.5}
-          onPress={() => navigation.navigate('ReviewDetails', {
-            reviewId: '1',
-            title: 'Birthday Party - John Smith'
-          })}
+          onPress={() =>
+            navigation.navigate("ReviewDetails", {
+              reviewId: "1",
+              title: "Birthday Party - John Smith",
+            })
+          }
         />
       </View>
     </ScrollView>
@@ -367,7 +429,7 @@ const styles = StyleSheet.create({
     paddingTop: 60,
     paddingHorizontal: 24,
     paddingBottom: 24,
-    backgroundColor: '#FFF',
+    backgroundColor: "#FFF",
   },
   headerContent: {
     flexDirection: "row",
@@ -392,14 +454,15 @@ const styles = StyleSheet.create({
   statsGrid: {
     flexDirection: "row",
     flexWrap: "wrap",
-    padding: 16,
-    gap: 6,
+    justifyContent: "space-between",
   },
   statCard: {
-    width: '47%',
+    width:"47%",
+    height: 150,
+    marginBottom: 10,
     backgroundColor: "#FFF",
     borderRadius: 16,
-    padding: 16,
+    padding: 0,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.05,
@@ -417,7 +480,7 @@ const styles = StyleSheet.create({
     borderRadius: 18,
     justifyContent: "center",
     alignItems: "center",
-    marginRight: 12,
+    marginRight: 10,
   },
   statInfo: {
     flex: 1,
@@ -428,7 +491,7 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   statValue: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: "600",
     color: "#2D3436",
   },
@@ -492,6 +555,7 @@ const styles = StyleSheet.create({
   chart: {
     marginTop: 8,
     borderRadius: 16,
+    marginLeft: -20,
   },
   activityContainer: {
     paddingHorizontal: 20,
@@ -509,8 +573,8 @@ const styles = StyleSheet.create({
     color: "#2D3436",
   },
   seeAllButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     padding: 8,
   },
   seeAllText: {
@@ -593,7 +657,7 @@ const styles = StyleSheet.create({
   balanceCard: {
     margin: 16,
     borderRadius: 24,
-    overflow: 'hidden',
+    overflow: "hidden",
     elevation: 4,
     shadowColor: "#FF6B6B",
     shadowOffset: { width: 0, height: 4 },
@@ -604,46 +668,47 @@ const styles = StyleSheet.create({
     padding: 24,
   },
   balanceHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "flex-start",
     marginBottom: 24,
   },
   balanceLabel: {
     fontSize: 16,
-    color: 'rgba(255, 255, 255, 0.9)',
+    color: "rgba(255, 255, 255, 0.9)",
     marginBottom: 8,
   },
   balanceAmount: {
     fontSize: 32,
-    fontWeight: '600',
-    color: '#ffffff',
+    fontWeight: "600",
+    color: "#ffffff",
   },
   quickActions: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
+    flexDirection: "row",
+    justifyContent: "space-around",
     marginTop: 16,
   },
   actionButton: {
-    alignItems: 'center',
+    alignItems: "center",
   },
   actionText: {
-    color: '#ffffff',
+    color: "#ffffff",
     marginTop: 8,
     fontSize: 12,
   },
   statsContainer: {
-    padding: 16,
+    padding: 10,
   },
   statsTitle: {
     fontSize: 20,
-    fontWeight: '600',
-    color: '#2D3436',
+    fontWeight: "600",
+    color: "#2D3436",
     marginBottom: 16,
+    paddingHorizontal: 6
   },
   seeAllButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     padding: 8,
   },
   seeAllText: {
@@ -652,7 +717,7 @@ const styles = StyleSheet.create({
     marginRight: 4,
   },
   statCardNew: {
-    width: '47%',
+    width:'50%',
     borderRadius: 16,
     padding: 16,
   },

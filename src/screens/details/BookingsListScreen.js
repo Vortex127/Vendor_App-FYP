@@ -133,7 +133,7 @@ const BookingsListScreen = ({ navigation }) => {
     <SafeAreaView style={styles.container}>
       <Animated.View style={[styles.header, { opacity: fadeAnim }]}>
         <LinearGradient
-          colors={['#FF9A8B', '#FF6A88', '#FF99AC']}
+          colors={["#ff4500", "#ff4500", "#ff4500"]}
           style={styles.headerGradient}
         >
           <Text style={styles.title}>Bookings</Text>
@@ -164,10 +164,12 @@ const BookingsListScreen = ({ navigation }) => {
               ]}
               onPress={() => setSelectedFilter(item.id)}
             >
-              <Text style={[
-                styles.filterButtonText,
-                selectedFilter === item.id && styles.filterButtonTextActive,
-              ]}>
+              <Text
+                style={[
+                  styles.filterButtonText,
+                  selectedFilter === item.id && styles.filterButtonTextActive,
+                ]}
+              >
                 {item.label}
               </Text>
             </TouchableOpacity>
@@ -298,6 +300,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 12,
+    marginLeft:-100,
   },
   upcomingBadge: {
     backgroundColor: '#E8F5E9',
