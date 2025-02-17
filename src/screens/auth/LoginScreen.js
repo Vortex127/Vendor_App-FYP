@@ -29,12 +29,23 @@ const LoginScreen = ({ navigation }) => {
     }).start();
   }, []);
 
-  const handleLogin = async () => {
-    if (email && password) {
-      Keyboard.dismiss();
-      await login(email, password);
-    }
-  };
+ const handleLogin = async () => {
+   if (!email || !password) {
+     alert("Please enter email and password");
+     return;
+   }
+
+   Keyboard.dismiss();
+
+   const { success, error } = await login(email, password);
+
+   if (success) {
+     alert("Login successful");
+     navigation.navigate("MainApp");
+   } else {
+     alert(error);
+   }
+ };
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>

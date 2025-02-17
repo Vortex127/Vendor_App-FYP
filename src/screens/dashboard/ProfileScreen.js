@@ -96,10 +96,10 @@ const ProfileScreen = ({ navigation }) => {
   };
 
   return (
-    <SafeAreaView style={styles.container} edges={['left', 'right']}>
+    <SafeAreaView style={styles.container} edges={["left", "right"]}>
       <ScrollView showsVerticalScrollIndicator={false}>
         <LinearGradient
-          colors={['#FF9A8B', '#FF6A88', '#FF99AC']}
+          colors={["#FF9A8B", "#FF6A88", "#FF99AC"]}
           style={styles.headerGradient}
         >
           <View style={styles.header}>
@@ -107,7 +107,11 @@ const ProfileScreen = ({ navigation }) => {
               <Avatar
                 size={100}
                 rounded
-                source={{ uri: user?.avatar || 'https://randomuser.me/api/portraits/men/1.jpg' }}
+                source={{
+                  uri:
+                    user?.avatar ||
+                    "https://randomuser.me/api/portraits/men/1.jpg",
+                }}
                 containerStyle={styles.avatar}
               >
                 <Avatar.Accessory
@@ -117,8 +121,12 @@ const ProfileScreen = ({ navigation }) => {
                 />
               </Avatar>
             </View>
-            <Text h3 style={styles.name}>{user?.name || 'User'}</Text>
-            <Text style={styles.email}>{user?.email || 'email@example.com'}</Text>
+            <Text h3 style={styles.name}>
+              {user?.user_metadata?.fullName || "User"}
+            </Text>
+            <Text style={styles.email}>
+              {user?.email || "email@example.com"}
+            </Text>
             <View style={styles.statsContainer}>
               <View style={styles.statItem}>
                 <Text style={styles.statNumber}>12</Text>
@@ -150,7 +158,10 @@ const ProfileScreen = ({ navigation }) => {
                     {
                       transform: [
                         {
-                          scale: pressedItem === `${sectionIndex}-${index}` ? scaleAnim : 1,
+                          scale:
+                            pressedItem === `${sectionIndex}-${index}`
+                              ? scaleAnim
+                              : 1,
                         },
                       ],
                     },

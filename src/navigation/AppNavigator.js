@@ -134,8 +134,7 @@ const MainTabNavigator = () => {
           title: 'Home'
         }}
       />
-      <Tab.Screen name="Vendors" component={VendorListScreen} />
-      <Tab.Screen 
+       <Tab.Screen 
         name="Profile" 
         component={ProfileStackNavigator}
         options={{ headerShown: false,
@@ -150,16 +149,16 @@ const AppNavigator = () => {
 
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
-      {!user ? (
+      {/* {!user ? (
         // Auth Stack
-        <>
+        <> */}
           <Stack.Screen name="Welcome" component={WelcomeScreen} />
           <Stack.Screen name="Login" component={LoginScreen} />
           <Stack.Screen name="Signup" component={SignupScreen} />
-        </>
+        {/* </>
       ) : (
         // Main App Stack
-        <>
+        <> */}
           <Stack.Screen name="MainApp" component={MainTabNavigator} />
           <Stack.Screen 
             name="VendorDetails" 
@@ -177,8 +176,8 @@ const AppNavigator = () => {
               headerTintColor: '#2D3436',
             }}
           />
-        </>
-      )}
+        {/* </>
+      // )} */}
     </Stack.Navigator>
   );
 };
