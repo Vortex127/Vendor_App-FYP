@@ -24,6 +24,23 @@ import HelpSupportScreen from '../screens/profile/HelpSupportScreen';
 import PrivacyPolicyScreen from '../screens/profile/PrivacyPolicyScreen';
 import EditProfileScreen from '../screens/profile/EditProfileScreen';
 
+// Money Management Screens
+import AddBalanceScreen from '../screens/money-management/AddBalanceScreen';
+import SendMoneyScreen from '../screens/money-management/SendMoneyScreen';
+import ReceiveMoneyScreen from '../screens/money-management/ReceiveMoneyScreen';
+
+// Detail Screens
+import RevenueDetailsScreen from '../screens/details/RevenueDetailsScreen';
+import BookingsListScreen from '../screens/details/BookingsListScreen';
+import CustomersListScreen from '../screens/details/CustomersListScreen';
+import CustomerDetailsScreen from '../screens/details/CustomerDetailsScreen';
+import RatingsReviewsScreen from '../screens/details/RatingsReviewsScreen';
+import AllActivitiesScreen from '../screens/details/AllActivitiesScreen';
+import BookingDetailsScreen from '../screens/details/BookingDetailsScreen';
+import PaymentDetailsScreen from '../screens/details/PaymentDetailsScreen';
+import ReviewDetailsScreen from '../screens/details/ReviewDetailsScreen';
+import ChatScreen from '../screens/chat/ChatScreen';
+
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 const ProfileStack = createNativeStackNavigator();
@@ -176,6 +193,19 @@ const AppNavigator = () => {
               headerTintColor: '#2D3436',
             }}
           />
+          <Stack.Screen name="AddBalance" component={AddBalanceScreen} />
+          <Stack.Screen name="SendMoney" component={SendMoneyScreen} />
+          <Stack.Screen name="ReceiveMoney" component={ReceiveMoneyScreen} />
+          <Stack.Screen name="RevenueDetails" component={RevenueDetailsScreen} />
+          <Stack.Screen name="BookingsList" component={BookingsListScreen} />
+          <Stack.Screen name="CustomersList" component={CustomersListScreen} />
+          <Stack.Screen name="CustomerDetails" component={CustomerDetailsScreen} />
+          <Stack.Screen name="RatingsReviews" component={RatingsReviewsScreen} />
+          <Stack.Screen name="AllActivities" component={AllActivitiesScreen} />
+          <Stack.Screen name="BookingDetails" component={BookingDetailsScreen} />
+          <Stack.Screen name="PaymentDetails" component={PaymentDetailsScreen} />
+          <Stack.Screen name="ReviewDetails" component={ReviewDetailsScreen} />
+          <Stack.Screen name="Chat" component={ChatScreen} options={{ headerShown: false }} />
         {/* </>
       // )} */}
     </Stack.Navigator>
