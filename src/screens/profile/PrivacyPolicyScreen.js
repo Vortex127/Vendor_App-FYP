@@ -52,10 +52,6 @@ const PrivacyPolicyScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
-        <Text h4 style={styles.title}>Privacy Policy</Text>
-        <Text style={styles.lastUpdated}>Last updated: March 26, 2024</Text>
-      </View>
 
       <ScrollView style={styles.content}>
         <Text style={styles.introduction}>

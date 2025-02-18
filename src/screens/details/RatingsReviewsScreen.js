@@ -146,12 +146,24 @@ const RatingsReviewsScreen = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Animated.View style={[styles.header, { opacity: fadeAnim }]}>
+      <Animated.View style={styles.header}>
         <LinearGradient
           colors={["#ff4500", "#cc3700"]}
           style={styles.headerGradient}
         >
+          {/* Back Button */}
+          <TouchableOpacity
+            onPress={() => navigation.goBack()}
+            style={styles.backButton}
+          >
+            <Icon name="arrow-back" size={24} color="#FFF" />
+          </TouchableOpacity>
+
           <Text style={styles.title}>Reviews</Text>
+        </LinearGradient>
+
+        {/* Search Bar positioned to overlap both sections */}
+        <View style={styles.searchWrapper}>
           <SearchBar
             placeholder="Search reviews..."
             onChangeText={setSearchQuery}
@@ -162,7 +174,7 @@ const RatingsReviewsScreen = ({ navigation }) => {
             lightTheme
             round
           />
-        </LinearGradient>
+        </View>
       </Animated.View>
 
       <View style={styles.filterContainer}>
@@ -210,18 +222,31 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
   },
   header: {
-    marginBottom: 12,
+    marginBottom: 40, // Increased margin for overlap effect
   },
   headerGradient: {
     padding: 20,
-    borderBottomRightRadius: 20,
+    paddingBottom: 50, // Increased padding to make space for SearchBar
     borderBottomLeftRadius: 20,
+    borderBottomRightRadius: 20,
+  },
+  backButton: {
+    position: "absolute",
+    top: 20,
+    left: 15,
+    zIndex: 1,
   },
   title: {
     fontSize: 28,
     fontWeight: "bold",
     color: "#FFF",
-    marginBottom: 15,
+    textAlign: "center",
+  },
+  searchWrapper: {
+    position: "absolute",
+    top: "75%", // Moves the search bar down
+    left: "5%",
+    right: "5%",
   },
   searchContainer: {
     backgroundColor: "transparent",
@@ -232,6 +257,11 @@ const styles = StyleSheet.create({
   searchInputContainer: {
     backgroundColor: "#FFF",
     borderRadius: 12,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 5,
   },
   searchInput: {
     fontSize: 16,

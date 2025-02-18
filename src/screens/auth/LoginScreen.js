@@ -54,7 +54,7 @@ const LoginScreen = ({ navigation }) => {
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
           style={styles.content}
         >
-          <Animated.View style={[styles.header, { opacity: fadeAnim }]}>
+          <Animated.View style={styles.header}>
             <Text style={styles.title}>Welcome Back!</Text>
             <Text style={styles.subtitle}>Sign in to continue</Text>
           </Animated.View>
@@ -156,10 +156,10 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   form: {
-    marginBottom: 20,
+    marginBottom: 5,
   },
   inputContainer: {
-    marginBottom: 15,
+    marginBottom: 5,
   },
   inputField: {
     borderWidth: 1,
@@ -172,11 +172,11 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   forgotPassword: {
-    color: '#FF6B6B',
+    color: '#ff4500',
     fontSize: 16,
   },
   loginButton: {
-    backgroundColor: '#FF6B6B',
+    backgroundColor: '#ff4500',
     borderRadius: 12,
     paddingVertical: 15,
   },
@@ -193,7 +193,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   signUpButton: {
-    color: '#FF6B6B',
+    color: '#ff4500',
     fontSize: 16,
     fontWeight: 'bold',
   },
@@ -206,3 +206,5 @@ const styles = StyleSheet.create({
 });
 
 export default LoginScreen;
+
+

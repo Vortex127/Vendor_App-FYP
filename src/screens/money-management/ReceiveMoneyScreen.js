@@ -46,7 +46,7 @@ const ReceiveMoneyScreen = ({ navigation }) => {
   const PaymentMethod = ({ icon, title, subtitle, onPress }) => (
     <TouchableOpacity style={styles.methodCard} onPress={onPress}>
       <View style={styles.methodIcon}>
-        <Icon name={icon} type="material" size={24} color="#FF6B6B" />
+        <Icon name={icon} type="material" size={24} color="#ff4500" />
       </View>
       <View style={styles.methodInfo}>
         <Text style={styles.methodTitle}>{title}</Text>
@@ -61,7 +61,7 @@ const ReceiveMoneyScreen = ({ navigation }) => {
       <ScrollView style={styles.content}>
         <Animated.View style={[styles.qrSection, { opacity: fadeAnim }]}>
           <LinearGradient
-            colors={['#FF9A8B', '#FF6A88', '#FF99AC']}
+            colors={["#cc3700", "#ff4500"]}
             style={styles.qrGradient}
           >
             <View style={styles.qrContainer}>
@@ -83,9 +83,7 @@ const ReceiveMoneyScreen = ({ navigation }) => {
             value={amount}
             onChangeText={setAmount}
             keyboardType="decimal-pad"
-            leftIcon={
-              <Text style={styles.currencySymbol}>$</Text>
-            }
+            leftIcon={<Text style={styles.currencySymbol}>$</Text>}
             inputStyle={styles.amountInput}
             containerStyle={styles.amountContainer}
             inputContainerStyle={styles.amountInputContainer}
@@ -147,7 +145,7 @@ const ReceiveMoneyScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
   },
   content: {
     flex: 1,
@@ -158,26 +156,26 @@ const styles = StyleSheet.create({
   qrGradient: {
     padding: 20,
     borderRadius: 16,
-    alignItems: 'center',
+    alignItems: "center",
   },
   qrContainer: {
-    backgroundColor: '#FFF',
+    backgroundColor: "#FFF",
     padding: 20,
     borderRadius: 12,
     marginBottom: 12,
   },
   qrLabel: {
-    color: '#FFF',
+    color: "#FFF",
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   amountSection: {
     padding: 20,
   },
   sectionTitle: {
     fontSize: 18,
-    fontWeight: 'bold',
-    color: '#2D3436',
+    fontWeight: "bold",
+    color: "#2D3436",
     marginBottom: 15,
   },
   amountContainer: {
@@ -185,18 +183,18 @@ const styles = StyleSheet.create({
   },
   amountInputContainer: {
     borderWidth: 1,
-    borderColor: '#DFE6E9',
+    borderColor: "#DFE6E9",
     borderRadius: 12,
     paddingHorizontal: 15,
     height: 60,
   },
   amountInput: {
     fontSize: 24,
-    color: '#2D3436',
+    color: "#2D3436",
   },
   currencySymbol: {
     fontSize: 24,
-    color: '#2D3436',
+    color: "#2D3436",
     marginRight: 10,
   },
   noteSection: {
@@ -207,29 +205,29 @@ const styles = StyleSheet.create({
   },
   noteInputContainer: {
     borderWidth: 1,
-    borderColor: '#DFE6E9',
+    borderColor: "#DFE6E9",
     borderRadius: 12,
     paddingHorizontal: 15,
     minHeight: 100,
   },
   noteInput: {
     fontSize: 16,
-    color: '#2D3436',
-    textAlignVertical: 'top',
+    color: "#2D3436",
+    textAlignVertical: "top",
   },
   methodsSection: {
     padding: 20,
   },
   methodCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     padding: 15,
-    backgroundColor: '#F5F6FA',
+    backgroundColor: "#F5F6FA",
     borderRadius: 12,
     marginBottom: 10,
   },
   methodIcon: {
-    backgroundColor: '#FFE9E9',
+    backgroundColor: "#ffe0cc",
     padding: 10,
     borderRadius: 10,
     marginRight: 15,
@@ -239,25 +237,25 @@ const styles = StyleSheet.create({
   },
   methodTitle: {
     fontSize: 16,
-    fontWeight: '600',
-    color: '#2D3436',
+    fontWeight: "600",
+    color: "#2D3436",
     marginBottom: 4,
   },
   methodSubtitle: {
     fontSize: 14,
-    color: '#636E72',
+    color: "#636E72",
   },
   footer: {
     padding: 20,
-    backgroundColor: '#FFF',
+    backgroundColor: "#FFF",
     borderTopWidth: 1,
-    borderTopColor: '#F5F6FA',
+    borderTopColor: "#F5F6FA",
   },
   buttonContainer: {
-    width: '100%',
+    width: "100%",
   },
   shareButton: {
-    backgroundColor: '#FF6B6B',
+    backgroundColor: "#ff4500",
     borderRadius: 12,
     paddingVertical: 15,
   },

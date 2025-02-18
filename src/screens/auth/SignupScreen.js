@@ -95,7 +95,7 @@ const SignupScreen = ({ navigation }) => {
               <Text style={styles.subtitle}>Sign up to get started</Text>
             </Animated.View>
 
-            <Animated.View style={[styles.form, { opacity: fadeAnim }]}>
+            <Animated.View style={styles.form}>
               <Input
                 placeholder="First Name"
                 value={formData.fullName}
@@ -251,7 +251,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   inputContainer: {
-    marginBottom: 15,
+    marginBottom: 5,
   },
   inputField: {
     borderWidth: 1,
@@ -260,7 +260,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   signupButton: {
-    backgroundColor: "#FF6B6B",
+    backgroundColor: "#ff4500",
     borderRadius: 12,
     paddingVertical: 15,
   },
@@ -278,7 +278,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   loginButton: {
-    color: "#FF6B6B",
+    color: "#ff4500",
     fontSize: 16,
     fontWeight: "bold",
   },

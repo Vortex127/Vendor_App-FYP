@@ -55,20 +55,42 @@ const ChatScreen = ({ route, navigation }) => {
   };
 
   const MessageBubble = ({ item }) => (
-    <View style={[
-      styles.messageBubble,
-      item.sender === 'business' ? styles.businessMessage : styles.customerMessage,
-    ]}>
-      <Text style={styles.messageText}>{item.text}</Text>
-      <Text style={styles.timestamp}>{item.timestamp}</Text>
+    <View
+      style={[
+        styles.messageBubble,
+        item.sender === "business"
+          ? styles.businessMessage
+          : styles.customerMessage,
+      ]}
+    >
+      <Text
+        style={[
+          styles.messageText,
+          item.sender === "business"
+            ? styles.businessMsgT
+            : styles.customerMsgT,
+        ]}
+      >
+        {item.text}
+      </Text>
+      <Text
+        style={[
+          styles.timestamp,
+          item.sender === "business"
+            ? styles.businessMsgT
+            : styles.customerMsgT,
+        ]}
+      >
+        {item.timestamp}
+      </Text>
     </View>
   );
 
   return (
     <SafeAreaView style={styles.container}>
-      <Animated.View style={[styles.header, { opacity: fadeAnim }]}>
+      <Animated.View style={styles.header}>
         <LinearGradient
-          colors={['#FF9A8B', '#FF6A88', '#FF99AC']}
+          colors={["#cc3700", "#ff4500"]}
           style={styles.headerGradient}
         >
           <View style={styles.headerContent}>
@@ -105,7 +127,7 @@ const ChatScreen = ({ route, navigation }) => {
       />
 
       <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={styles.inputContainer}
       >
         <Input
@@ -116,12 +138,7 @@ const ChatScreen = ({ route, navigation }) => {
           inputContainerStyle={styles.inputField}
           rightIcon={
             <TouchableOpacity onPress={sendMessage}>
-              <Icon
-                name="send"
-                type="material"
-                color="#FF6B6B"
-                size={24}
-              />
+              <Icon name="send" type="material" color="#ff4500" size={24} />
             </TouchableOpacity>
           }
         />
@@ -133,7 +150,7 @@ const ChatScreen = ({ route, navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F8F9FA',
+    backgroundColor: "#fff",
   },
   header: {
     marginBottom: 12,
@@ -142,72 +159,83 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   headerContent: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   backButton: {
     marginRight: 16,
   },
   customerInfo: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     flex: 1,
   },
   avatar: {
-    backgroundColor: '#FF6B6B',
+    backgroundColor: "#ff4500",
     marginRight: 12,
   },
   customerName: {
     fontSize: 18,
-    fontWeight: '600',
-    color: '#FFF',
+    fontWeight: "600",
+    color: "#FFF",
   },
   customerStatus: {
     fontSize: 14,
-    color: '#FFF',
+    color: "#FFF",
     opacity: 0.8,
   },
   messagesList: {
     padding: 20,
   },
   messageBubble: {
-    maxWidth: '80%',
+    maxWidth: "80%",
     padding: 12,
     borderRadius: 16,
     marginBottom: 12,
   },
   businessMessage: {
-    backgroundColor: '#FF6B6B',
-    alignSelf: 'flex-end',
+    backgroundColor: "#ff4500",
+    alignSelf: "flex-end",
     borderTopRightRadius: 4,
   },
   customerMessage: {
-    backgroundColor: '#FFF',
-    alignSelf: 'flex-start',
+    backgroundColor: "#FFF",
+    alignSelf: "flex-start",
     borderTopLeftRadius: 4,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
   },
   messageText: {
     fontSize: 16,
-    color: '#2D3436',
+    // color: "#2D3436",
     marginBottom: 4,
+  },
+  businessMsgT: {
+    color: "#fff",
+  },
+  customerMsgT: {
+    color: "#2D3436",
   },
   timestamp: {
     fontSize: 12,
-    color: '#636E72',
-    alignSelf: 'flex-end',
+    color: "#636E72",
+    alignSelf: "flex-end",
   },
   inputContainer: {
     padding: 12,
-    backgroundColor: '#FFF',
+    backgroundColor: "#FFF",
     borderTopWidth: 1,
-    borderTopColor: '#F5F6FA',
+    borderTopColor: "#F5F6FA",
   },
   input: {
     paddingHorizontal: 0,
   },
   inputField: {
     borderWidth: 1,
-    borderColor: '#F5F6FA',
+    borderColor: "#F5F6FA",
     borderRadius: 24,
     paddingHorizontal: 16,
   },

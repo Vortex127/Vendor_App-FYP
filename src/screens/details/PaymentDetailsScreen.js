@@ -227,6 +227,8 @@ const styles = StyleSheet.create({
   headerGradient: {
     padding: 20,
     alignItems: "center",
+    borderBottomRightRadius: 30,
+    borderBottomLeftRadius: 30,
   },
   statusContainer: {
     marginBottom: 15,

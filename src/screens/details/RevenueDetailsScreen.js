@@ -213,7 +213,7 @@ const RevenueDetailsScreen = ({ route, navigation }) => {
             title="View All Transactions"
             type="clear"
             titleStyle={styles.viewAllButton}
-            onPress={() => navigation.navigate("Transactions")}
+            // onPress={() => navigation.navigate("Transactions")}
           />
         </View>
       </ScrollView>
@@ -224,7 +224,7 @@ const RevenueDetailsScreen = ({ route, navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F8F9FA",
+    backgroundColor: "#fff",
   },
   content: {
     flex: 1,
@@ -235,6 +235,8 @@ const styles = StyleSheet.create({
   headerGradient: {
     padding: 20,
     alignItems: "center",
+    borderBottomLeftRadius: 30,
+    borderBottomRightRadius: 30,
   },
   periodLabel: {
     color: "#FFF",

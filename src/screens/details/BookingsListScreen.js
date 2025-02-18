@@ -1,26 +1,26 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   StyleSheet,
   View,
   FlatList,
   TouchableOpacity,
   Animated,
-} from 'react-native';
-import { Text, SearchBar, Icon, Button } from 'react-native-elements';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { LinearGradient } from 'expo-linear-gradient';
+} from "react-native";
+import { Text, SearchBar, Icon, Button } from "react-native-elements";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { LinearGradient } from "expo-linear-gradient";
 
 const BOOKING_FILTERS = [
-  { id: 'all', label: 'All Bookings' },
-  { id: 'upcoming', label: 'Upcoming' },
-  { id: 'completed', label: 'Completed' },
-  { id: 'pending', label: 'Pending' },
-  { id: 'cancelled', label: 'Cancelled' },
+  { id: "all", label: "All Bookings" },
+  { id: "upcoming", label: "Upcoming" },
+  { id: "completed", label: "Completed" },
+  { id: "pending", label: "Pending" },
+  { id: "cancelled", label: "Cancelled" },
 ];
 
 const BookingsListScreen = ({ navigation }) => {
-  const [selectedFilter, setSelectedFilter] = useState('all');
-  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedFilter, setSelectedFilter] = useState("all");
+  const [searchQuery, setSearchQuery] = useState("");
   const fadeAnim = new Animated.Value(0);
 
   React.useEffect(() => {
@@ -34,41 +34,43 @@ const BookingsListScreen = ({ navigation }) => {
   // Mock bookings data
   const bookings = [
     {
-      id: '1',
-      customerName: 'Sarah Johnson',
-      eventType: 'Wedding Reception',
-      date: '24 Feb 2024',
-      time: '6:00 PM',
-      amount: '$2,500',
-      status: 'upcoming',
+      id: "1",
+      customerName: "Sarah Johnson",
+      eventType: "Wedding Reception",
+      date: "24 Feb 2024",
+      time: "6:00 PM",
+      amount: "$2,500",
+      status: "upcoming",
       guests: 150,
     },
     {
-      id: '2',
-      customerName: 'Mike Anderson',
-      eventType: 'Corporate Event',
-      date: '23 Feb 2024',
-      time: '2:00 PM',
-      amount: '$1,800',
-      status: 'pending',
+      id: "2",
+      customerName: "Mike Anderson",
+      eventType: "Corporate Event",
+      date: "23 Feb 2024",
+      time: "2:00 PM",
+      amount: "$1,800",
+      status: "pending",
       guests: 80,
     },
     {
-      id: '3',
-      customerName: 'Emily Wilson',
-      eventType: 'Birthday Party',
-      date: '22 Feb 2024',
-      time: '4:00 PM',
-      amount: '$1,200',
-      status: 'completed',
+      id: "3",
+      customerName: "Emily Wilson",
+      eventType: "Birthday Party",
+      date: "22 Feb 2024",
+      time: "4:00 PM",
+      amount: "$1,200",
+      status: "completed",
       guests: 40,
     },
   ];
 
-  const filteredBookings = bookings.filter(booking => {
-    const matchesFilter = selectedFilter === 'all' || booking.status === selectedFilter;
-    const matchesSearch = booking.customerName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         booking.eventType.toLowerCase().includes(searchQuery.toLowerCase());
+  const filteredBookings = bookings.filter((booking) => {
+    const matchesFilter =
+      selectedFilter === "all" || booking.status === selectedFilter;
+    const matchesSearch =
+      booking.customerName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      booking.eventType.toLowerCase().includes(searchQuery.toLowerCase());
     return matchesFilter && matchesSearch;
   });
 
@@ -133,7 +135,7 @@ const BookingsListScreen = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Animated.View style={styles.header}>
+      {/* <Animated.View style={styles.header}>
         <LinearGradient
           colors={["#ff4500", "#cc3700"]}
           style={styles.headerGradient}
@@ -150,6 +152,36 @@ const BookingsListScreen = ({ navigation }) => {
             round
           />
         </LinearGradient>
+      </Animated.View> */}
+      <Animated.View style={styles.header}>
+        <LinearGradient
+          colors={["#ff4500", "#cc3700"]}
+          style={styles.headerGradient}
+        >
+          {/* Back Button */}
+          <TouchableOpacity
+            onPress={() => navigation.goBack()}
+            style={styles.backButton}
+          >
+            <Icon name="arrow-back" size={24} color="#FFF" />
+          </TouchableOpacity>
+
+          <Text style={styles.title}>Bookings</Text>
+        </LinearGradient>
+
+        {/* Search Bar positioned to overlap both sections */}
+        <View style={styles.searchWrapper}>
+          <SearchBar
+            placeholder="Search bookings..."
+            onChangeText={setSearchQuery}
+            value={searchQuery}
+            containerStyle={styles.searchContainer}
+            inputContainerStyle={styles.searchInputContainer}
+            inputStyle={styles.searchInput}
+            lightTheme
+            round
+          />
+        </View>
       </Animated.View>
 
       <View style={styles.filterContainer}>
@@ -196,19 +228,57 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#fff",
   },
+  // header: {
+  //   marginBottom: 12,
+  // },
+  // headerGradient: {
+  //   padding: 20,
+  // },
+  // title: {
+  //   fontSize: 28,
+  //   fontWeight: "bold",
+  //   color: "#FFF",
+  //   marginBottom: 15,
+  // },
+  // searchContainer: {
+  //   backgroundColor: "transparent",
+  //   borderTopWidth: 0,
+  //   borderBottomWidth: 0,
+  //   paddingHorizontal: 0,
+  // },
+  // searchInputContainer: {
+  //   backgroundColor: "#FFF",
+  //   borderRadius: 12,
+  // },
+  // searchInput: {
+  //   fontSize: 16,
+  // },
   header: {
-    marginBottom: 12,
+    marginBottom: 40, // Increased margin for overlap effect
   },
   headerGradient: {
     padding: 20,
-    borderBottomRightRadius: 20,
+    paddingBottom: 50, // Increased padding to make space for SearchBar
     borderBottomLeftRadius: 20,
+    borderBottomRightRadius: 20,
+  },
+  backButton: {
+    position: "absolute",
+    top: 20,
+    left: 15,
+    zIndex: 1,
   },
   title: {
     fontSize: 28,
     fontWeight: "bold",
     color: "#FFF",
-    marginBottom: 15,
+    textAlign: "center",
+  },
+  searchWrapper: {
+    position: "absolute",
+    top: "75%", // Moves the search bar down
+    left: "5%",
+    right: "5%",
   },
   searchContainer: {
     backgroundColor: "transparent",
@@ -219,6 +289,11 @@ const styles = StyleSheet.create({
   searchInputContainer: {
     backgroundColor: "#FFF",
     borderRadius: 12,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 5,
   },
   searchInput: {
     fontSize: 16,
@@ -369,4 +444,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default BookingsListScreen; 
+export default BookingsListScreen;

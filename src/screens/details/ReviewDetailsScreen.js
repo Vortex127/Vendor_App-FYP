@@ -132,7 +132,7 @@ const ReviewDetailsScreen = ({ route, navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.content}>
-        <Animated.View style={[styles.header, { opacity: fadeAnim }]}>
+        <Animated.View style={styles.header}>
           <LinearGradient
             colors={["#ff4500", "#cc3700"]}
             style={styles.headerGradient}
@@ -251,8 +251,8 @@ const styles = StyleSheet.create({
   headerGradient: {
     padding: 20,
     alignItems: "center",
-    borderBottomRightRadius: 20,
-    borderBottomLeftRadius: 20,
+    borderBottomRightRadius: 30,
+    borderBottomLeftRadius: 30,
   },
   ratingContainer: {
     marginBottom: 15,

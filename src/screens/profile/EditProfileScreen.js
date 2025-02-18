@@ -111,47 +111,101 @@ const EditProfileScreen = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={styles.keyboardAvoid}
       >
         <ScrollView style={styles.content}>
-          <Animated.View style={[styles.header, { opacity: fadeAnim }]}>
+          <Animated.View style={styles.header}>
             <LinearGradient
-              colors={['#FF9A8B', '#FF6A88', '#FF99AC']}
+              colors={["#ff4500", "#cc3700"]}
               style={styles.gradientBackground}
             >
-              <TouchableOpacity onPress={pickImage} style={styles.avatarContainer}>
+              {/* Back Button */}
+              <TouchableOpacity
+                onPress={() => navigation.goBack()}
+                style={styles.backButton}
+              >
+                <Icon name="arrow-back" size={28} color="#FFF" />
+              </TouchableOpacity>
+
+              {/* Profile Image */}
+              <TouchableOpacity
+                onPress={pickImage}
+                style={styles.avatarContainer}
+              >
                 <Avatar
                   size={120}
                   rounded
                   source={{ uri: profileImage }}
                   containerStyle={styles.avatar}
                 >
-                  <Avatar.Accessory
-                    size={36}
-                    onPress={pickImage}
-                  />
+                  <Avatar.Accessory size={36} onPress={pickImage} />
                 </Avatar>
               </TouchableOpacity>
+
+              {/* Change Photo Text */}
               <Text style={styles.changePhotoText}>Tap to change photo</Text>
             </LinearGradient>
           </Animated.View>
-
           <Animated.View style={[styles.form, { opacity: fadeAnim }]}>
             <View style={styles.formSection}>
               <Text style={styles.sectionTitle}>Personal Information</Text>
-              {renderInput('First Name', formData.firstName, (text) => setFormData({ ...formData, firstName: text }), 'person')}
-              {renderInput('Last Name', formData.lastName, (text) => setFormData({ ...formData, lastName: text }), 'person')}
-              {renderInput('Email', formData.email, (text) => setFormData({ ...formData, email: text }), 'email', 'email-address', true)}
-              {renderInput('Phone Number', formData.phone, (text) => setFormData({ ...formData, phone: text }), 'phone', 'phone-pad')}
+              {renderInput(
+                "First Name",
+                formData.firstName,
+                (text) => setFormData({ ...formData, firstName: text }),
+                "person"
+              )}
+              {renderInput(
+                "Last Name",
+                formData.lastName,
+                (text) => setFormData({ ...formData, lastName: text }),
+                "person"
+              )}
+              {renderInput(
+                "Email",
+                formData.email,
+                (text) => setFormData({ ...formData, email: text }),
+                "email",
+                "email-address",
+                true
+              )}
+              {renderInput(
+                "Phone Number",
+                formData.phone,
+                (text) => setFormData({ ...formData, phone: text }),
+                "phone",
+                "phone-pad"
+              )}
             </View>
 
             <View style={styles.formSection}>
               <Text style={styles.sectionTitle}>Address</Text>
-              {renderInput('Address', formData.address, (text) => setFormData({ ...formData, address: text }), 'home')}
-              {renderInput('City', formData.city, (text) => setFormData({ ...formData, city: text }), 'location-city')}
-              {renderInput('State', formData.state, (text) => setFormData({ ...formData, state: text }), 'place')}
-              {renderInput('ZIP Code', formData.zipCode, (text) => setFormData({ ...formData, zipCode: text }), 'markunread-mailbox', 'numeric')}
+              {renderInput(
+                "Address",
+                formData.address,
+                (text) => setFormData({ ...formData, address: text }),
+                "home"
+              )}
+              {renderInput(
+                "City",
+                formData.city,
+                (text) => setFormData({ ...formData, city: text }),
+                "location-city"
+              )}
+              {renderInput(
+                "State",
+                formData.state,
+                (text) => setFormData({ ...formData, state: text }),
+                "place"
+              )}
+              {renderInput(
+                "ZIP Code",
+                formData.zipCode,
+                (text) => setFormData({ ...formData, zipCode: text }),
+                "markunread-mailbox",
+                "numeric"
+              )}
             </View>
           </Animated.View>
 
@@ -165,7 +219,7 @@ const EditProfileScreen = ({ navigation }) => {
               containerStyle={styles.buttonWrapper}
             />
             <Button
-              title={loading ? 'Saving...' : 'Save Changes'}
+              title={loading ? "Saving..." : "Save Changes"}
               onPress={handleSave}
               loading={loading}
               buttonStyle={styles.saveButton}
@@ -181,7 +235,7 @@ const EditProfileScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F7F8FA',
+    backgroundColor: "#fff",
   },
   keyboardAvoid: {
     flex: 1,
@@ -190,27 +244,41 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   header: {
-    alignItems: 'center',
+    alignItems: "center",
     marginBottom: 20,
   },
   gradientBackground: {
-    width: '100%',
-    alignItems: 'center',
-    paddingVertical: 30,
+    width: "100%",
+    alignItems: "center",
+    paddingVertical: 50,
     borderBottomLeftRadius: 30,
     borderBottomRightRadius: 30,
+    position: "relative",
+  },
+  backButton: {
+    position: "absolute",
+    top: 15,
+    left: 15,
+    zIndex: 1,
   },
   avatarContainer: {
     marginBottom: 10,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 6,
+    elevation: 5,
   },
   avatar: {
     borderWidth: 4,
-    borderColor: '#FFFFFF',
+    borderColor: "#FFFFFF",
   },
   changePhotoText: {
-    color: '#FFFFFF',
+    color: "#FFFFFF",
     fontSize: 16,
     marginTop: 10,
+    fontWeight: "500",
+    letterSpacing: 0.5,
   },
   form: {
     marginBottom: 20,
@@ -218,10 +286,10 @@ const styles = StyleSheet.create({
   },
   formSection: {
     marginBottom: 20,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: "#FFFFFF",
     borderRadius: 15,
     padding: 15,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
@@ -229,22 +297,22 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 15,
-    color: '#2D3436',
+    color: "#2D3436",
   },
   inputContainer: {
     marginBottom: 15,
   },
   input: {
     borderBottomWidth: 0,
-    backgroundColor: '#F0F3F5',
+    backgroundColor: "#F0F3F5",
     borderRadius: 10,
     paddingHorizontal: 10,
   },
   buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     marginBottom: 30,
     paddingHorizontal: 20,
   },
@@ -253,16 +321,16 @@ const styles = StyleSheet.create({
     marginHorizontal: 5,
   },
   cancelButton: {
-    borderColor: '#FF6B6B',
+    borderColor: "#ff4500",
     borderWidth: 1,
     paddingVertical: 12,
     borderRadius: 12,
   },
   cancelButtonText: {
-    color: '#FF6B6B',
+    color: "#ff4500",
   },
   saveButton: {
-    backgroundColor: '#FF6B6B',
+    backgroundColor: "#ff4500",
     paddingVertical: 12,
     borderRadius: 12,
   },

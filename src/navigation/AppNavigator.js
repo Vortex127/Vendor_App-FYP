@@ -48,75 +48,76 @@ const ProfileStack = createNativeStackNavigator();
 const ProfileStackNavigator = () => {
   return (
     <ProfileStack.Navigator>
-      <ProfileStack.Screen 
-        name="ProfileMain" 
+      <ProfileStack.Screen
+        name="ProfileMain"
         component={ProfileScreen}
         options={{ headerShown: false }}
       />
-      <ProfileStack.Screen 
-        name="EditProfile" 
+      <ProfileStack.Screen
+        name="EditProfile"
         component={EditProfileScreen}
-        options={{ 
-          title: 'Edit Profile',
+        options={{
+          title: "Edit Profile",
+          headerShown: false ,
           headerStyle: {
-            backgroundColor: '#F5F6FA',
+            backgroundColor: "#F5F6FA",
           },
-          headerTintColor: '#2D3436',
+          headerTintColor: "#2D3436",
         }}
       />
-      <ProfileStack.Screen 
-        name="Bookings" 
+      <ProfileStack.Screen
+        name="Bookings"
         component={BookingsScreen}
-        options={{ 
-          title: 'My Bookings',
+        options={{
+          title: "My Bookings",
           headerStyle: {
-            backgroundColor: '#F5F6FA',
+            backgroundColor: "#F5F6FA",
           },
-          headerTintColor: '#2D3436',
+          headerTintColor: "#2D3436",
         }}
       />
-      <ProfileStack.Screen 
-        name="PaymentMethods" 
+      <ProfileStack.Screen
+        name="PaymentMethods"
         component={PaymentMethodsScreen}
-        options={{ 
-          title: 'Payment Methods',
+        options={{
+          title: "Payment Methods",
           headerStyle: {
-            backgroundColor: '#F5F6FA',
+            backgroundColor: "#F5F6FA",
           },
-          headerTintColor: '#2D3436',
+          headerTintColor: "#2D3436",
         }}
       />
-      <ProfileStack.Screen 
-        name="Notifications" 
+      <ProfileStack.Screen
+        name="Notifications"
         component={NotificationsScreen}
-        options={{ 
-          title: 'Notifications',
+        options={{
+          title: "Notifications",
           headerStyle: {
-            backgroundColor: '#F5F6FA',
+            backgroundColor: "#F5F6FA",
           },
-          headerTintColor: '#2D3436',
+          headerTintColor: "#2D3436",
         }}
       />
-      <ProfileStack.Screen 
-        name="Support" 
+      <ProfileStack.Screen
+        name="Support"
         component={HelpSupportScreen}
-        options={{ 
-          title: 'Help & Support',
+        options={{
+          title: "Help & Support",
           headerStyle: {
-            backgroundColor: '#F5F6FA',
+            backgroundColor: "#F5F6FA",
           },
-          headerTintColor: '#2D3436',
+          headerTintColor: "#2D3436",
         }}
       />
-      <ProfileStack.Screen 
-        name="Privacy" 
+      <ProfileStack.Screen
+        name="Privacy"
         component={PrivacyPolicyScreen}
-        options={{ 
-          title: 'Privacy Policy',
+        options={{
+          title: "Privacy Policy",
           headerStyle: {
-            backgroundColor: '#F5F6FA',
+            backgroundColor: "#F5F6FA",
           },
-          headerTintColor: '#2D3436',
+          headerTintColor: "#2D3436",
         }}
       />
     </ProfileStack.Navigator>
