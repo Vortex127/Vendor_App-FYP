@@ -75,7 +75,9 @@ const BookingsListScreen = ({ navigation }) => {
   const BookingCard = ({ booking }) => (
     <TouchableOpacity
       style={styles.bookingCard}
-      onPress={() => navigation.navigate('BookingDetails', { bookingId: booking.id })}
+      onPress={() =>
+        navigation.navigate("BookingDetails", { bookingId: booking.id })
+      }
     >
       <View style={styles.bookingHeader}>
         <View style={styles.customerInfo}>
@@ -119,7 +121,7 @@ const BookingsListScreen = ({ navigation }) => {
               name="chevron-right"
               type="material"
               size={20}
-              color="#FF6B6B"
+              color="#ff4500"
             />
           }
           iconRight
@@ -131,9 +133,9 @@ const BookingsListScreen = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Animated.View style={[styles.header, { opacity: fadeAnim }]}>
+      <Animated.View style={styles.header}>
         <LinearGradient
-          colors={["#ff4500", "#ff4500", "#ff4500"]}
+          colors={["#ff4500", "#cc3700"]}
           style={styles.headerGradient}
         >
           <Text style={styles.title}>Bookings</Text>
@@ -192,35 +194,37 @@ const BookingsListScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F8F9FA',
+    backgroundColor: "#fff",
   },
   header: {
     marginBottom: 12,
   },
   headerGradient: {
     padding: 20,
+    borderBottomRightRadius: 20,
+    borderBottomLeftRadius: 20,
   },
   title: {
     fontSize: 28,
-    fontWeight: 'bold',
-    color: '#FFF',
+    fontWeight: "bold",
+    color: "#FFF",
     marginBottom: 15,
   },
   searchContainer: {
-    backgroundColor: 'transparent',
+    backgroundColor: "transparent",
     borderTopWidth: 0,
     borderBottomWidth: 0,
     paddingHorizontal: 0,
   },
   searchInputContainer: {
-    backgroundColor: '#FFF',
+    backgroundColor: "#FFF",
     borderRadius: 12,
   },
   searchInput: {
     fontSize: 16,
   },
   filterContainer: {
-    backgroundColor: '#FFF',
+    backgroundColor: "#FFF",
     paddingVertical: 12,
     marginBottom: 12,
   },
@@ -231,135 +235,135 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 8,
     borderRadius: 20,
-    backgroundColor: '#F5F6FA',
+    backgroundColor: "#F5F6FA",
     marginRight: 8,
   },
   filterButtonActive: {
-    backgroundColor: '#FF6B6B',
+    backgroundColor: "#ff4500",
   },
   filterButtonText: {
-    color: '#636E72',
+    color: "#636E72",
     fontSize: 14,
   },
   filterButtonTextActive: {
-    color: '#FFF',
-    fontWeight: '500',
+    color: "#FFF",
+    fontWeight: "500",
   },
   bookingsList: {
     padding: 20,
   },
   bookingCard: {
-    backgroundColor: '#FFF',
+    backgroundColor: "#FFF",
     borderRadius: 16,
     padding: 16,
     marginBottom: 12,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 3,
   },
   bookingHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "flex-start",
     marginBottom: 16,
   },
   customerInfo: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   avatarContainer: {
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: '#FF6B6B',
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: "#ff4500",
+    justifyContent: "center",
+    alignItems: "center",
     marginRight: 12,
   },
   avatarText: {
-    color: '#FFF',
+    color: "#FFF",
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   bookingInfo: {
     flex: 1,
   },
   customerName: {
     fontSize: 16,
-    fontWeight: '600',
-    color: '#2D3436',
+    fontWeight: "600",
+    color: "#2D3436",
     marginBottom: 4,
   },
   eventType: {
     fontSize: 14,
-    color: '#636E72',
+    color: "#636E72",
   },
   statusBadge: {
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 12,
-    marginLeft:-100,
+    marginLeft: -100,
   },
   upcomingBadge: {
-    backgroundColor: '#E8F5E9',
+    backgroundColor: "#E8F5E9",
   },
   pendingBadge: {
-    backgroundColor: '#FFF3E0',
+    backgroundColor: "#FFF3E0",
   },
   completedBadge: {
-    backgroundColor: '#E3F2FD',
+    backgroundColor: "#E3F2FD",
   },
   cancelledBadge: {
-    backgroundColor: '#FFEBEE',
+    backgroundColor: "#FFEBEE",
   },
   statusText: {
     fontSize: 12,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   upcomingText: {
-    color: '#4CAF50',
+    color: "#4CAF50",
   },
   pendingText: {
-    color: '#FF9800',
+    color: "#FF9800",
   },
   completedText: {
-    color: '#2196F3',
+    color: "#2196F3",
   },
   cancelledText: {
-    color: '#F44336',
+    color: "#F44336",
   },
   bookingDetails: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     paddingVertical: 12,
     borderTopWidth: 1,
     borderBottomWidth: 1,
-    borderColor: '#F5F6FA',
+    borderColor: "#F5F6FA",
   },
   detailItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   detailText: {
     marginLeft: 6,
     fontSize: 14,
-    color: '#636E72',
+    color: "#636E72",
   },
   bookingFooter: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginTop: 12,
   },
   amount: {
     fontSize: 18,
-    fontWeight: 'bold',
-    color: '#2D3436',
+    fontWeight: "bold",
+    color: "#2D3436",
   },
   viewDetailsText: {
-    color: '#FF6B6B',
+    color: "#ff4500",
     fontSize: 14,
     marginRight: 4,
   },

@@ -82,7 +82,9 @@ const RatingsReviewsScreen = ({ navigation }) => {
   const ReviewCard = ({ review }) => (
     <TouchableOpacity
       style={styles.reviewCard}
-      onPress={() => navigation.navigate('ReviewDetails', { reviewId: review.id })}
+      onPress={() =>
+        navigation.navigate("ReviewDetails", { reviewId: review.id })
+      }
     >
       <View style={styles.reviewHeader}>
         <View style={styles.customerInfo}>
@@ -94,12 +96,11 @@ const RatingsReviewsScreen = ({ navigation }) => {
             <Text style={styles.eventType}>{review.eventType}</Text>
           </View>
         </View>
-        <Text style={styles.reviewDate}>{review.date}</Text>
       </View>
 
       <View style={styles.ratingContainer}>
         {renderStars(review.rating)}
-        {review.status === 'pending' && (
+        {review.status === "pending" && (
           <View style={styles.pendingBadge}>
             <Text style={styles.pendingText}>PENDING RESPONSE</Text>
           </View>
@@ -123,15 +124,17 @@ const RatingsReviewsScreen = ({ navigation }) => {
       )}
 
       <View style={styles.reviewFooter}>
+        <Text style={styles.reviewDate}>{review.date}</Text>
+
         <Button
-          title={review.status === 'pending' ? 'Respond' : 'View Details'}
+          title={review.status === "pending" ? "Respond" : "View Details"}
           type="clear"
           icon={
             <Icon
-              name={review.status === 'pending' ? 'reply' : 'chevron-right'}
+              name={review.status === "pending" ? "reply" : "chevron-right"}
               type="material"
               size={20}
-              color="#FF6B6B"
+              color="#ff4500"
             />
           }
           iconRight
@@ -145,7 +148,7 @@ const RatingsReviewsScreen = ({ navigation }) => {
     <SafeAreaView style={styles.container}>
       <Animated.View style={[styles.header, { opacity: fadeAnim }]}>
         <LinearGradient
-          colors={['#FF9A8B', '#FF6A88', '#FF99AC']}
+          colors={["#ff4500", "#cc3700"]}
           style={styles.headerGradient}
         >
           <Text style={styles.title}>Reviews</Text>
@@ -176,10 +179,12 @@ const RatingsReviewsScreen = ({ navigation }) => {
               ]}
               onPress={() => setSelectedFilter(item.id)}
             >
-              <Text style={[
-                styles.filterButtonText,
-                selectedFilter === item.id && styles.filterButtonTextActive,
-              ]}>
+              <Text
+                style={[
+                  styles.filterButtonText,
+                  selectedFilter === item.id && styles.filterButtonTextActive,
+                ]}
+              >
                 {item.label}
               </Text>
             </TouchableOpacity>
@@ -202,35 +207,37 @@ const RatingsReviewsScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F8F9FA',
+    backgroundColor: "#fff",
   },
   header: {
     marginBottom: 12,
   },
   headerGradient: {
     padding: 20,
+    borderBottomRightRadius: 20,
+    borderBottomLeftRadius: 20,
   },
   title: {
     fontSize: 28,
-    fontWeight: 'bold',
-    color: '#FFF',
+    fontWeight: "bold",
+    color: "#FFF",
     marginBottom: 15,
   },
   searchContainer: {
-    backgroundColor: 'transparent',
+    backgroundColor: "transparent",
     borderTopWidth: 0,
     borderBottomWidth: 0,
     paddingHorizontal: 0,
   },
   searchInputContainer: {
-    backgroundColor: '#FFF',
+    backgroundColor: "#FFF",
     borderRadius: 12,
   },
   searchInput: {
     fontSize: 16,
   },
   filterContainer: {
-    backgroundColor: '#FFF',
+    backgroundColor: "#FFF",
     paddingVertical: 12,
     marginBottom: 12,
   },
@@ -241,107 +248,107 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 8,
     borderRadius: 20,
-    backgroundColor: '#F5F6FA',
+    backgroundColor: "#F5F6FA",
     marginRight: 8,
   },
   filterButtonActive: {
-    backgroundColor: '#FF6B6B',
+    backgroundColor: "#ff4500",
   },
   filterButtonText: {
-    color: '#636E72',
+    color: "#636E72",
     fontSize: 14,
   },
   filterButtonTextActive: {
-    color: '#FFF',
-    fontWeight: '500',
+    color: "#FFF",
+    fontWeight: "500",
   },
   reviewsList: {
     padding: 20,
   },
   reviewCard: {
-    backgroundColor: '#FFF',
+    backgroundColor: "#FFF",
     borderRadius: 16,
     padding: 16,
     marginBottom: 12,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 3,
   },
   reviewHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "flex-start",
     marginBottom: 12,
   },
   customerInfo: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   avatarContainer: {
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: '#FF6B6B',
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: "#ff4500",
+    justifyContent: "center",
+    alignItems: "center",
     marginRight: 12,
   },
   avatarText: {
-    color: '#FFF',
+    color: "#FFF",
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   reviewInfo: {
     flex: 1,
   },
   customerName: {
     fontSize: 16,
-    fontWeight: '600',
-    color: '#2D3436',
+    fontWeight: "600",
+    color: "#2D3436",
     marginBottom: 4,
   },
   eventType: {
     fontSize: 14,
-    color: '#636E72',
+    color: "#636E72",
   },
   reviewDate: {
     fontSize: 14,
-    color: '#636E72',
+    color: "#636E72",
   },
   ratingContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     marginBottom: 12,
   },
   starsContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   starIcon: {
     marginRight: 2,
   },
   pendingBadge: {
-    backgroundColor: '#FFF3E0',
+    backgroundColor: "#FFF3E0",
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 12,
   },
   pendingText: {
-    color: '#FF9800',
+    color: "#FF9800",
     fontSize: 12,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   reviewComment: {
     fontSize: 16,
-    color: '#2D3436',
+    color: "#2D3436",
     lineHeight: 24,
     marginBottom: 12,
   },
   imagesContainer: {
-    flexDirection: 'row',
+    flexDirection: "row",
     marginBottom: 12,
   },
   reviewImage: {
@@ -351,12 +358,12 @@ const styles = StyleSheet.create({
     marginRight: 8,
   },
   reviewFooter: {
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
   viewDetailsText: {
-    color: '#FF6B6B',
+    color: "#ff4500",
     fontSize: 14,
     marginRight: 4,
   },

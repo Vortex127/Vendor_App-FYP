@@ -140,7 +140,7 @@ const MainTabNavigator = () => {
 
           return <Icon name={iconName} type="material" size={size} color={color} />;
         },
-        tabBarActiveTintColor: '#FF6B6B',
+        tabBarActiveTintColor: '#ff4500',
         tabBarInactiveTintColor: 'gray',
       })}
     >

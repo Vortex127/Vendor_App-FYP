@@ -63,14 +63,14 @@ const CustomerDetailsScreen = ({ route, navigation }) => {
     navigation.navigate('Chat', {
       customerId: customer.id,
       customerName: customer.name,
-      customerAvatar: `https://ui-avatars.com/api/?name=${customer.name[0]}&background=FF6B6B&color=fff`,
+      customerAvatar: `https://ui-avatars.com/api/?name=${customer.name[0]}&background=ff4500&color=fff`,
     });
   };
 
   const StatCard = ({ icon, label, value }) => (
     <View style={styles.statCard}>
       <View style={styles.statIcon}>
-        <Icon name={icon} type="material" size={24} color="#FF6B6B" />
+        <Icon name={icon} type="material" size={24} color="#ff4500" />
       </View>
       <Text style={styles.statValue}>{value}</Text>
       <Text style={styles.statLabel}>{label}</Text>
@@ -102,18 +102,35 @@ const CustomerDetailsScreen = ({ route, navigation }) => {
       <ScrollView style={styles.content}>
         <Animated.View style={[styles.header, { opacity: fadeAnim }]}>
           <LinearGradient
-            colors={['#FF9A8B', '#FF6A88', '#FF99AC']}
+            colors={["#ff4500", "#cc3700"]}
             style={styles.headerGradient}
           >
             <View style={styles.customerHeader}>
-              <View style={[styles.avatarContainer, styles[`${customer.status}Avatar`]]}>
+              <View
+                style={[
+                  styles.avatarContainer,
+                  styles[`${customer.status}Avatar`],
+                ]}
+              >
                 <Text style={styles.avatarText}>{customer.name[0]}</Text>
               </View>
               <View style={styles.customerInfo}>
                 <Text style={styles.customerName}>{customer.name}</Text>
-                <Text style={styles.customerMeta}>Member since {customer.joinDate}</Text>
-                <View style={[styles.statusBadge, styles[`${customer.status}Badge`]]}>
-                  <Text style={[styles.statusText, styles[`${customer.status}Text`]]}>
+                <Text style={styles.customerMeta}>
+                  Member since {customer.joinDate}
+                </Text>
+                <View
+                  style={[
+                    styles.statusBadge,
+                    styles[`${customer.status}Badge`],
+                  ]}
+                >
+                  <Text
+                    style={[
+                      styles.statusText,
+                      styles[`${customer.status}Text`],
+                    ]}
+                  >
                     {customer.status.toUpperCase()}
                   </Text>
                 </View>
@@ -125,31 +142,52 @@ const CustomerDetailsScreen = ({ route, navigation }) => {
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Contact Information</Text>
           <View style={styles.contactItem}>
-            <Icon name="email" type="material" size={20} color="#FF6B6B" />
+            <Icon name="email" type="material" size={20} color="#ff4500" />
             <Text style={styles.contactText}>{customer.email}</Text>
           </View>
           <View style={styles.contactItem}>
-            <Icon name="phone" type="material" size={20} color="#FF6B6B" />
+            <Icon name="phone" type="material" size={20} color="#ff4500" />
             <Text style={styles.contactText}>{customer.phone}</Text>
           </View>
         </View>
 
         <View style={styles.statsGrid}>
-          <StatCard icon="shopping-bag" label="Total Orders" value={customer.stats.totalOrders} />
-          <StatCard icon="attach-money" label="Total Spent" value={customer.stats.totalSpent} />
-          <StatCard icon="trending-up" label="Avg. Order" value={customer.stats.avgOrderValue} />
-          <StatCard icon="schedule" label="Last Order" value={customer.stats.lastOrder} />
+          <StatCard
+            icon="shopping-bag"
+            label="Total Orders"
+            value={customer.stats.totalOrders}
+          />
+          <StatCard
+            icon="attach-money"
+            label="Total Spent"
+            value={customer.stats.totalSpent}
+          />
+          <StatCard
+            icon="trending-up"
+            label="Avg. Order"
+            value={customer.stats.avgOrderValue}
+          />
+          <StatCard
+            icon="schedule"
+            label="Last Order"
+            value={customer.stats.lastOrder}
+          />
         </View>
 
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
             <Text style={styles.sectionTitle}>Recent Bookings</Text>
-            <TouchableOpacity 
+            <TouchableOpacity
               style={styles.seeAllButton}
-              onPress={() => navigation.navigate('BookingsList')}
+              onPress={() => navigation.navigate("BookingsList")}
             >
               <Text style={styles.seeAllText}>See All</Text>
-              <Icon name="chevron-right" type="material" size={20} color="#FF6B6B" />
+              <Icon
+                name="chevron-right"
+                type="material"
+                size={20}
+                color="#ff4500"
+              />
             </TouchableOpacity>
           </View>
           {customer.recentBookings.map((booking) => (
@@ -161,30 +199,36 @@ const CustomerDetailsScreen = ({ route, navigation }) => {
           <Text style={styles.sectionTitle}>Preferences</Text>
           <View style={styles.preferenceItem}>
             <Text style={styles.preferenceLabel}>Food Preferences</Text>
-            <Text style={styles.preferenceValue}>{customer.preferences.foodPreferences}</Text>
+            <Text style={styles.preferenceValue}>
+              {customer.preferences.foodPreferences}
+            </Text>
           </View>
           <Divider style={styles.divider} />
           <View style={styles.preferenceItem}>
             <Text style={styles.preferenceLabel}>Special Requirements</Text>
-            <Text style={styles.preferenceValue}>{customer.preferences.specialRequirements}</Text>
+            <Text style={styles.preferenceValue}>
+              {customer.preferences.specialRequirements}
+            </Text>
           </View>
           <Divider style={styles.divider} />
           <View style={styles.preferenceItem}>
             <Text style={styles.preferenceLabel}>Preferred Venue</Text>
-            <Text style={styles.preferenceValue}>{customer.preferences.preferredVenue}</Text>
+            <Text style={styles.preferenceValue}>
+              {customer.preferences.preferredVenue}
+            </Text>
           </View>
         </View>
       </ScrollView>
 
       <View style={styles.footer}>
         <Button
-          title="Message Customer"
+          title="Message"
           icon={
             <Icon
               name="message"
               type="material"
               size={20}
-              color="#FF6B6B"
+              color="#ff4500"
               style={styles.buttonIcon}
             />
           }
@@ -207,7 +251,9 @@ const CustomerDetailsScreen = ({ route, navigation }) => {
           }
           buttonStyle={styles.createButton}
           containerStyle={styles.buttonContainer}
-          onPress={() => navigation.navigate('CreateBooking', { customerId: customer.id })}
+          onPress={() =>
+            navigation.navigate("CreateBooking", { customerId: customer.id })
+          }
         />
       </View>
     </SafeAreaView>
@@ -217,7 +263,7 @@ const CustomerDetailsScreen = ({ route, navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F8F9FA',
+    backgroundColor: "#fff",
   },
   content: {
     flex: 1,
@@ -229,123 +275,123 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   customerHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   avatarContainer: {
     width: 60,
     height: 60,
     borderRadius: 30,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     marginRight: 16,
   },
   vipAvatar: {
-    backgroundColor: '#FF6B6B',
+    backgroundColor: "#ff4500",
   },
   avatarText: {
-    color: '#FFF',
+    color: "#FFF",
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   customerInfo: {
     flex: 1,
   },
   customerName: {
     fontSize: 24,
-    fontWeight: 'bold',
-    color: '#FFF',
+    fontWeight: "bold",
+    color: "#FFF",
     marginBottom: 4,
   },
   customerMeta: {
     fontSize: 14,
-    color: '#FFF',
+    color: "#FFF",
     opacity: 0.9,
     marginBottom: 8,
   },
   section: {
-    backgroundColor: '#FFF',
+    backgroundColor: "#FFF",
     padding: 20,
     marginBottom: 12,
   },
   sectionHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginBottom: 15,
   },
   sectionTitle: {
     fontSize: 18,
-    fontWeight: 'bold',
-    color: '#2D3436',
+    fontWeight: "bold",
+    color: "#2D3436",
     marginBottom: 15,
   },
   contactItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginBottom: 12,
   },
   contactText: {
     fontSize: 16,
-    color: '#2D3436',
+    color: "#2D3436",
     marginLeft: 12,
   },
   statsGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
+    flexDirection: "row",
+    flexWrap: "wrap",
     padding: 10,
-    backgroundColor: '#FFF',
+    backgroundColor: "#FFF",
     marginBottom: 12,
   },
   statCard: {
-    width: '50%',
+    width: "50%",
     padding: 10,
-    alignItems: 'center',
+    alignItems: "center",
   },
   statIcon: {
-    backgroundColor: '#FFE9E9',
+    backgroundColor: "#ffe0cc",
     padding: 12,
     borderRadius: 12,
     marginBottom: 8,
   },
   statValue: {
     fontSize: 18,
-    fontWeight: 'bold',
-    color: '#2D3436',
+    fontWeight: "bold",
+    color: "#2D3436",
     marginBottom: 4,
   },
   statLabel: {
     fontSize: 14,
-    color: '#636E72',
+    color: "#636E72",
   },
   bookingItem: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     paddingVertical: 12,
     borderBottomWidth: 1,
-    borderBottomColor: '#F5F6FA',
+    borderBottomColor: "#F5F6FA",
   },
   bookingInfo: {
     flex: 1,
   },
   bookingType: {
     fontSize: 16,
-    fontWeight: '600',
-    color: '#2D3436',
+    fontWeight: "600",
+    color: "#2D3436",
     marginBottom: 4,
   },
   bookingDate: {
     fontSize: 14,
-    color: '#636E72',
+    color: "#636E72",
   },
   bookingMeta: {
-    alignItems: 'flex-end',
+    alignItems: "flex-end",
   },
   bookingAmount: {
     fontSize: 16,
-    fontWeight: '600',
-    color: '#2D3436',
+    fontWeight: "600",
+    color: "#2D3436",
     marginBottom: 4,
   },
   statusBadge: {
@@ -354,76 +400,77 @@ const styles = StyleSheet.create({
     borderRadius: 12,
   },
   upcomingBadge: {
-    backgroundColor: '#E8F5E9',
+    backgroundColor: "#E8F5E9",
   },
   completedBadge: {
-    backgroundColor: '#E3F2FD',
+    backgroundColor: "#E3F2FD",
   },
   vipBadge: {
-    backgroundColor: '#FFE9E9',
+    backgroundColor: "#ffe0cc",
   },
   statusText: {
     fontSize: 12,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   upcomingText: {
-    color: '#4CAF50',
+    color: "#4CAF50",
   },
   completedText: {
-    color: '#2196F3',
+    color: "#2196F3",
   },
   vipText: {
-    color: '#FF6B6B',
+    color: "#ff4500",
   },
   preferenceItem: {
     marginBottom: 12,
   },
   preferenceLabel: {
     fontSize: 14,
-    color: '#636E72',
+    color: "#636E72",
     marginBottom: 4,
   },
   preferenceValue: {
     fontSize: 16,
-    color: '#2D3436',
+    color: "#2D3436",
   },
   divider: {
     marginVertical: 12,
   },
   seeAllButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   seeAllText: {
-    color: '#FF6B6B',
+    color: "#ff4500",
     fontSize: 14,
     marginRight: 4,
   },
   footer: {
-    flexDirection: 'row',
+    flexDirection: "row",
     padding: 20,
-    backgroundColor: '#FFF',
+    backgroundColor: "#FFF",
     borderTopWidth: 1,
-    borderTopColor: '#F5F6FA',
+    borderTopColor: "#F5F6FA",
   },
   buttonContainer: {
     flex: 1,
     marginHorizontal: 5,
   },
   messageButton: {
-    backgroundColor: '#FFF',
-    borderColor: '#FF6B6B',
+    backgroundColor: "#FFF",
+    borderColor: "#ff4500",
     borderWidth: 1,
     borderRadius: 12,
     paddingVertical: 12,
   },
   messageButtonText: {
-    color: '#FF6B6B',
+    color: "#ff4500",
   },
   createButton: {
-    backgroundColor: '#FF6B6B',
+    backgroundColor: "#ff4500",
     borderRadius: 12,
     paddingVertical: 12,
+    paddingHorizontal: 6,
   },
   buttonIcon: {
     marginRight: 8,

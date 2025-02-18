@@ -134,7 +134,7 @@ const ReviewDetailsScreen = ({ route, navigation }) => {
       <ScrollView style={styles.content}>
         <Animated.View style={[styles.header, { opacity: fadeAnim }]}>
           <LinearGradient
-            colors={['#FF9A8B', '#FF6A88', '#FF99AC']}
+            colors={["#ff4500", "#cc3700"]}
             style={styles.headerGradient}
           >
             <View style={styles.ratingContainer}>
@@ -240,7 +240,7 @@ const ReviewDetailsScreen = ({ route, navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
   },
   content: {
     flex: 1,
@@ -250,14 +250,16 @@ const styles = StyleSheet.create({
   },
   headerGradient: {
     padding: 20,
-    alignItems: 'center',
+    alignItems: "center",
+    borderBottomRightRadius: 20,
+    borderBottomLeftRadius: 20,
   },
   ratingContainer: {
     marginBottom: 15,
   },
   starsContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   starIcon: {
     marginHorizontal: 2,
@@ -265,40 +267,40 @@ const styles = StyleSheet.create({
   ratingText: {
     marginLeft: 8,
     fontSize: 24,
-    fontWeight: 'bold',
-    color: '#FFF',
+    fontWeight: "bold",
+    color: "#FFF",
   },
   customerName: {
-    color: '#FFF',
+    color: "#FFF",
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 4,
   },
   eventType: {
-    color: '#FFF',
+    color: "#FFF",
     fontSize: 16,
     opacity: 0.9,
     marginBottom: 4,
   },
   reviewDate: {
-    color: '#FFF',
+    color: "#FFF",
     fontSize: 14,
     opacity: 0.8,
   },
   section: {
     padding: 20,
-    backgroundColor: '#FFF',
+    backgroundColor: "#FFF",
     marginBottom: 12,
   },
   sectionTitle: {
     fontSize: 18,
-    fontWeight: 'bold',
-    color: '#2D3436',
+    fontWeight: "bold",
+    color: "#2D3436",
     marginBottom: 15,
   },
   reviewText: {
     fontSize: 16,
-    color: '#636E72',
+    color: "#636E72",
     lineHeight: 24,
   },
   reviewImage: {
@@ -308,43 +310,43 @@ const styles = StyleSheet.create({
     marginRight: 12,
   },
   bookingCard: {
-    backgroundColor: '#F5F6FA',
+    backgroundColor: "#F5F6FA",
     borderRadius: 12,
     padding: 15,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
   bookingInfo: {
     flex: 1,
-    alignItems: 'center',
+    alignItems: "center",
   },
   bookingLabel: {
     fontSize: 14,
-    color: '#636E72',
+    color: "#636E72",
     marginBottom: 4,
   },
   bookingValue: {
     fontSize: 16,
-    color: '#2D3436',
-    fontWeight: '600',
+    color: "#2D3436",
+    fontWeight: "600",
   },
   responseText: {
     fontSize: 16,
-    color: '#636E72',
+    color: "#636E72",
     lineHeight: 24,
-    fontStyle: 'italic',
+    fontStyle: "italic",
   },
   footer: {
     padding: 20,
-    backgroundColor: '#FFF',
+    backgroundColor: "#FFF",
     borderTopWidth: 1,
-    borderTopColor: '#F5F6FA',
+    borderTopColor: "#F5F6FA",
   },
   buttonContainer: {
-    width: '100%',
+    width: "100%",
   },
   respondButton: {
-    backgroundColor: '#FF6B6B',
+    backgroundColor: "#ff4500",
     borderRadius: 12,
     paddingVertical: 12,
   },
@@ -353,19 +355,19 @@ const styles = StyleSheet.create({
   },
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    justifyContent: 'flex-end',
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    justifyContent: "flex-end",
   },
   modalContent: {
-    backgroundColor: '#FFF',
+    backgroundColor: "#FFF",
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     padding: 20,
   },
   modalTitle: {
     fontSize: 20,
-    fontWeight: 'bold',
-    color: '#2D3436',
+    fontWeight: "bold",
+    color: "#2D3436",
     marginBottom: 20,
   },
   responseInput: {
@@ -373,18 +375,18 @@ const styles = StyleSheet.create({
   },
   responseInputContainer: {
     borderWidth: 1,
-    borderColor: '#DFE6E9',
+    borderColor: "#DFE6E9",
     borderRadius: 12,
     paddingHorizontal: 15,
     minHeight: 120,
   },
   responseInputText: {
     fontSize: 16,
-    color: '#2D3436',
-    textAlignVertical: 'top',
+    color: "#2D3436",
+    textAlignVertical: "top",
   },
   modalButtons: {
-    flexDirection: 'row',
+    flexDirection: "row",
     marginTop: 20,
   },
   modalButtonContainer: {
@@ -392,29 +394,29 @@ const styles = StyleSheet.create({
     marginHorizontal: 5,
   },
   cancelButton: {
-    backgroundColor: '#FFF',
-    borderColor: '#FF6B6B',
+    backgroundColor: "#FFF",
+    borderColor: "#ff4500",
     borderWidth: 1,
     borderRadius: 12,
     paddingVertical: 12,
   },
   cancelButtonText: {
-    color: '#FF6B6B',
+    color: "#ff4500",
   },
   submitButton: {
-    backgroundColor: '#FF6B6B',
+    backgroundColor: "#ff4500",
     borderRadius: 12,
     paddingVertical: 12,
   },
   imageModalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.9)',
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: "rgba(0, 0, 0, 0.9)",
+    justifyContent: "center",
+    alignItems: "center",
   },
   fullScreenImage: {
-    width: '100%',
-    height: '80%',
+    width: "100%",
+    height: "80%",
   },
 });
 

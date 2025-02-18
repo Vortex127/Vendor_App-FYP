@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   StyleSheet,
   View,
@@ -6,17 +6,17 @@ import {
   TouchableOpacity,
   Animated,
   Dimensions,
-} from 'react-native';
-import { Text, Icon, Button, Divider } from 'react-native-elements';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { LinearGradient } from 'expo-linear-gradient';
-import { LineChart, BarChart } from 'react-native-chart-kit';
+} from "react-native";
+import { Text, Icon, Button, Divider } from "react-native-elements";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { LinearGradient } from "expo-linear-gradient";
+import { LineChart, BarChart } from "react-native-chart-kit";
 
-const { width } = Dimensions.get('window');
+const { width } = Dimensions.get("window");
 
 const RevenueDetailsScreen = ({ route, navigation }) => {
-  const [selectedPeriod, setSelectedPeriod] = useState('week');
-  const [selectedChart, setSelectedChart] = useState('line');
+  const [selectedPeriod, setSelectedPeriod] = useState("week");
+  const [selectedChart, setSelectedChart] = useState("line");
   const fadeAnim = new Animated.Value(0);
 
   React.useEffect(() => {
@@ -28,34 +28,42 @@ const RevenueDetailsScreen = ({ route, navigation }) => {
   }, []);
 
   const revenueData = {
-    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-    datasets: [{
-      data: [500, 800, 600, 1200, 1800, 1500, 2000],
-    }],
+    labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+    datasets: [
+      {
+        data: [500, 800, 600, 1200, 1800, 1500, 2000],
+      },
+    ],
   };
 
   const TransactionItem = ({ transaction }) => (
-    <TouchableOpacity 
+    <TouchableOpacity
       style={styles.transactionItem}
-      onPress={() => navigation.navigate('PaymentDetails', { paymentId: transaction.id })}
+      onPress={() =>
+        navigation.navigate("PaymentDetails", { paymentId: transaction.id })
+      }
     >
       <View style={styles.transactionIcon}>
         <Icon
-          name={transaction.type === 'income' ? 'arrow-downward' : 'arrow-upward'}
+          name={
+            transaction.type === "income" ? "arrow-downward" : "arrow-upward"
+          }
           type="material"
           size={20}
-          color={transaction.type === 'income' ? '#4CAF50' : '#F44336'}
+          color={transaction.type === "income" ? "#4CAF50" : "#F44336"}
         />
       </View>
       <View style={styles.transactionInfo}>
         <Text style={styles.transactionTitle}>{transaction.title}</Text>
         <Text style={styles.transactionDate}>{transaction.date}</Text>
       </View>
-      <Text style={[
-        styles.transactionAmount,
-        { color: transaction.type === 'income' ? '#4CAF50' : '#F44336' }
-      ]}>
-        {transaction.type === 'income' ? '+' : '-'}${transaction.amount}
+      <Text
+        style={[
+          styles.transactionAmount,
+          { color: transaction.type === "income" ? "#4CAF50" : "#F44336" },
+        ]}
+      >
+        {transaction.type === "income" ? "+" : "-"}${transaction.amount}
       </Text>
     </TouchableOpacity>
   );
@@ -63,9 +71,9 @@ const RevenueDetailsScreen = ({ route, navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.content}>
-        <Animated.View style={[styles.header, { opacity: fadeAnim }]}>
+        <Animated.View style={styles.header}>
           <LinearGradient
-            colors={['#FF9A8B', '#FF6A88', '#FF99AC']}
+            colors={["#ff4500", "#cc3700"]}
             style={styles.headerGradient}
           >
             <Text style={styles.periodLabel}>This Month</Text>
@@ -86,10 +94,15 @@ const RevenueDetailsScreen = ({ route, navigation }) => {
 
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
-            <Text style={styles.sectionTitle}>Revenue Trend</Text>
+            {/* <Text style={styles.sectionTitle}>Revenue Trend</Text> */}
+            <View>
+              <Text style={styles.sectionTitle}>Revenue</Text>
+              <Text style={styles.sectionTitle}>Overview</Text>
+            </View>
+
             <View style={styles.chartControls}>
               <View style={styles.periodSelector}>
-                {['week', 'month', 'year'].map((period) => (
+                {["week", "month", "year"].map((period) => (
                   <TouchableOpacity
                     key={period}
                     style={[
@@ -98,10 +111,13 @@ const RevenueDetailsScreen = ({ route, navigation }) => {
                     ]}
                     onPress={() => setSelectedPeriod(period)}
                   >
-                    <Text style={[
-                      styles.periodButtonText,
-                      selectedPeriod === period && styles.periodButtonTextActive,
-                    ]}>
+                    <Text
+                      style={[
+                        styles.periodButtonText,
+                        selectedPeriod === period &&
+                          styles.periodButtonTextActive,
+                      ]}
+                    >
                       {period.charAt(0).toUpperCase() + period.slice(1)}
                     </Text>
                   </TouchableOpacity>
@@ -110,30 +126,32 @@ const RevenueDetailsScreen = ({ route, navigation }) => {
               <View style={styles.chartTypeSelector}>
                 <TouchableOpacity
                   style={styles.chartTypeButton}
-                  onPress={() => setSelectedChart(selectedChart === 'line' ? 'bar' : 'line')}
+                  onPress={() =>
+                    setSelectedChart(selectedChart === "line" ? "bar" : "line")
+                  }
                 >
                   <Icon
-                    name={selectedChart === 'line' ? 'show-chart' : 'bar-chart'}
+                    name={selectedChart === "line" ? "show-chart" : "bar-chart"}
                     type="material"
                     size={24}
-                    color="#FF6B6B"
+                    color="#ff4500"
                   />
                 </TouchableOpacity>
               </View>
             </View>
           </View>
 
-          {selectedChart === 'line' ? (
+          {selectedChart === "line" ? (
             <LineChart
               data={revenueData}
               width={width - 40}
               height={220}
               chartConfig={{
-                backgroundColor: '#FFF',
-                backgroundGradientFrom: '#FFF',
-                backgroundGradientTo: '#FFF',
+                backgroundColor: "#FFF",
+                backgroundGradientFrom: "#FFF",
+                backgroundGradientTo: "#FFF",
                 decimalPlaces: 0,
-                color: (opacity = 1) => `rgba(255, 107, 107, ${opacity})`,
+                color: (opacity = 1) => `rgba(255, 85, 0, ${opacity})`,
                 style: {
                   borderRadius: 16,
                 },
@@ -147,11 +165,11 @@ const RevenueDetailsScreen = ({ route, navigation }) => {
               width={width - 40}
               height={220}
               chartConfig={{
-                backgroundColor: '#FFF',
-                backgroundGradientFrom: '#FFF',
-                backgroundGradientTo: '#FFF',
+                backgroundColor: "#FFF",
+                backgroundGradientFrom: "#FFF",
+                backgroundGradientTo: "#FFF",
                 decimalPlaces: 0,
-                color: (opacity = 1) => `rgba(255, 107, 107, ${opacity})`,
+                color: (opacity = 1) => `rgba(255, 85, 0, ${opacity})`,
                 style: {
                   borderRadius: 16,
                 },
@@ -164,9 +182,27 @@ const RevenueDetailsScreen = ({ route, navigation }) => {
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Recent Transactions</Text>
           {[
-            { id: '1', type: 'income', title: 'Wedding Reception Booking', date: '24 Feb 2024', amount: '2,500' },
-            { id: '2', type: 'expense', title: 'Equipment Purchase', date: '23 Feb 2024', amount: '800' },
-            { id: '3', type: 'income', title: 'Birthday Party Booking', date: '22 Feb 2024', amount: '1,200' },
+            {
+              id: "1",
+              type: "income",
+              title: "Wedding Reception Booking",
+              date: "24 Feb 2024",
+              amount: "2,500",
+            },
+            {
+              id: "2",
+              type: "expense",
+              title: "Equipment Purchase",
+              date: "23 Feb 2024",
+              amount: "800",
+            },
+            {
+              id: "3",
+              type: "income",
+              title: "Birthday Party Booking",
+              date: "22 Feb 2024",
+              amount: "1,200",
+            },
           ].map((transaction) => (
             <React.Fragment key={transaction.id}>
               <TransactionItem transaction={transaction} />
@@ -177,7 +213,7 @@ const RevenueDetailsScreen = ({ route, navigation }) => {
             title="View All Transactions"
             type="clear"
             titleStyle={styles.viewAllButton}
-            onPress={() => navigation.navigate('Transactions')}
+            onPress={() => navigation.navigate("Transactions")}
           />
         </View>
       </ScrollView>
@@ -188,7 +224,7 @@ const RevenueDetailsScreen = ({ route, navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F8F9FA',
+    backgroundColor: "#F8F9FA",
   },
   content: {
     flex: 1,
@@ -198,71 +234,71 @@ const styles = StyleSheet.create({
   },
   headerGradient: {
     padding: 20,
-    alignItems: 'center',
+    alignItems: "center",
   },
   periodLabel: {
-    color: '#FFF',
+    color: "#FFF",
     fontSize: 16,
     opacity: 0.9,
     marginBottom: 8,
   },
   totalRevenue: {
-    color: '#FFF',
+    color: "#FFF",
     fontSize: 36,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 20,
   },
   statsRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "rgba(255, 255, 255, 0.2)",
     borderRadius: 12,
     padding: 15,
   },
   statItem: {
     flex: 1,
-    alignItems: 'center',
+    alignItems: "center",
   },
   statValue: {
-    color: '#FFF',
+    color: "#FFF",
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 4,
   },
   statLabel: {
-    color: '#FFF',
+    color: "#FFF",
     fontSize: 12,
     opacity: 0.9,
   },
   statDivider: {
     width: 1,
     height: 30,
-    backgroundColor: 'rgba(255, 255, 255, 0.3)',
+    backgroundColor: "rgba(255, 255, 255, 0.3)",
     marginHorizontal: 15,
   },
   section: {
     padding: 20,
-    backgroundColor: '#FFF',
+    backgroundColor: "#FFF",
     marginBottom: 12,
   },
   sectionHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginBottom: 15,
   },
   sectionTitle: {
     fontSize: 18,
-    fontWeight: 'bold',
-    color: '#2D3436',
+    fontWeight: "bold",
+    color: "#2D3436",
   },
   chartControls: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   periodSelector: {
-    flexDirection: 'row',
-    backgroundColor: '#F5F6FA',
+    flexDirection: "row",
+    backgroundColor: "#F5F6FA",
     borderRadius: 20,
     padding: 4,
     marginRight: 10,
@@ -273,19 +309,19 @@ const styles = StyleSheet.create({
     borderRadius: 16,
   },
   periodButtonActive: {
-    backgroundColor: '#FF6B6B',
+    backgroundColor: "#ff4500",
   },
   periodButtonText: {
     fontSize: 14,
-    color: '#636E72',
+    color: "#636E72",
   },
   periodButtonTextActive: {
-    color: '#FFF',
-    fontWeight: '600',
+    color: "#FFF",
+    fontWeight: "600",
   },
   chartTypeButton: {
     padding: 8,
-    backgroundColor: '#FFE9E9',
+    backgroundColor: "#ffe0cc",
     borderRadius: 8,
   },
   chart: {
@@ -293,12 +329,12 @@ const styles = StyleSheet.create({
     borderRadius: 16,
   },
   transactionItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     paddingVertical: 12,
   },
   transactionIcon: {
-    backgroundColor: '#F5F6FA',
+    backgroundColor: "#F5F6FA",
     padding: 10,
     borderRadius: 8,
     marginRight: 12,
@@ -308,25 +344,25 @@ const styles = StyleSheet.create({
   },
   transactionTitle: {
     fontSize: 16,
-    color: '#2D3436',
+    color: "#2D3436",
     marginBottom: 4,
   },
   transactionDate: {
     fontSize: 14,
-    color: '#636E72',
+    color: "#636E72",
   },
   transactionAmount: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   divider: {
     marginVertical: 8,
   },
   viewAllButton: {
-    color: '#FF6B6B',
+    color: "#ff4500",
     fontSize: 14,
     marginTop: 10,
   },
 });
 
-export default RevenueDetailsScreen; 
+export default RevenueDetailsScreen;

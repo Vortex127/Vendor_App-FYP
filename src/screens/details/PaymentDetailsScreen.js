@@ -66,7 +66,7 @@ const PaymentDetailsScreen = ({ route, navigation }) => {
   const DetailItem = ({ icon, label, value }) => (
     <View style={styles.detailItem}>
       <View style={styles.detailIcon}>
-        <Icon name={icon} type="material" size={20} color="#FF6B6B" />
+        <Icon name={icon} type="material" size={20} color="#ff4500" />
       </View>
       <View style={styles.detailContent}>
         <Text style={styles.detailLabel}>{label}</Text>
@@ -80,19 +80,29 @@ const PaymentDetailsScreen = ({ route, navigation }) => {
       <ScrollView style={styles.content}>
         <Animated.View style={[styles.header, { opacity: fadeAnim }]}>
           <LinearGradient
-            colors={['#FF9A8B', '#FF6A88', '#FF99AC']}
+            colors={["#ff4500", "#cc3700"]}
             style={styles.headerGradient}
           >
             <View style={styles.statusContainer}>
-              <View style={[styles.statusBadge, styles[`${payment.status}Badge`]]}>
-                <Text style={[styles.statusText, styles[`${payment.status}Text`]]}>
+              <View
+                style={[styles.statusBadge, styles[`${payment.status}Badge`]]}
+              >
+                <Text
+                  style={[styles.statusText, styles[`${payment.status}Text`]]}
+                >
                   {payment.status.toUpperCase()}
                 </Text>
               </View>
             </View>
-            <Text style={styles.paymentId}>Transaction #{payment.transactionId}</Text>
-            <Text style={styles.amount}>${payment.amount.toLocaleString()}</Text>
-            <Text style={styles.paymentDate}>{payment.date} at {payment.time}</Text>
+            <Text style={styles.paymentId}>
+              Transaction #{payment.transactionId}
+            </Text>
+            <Text style={styles.amount}>
+              ${payment.amount.toLocaleString()}
+            </Text>
+            <Text style={styles.paymentDate}>
+              {payment.date} at {payment.time}
+            </Text>
           </LinearGradient>
         </Animated.View>
 
@@ -103,14 +113,16 @@ const PaymentDetailsScreen = ({ route, navigation }) => {
               name={payment.paymentMethod.brand.toLowerCase()}
               type="font-awesome"
               size={24}
-              color="#2D3436"
+              color="#ff4500"
             />
             <View style={styles.paymentMethodInfo}>
               <Text style={styles.paymentMethodTitle}>
-                {payment.paymentMethod.brand} ending in {payment.paymentMethod.last4}
+                {payment.paymentMethod.brand} ending in{" "}
+                {payment.paymentMethod.last4}
               </Text>
               <Text style={styles.paymentMethodExpiry}>
-                Expires {payment.paymentMethod.expiryMonth}/{payment.paymentMethod.expiryYear}
+                Expires {payment.paymentMethod.expiryMonth}/
+                {payment.paymentMethod.expiryYear}
               </Text>
             </View>
           </View>
@@ -118,16 +130,40 @@ const PaymentDetailsScreen = ({ route, navigation }) => {
 
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Customer Information</Text>
-          <DetailItem icon="person" label="Name" value={payment.customer.name} />
-          <DetailItem icon="email" label="Email" value={payment.customer.email} />
-          <DetailItem icon="phone" label="Phone" value={payment.customer.phone} />
+          <DetailItem
+            icon="person"
+            label="Name"
+            value={payment.customer.name}
+          />
+          <DetailItem
+            icon="email"
+            label="Email"
+            value={payment.customer.email}
+          />
+          <DetailItem
+            icon="phone"
+            label="Phone"
+            value={payment.customer.phone}
+          />
         </View>
 
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Booking Details</Text>
-          <DetailItem icon="event" label="Event Type" value={payment.booking.eventType} />
-          <DetailItem icon="calendar-today" label="Event Date" value={payment.booking.date} />
-          <DetailItem icon="confirmation-number" label="Booking ID" value={payment.booking.id} />
+          <DetailItem
+            icon="event"
+            label="Event Type"
+            value={payment.booking.eventType}
+          />
+          <DetailItem
+            icon="calendar-today"
+            label="Event Date"
+            value={payment.booking.date}
+          />
+          <DetailItem
+            icon="confirmation-number"
+            label="Booking ID"
+            value={payment.booking.id}
+          />
         </View>
       </ScrollView>
 
@@ -135,7 +171,11 @@ const PaymentDetailsScreen = ({ route, navigation }) => {
         <Button
           title="View Booking"
           type="outline"
-          onPress={() => navigation.navigate('BookingDetails', { bookingId: payment.booking.id })}
+          onPress={() =>
+            navigation.navigate("BookingDetails", {
+              bookingId: payment.booking.id,
+            })
+          }
           buttonStyle={styles.viewBookingButton}
           titleStyle={styles.viewBookingText}
           containerStyle={styles.buttonContainer}
@@ -144,13 +184,13 @@ const PaymentDetailsScreen = ({ route, navigation }) => {
               name="visibility"
               type="material"
               size={20}
-              color="#FF6B6B"
+              color="#ff4500"
               style={styles.buttonIcon}
             />
           }
         />
         <Button
-          title={loading ? 'Downloading...' : 'Download Receipt'}
+          title={loading ? "Downloading..." : "Download"}
           onPress={handleDownloadReceipt}
           loading={loading}
           disabled={loading}
@@ -176,7 +216,7 @@ const PaymentDetailsScreen = ({ route, navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
   },
   content: {
     flex: 1,
@@ -186,7 +226,7 @@ const styles = StyleSheet.create({
   },
   headerGradient: {
     padding: 20,
-    alignItems: 'center',
+    alignItems: "center",
   },
   statusContainer: {
     marginBottom: 15,
@@ -197,60 +237,60 @@ const styles = StyleSheet.create({
     borderRadius: 12,
   },
   completedBadge: {
-    backgroundColor: '#E8F5E9',
+    backgroundColor: "#E8F5E9",
   },
   pendingBadge: {
-    backgroundColor: '#FFF3E0',
+    backgroundColor: "#FFF3E0",
   },
   failedBadge: {
-    backgroundColor: '#FFEBEE',
+    backgroundColor: "#FFEBEE",
   },
   statusText: {
     fontSize: 12,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   completedText: {
-    color: '#4CAF50',
+    color: "#4CAF50",
   },
   pendingText: {
-    color: '#FF9800',
+    color: "#FF9800",
   },
   failedText: {
-    color: '#F44336',
+    color: "#F44336",
   },
   paymentId: {
-    color: '#FFF',
+    color: "#FFF",
     fontSize: 14,
     opacity: 0.9,
     marginBottom: 8,
   },
   amount: {
-    color: '#FFF',
+    color: "#FFF",
     fontSize: 36,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 4,
   },
   paymentDate: {
-    color: '#FFF',
+    color: "#FFF",
     fontSize: 16,
     opacity: 0.9,
   },
   section: {
     padding: 20,
-    backgroundColor: '#FFF',
+    backgroundColor: "#FFF",
     marginBottom: 12,
   },
   sectionTitle: {
     fontSize: 18,
-    fontWeight: 'bold',
-    color: '#2D3436',
+    fontWeight: "bold",
+    color: "#2D3436",
     marginBottom: 15,
   },
   paymentMethodCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     padding: 15,
-    backgroundColor: '#F5F6FA',
+    backgroundColor: "#F5F6FA",
     borderRadius: 12,
   },
   paymentMethodInfo: {
@@ -258,21 +298,21 @@ const styles = StyleSheet.create({
   },
   paymentMethodTitle: {
     fontSize: 16,
-    fontWeight: '600',
-    color: '#2D3436',
+    fontWeight: "600",
+    color: "#2D3436",
     marginBottom: 4,
   },
   paymentMethodExpiry: {
     fontSize: 14,
-    color: '#636E72',
+    color: "#636E72",
   },
   detailItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginBottom: 15,
   },
   detailIcon: {
-    backgroundColor: '#FFE9E9',
+    backgroundColor: "#ffe0cc",
     padding: 10,
     borderRadius: 10,
     marginRight: 15,
@@ -282,39 +322,40 @@ const styles = StyleSheet.create({
   },
   detailLabel: {
     fontSize: 14,
-    color: '#636E72',
+    color: "#636E72",
     marginBottom: 4,
   },
   detailValue: {
     fontSize: 16,
-    color: '#2D3436',
-    fontWeight: '500',
+    color: "#2D3436",
+    fontWeight: "500",
   },
   footer: {
-    flexDirection: 'row',
+    flexDirection: "row",
     padding: 20,
-    backgroundColor: '#FFF',
+    backgroundColor: "#FFF",
     borderTopWidth: 1,
-    borderTopColor: '#F5F6FA',
+    borderTopColor: "#F5F6FA",
   },
   buttonContainer: {
     flex: 1,
     marginHorizontal: 5,
   },
   viewBookingButton: {
-    backgroundColor: '#FFF',
-    borderColor: '#FF6B6B',
+    backgroundColor: "#FFF",
+    borderColor: "#ff4500",
     borderWidth: 1,
     borderRadius: 12,
     paddingVertical: 12,
   },
   viewBookingText: {
-    color: '#FF6B6B',
+    color: "#ff4500",
   },
   downloadButton: {
-    backgroundColor: '#FF6B6B',
+    backgroundColor: "#ff4500",
     borderRadius: 12,
     paddingVertical: 12,
+    paddingHorizontal: 6,
   },
   buttonIcon: {
     marginRight: 8,

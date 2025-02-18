@@ -10,12 +10,6 @@ const menuItems = [
     section: 'Account',
     items: [
       {
-        title: 'My Bookings',
-        icon: 'calendar-today',
-        screen: 'Bookings',
-        badge: '2', // Number of active bookings
-      },
-      {
         title: 'Payment Methods',
         icon: 'payment',
         screen: 'PaymentMethods',
@@ -99,7 +93,7 @@ const ProfileScreen = ({ navigation }) => {
     <SafeAreaView style={styles.container} edges={["left", "right"]}>
       <ScrollView showsVerticalScrollIndicator={false}>
         <LinearGradient
-          colors={["#FF9A8B", "#FF6A88", "#FF99AC"]}
+          colors={["#ff4500", "#cc3700"]}
           style={styles.headerGradient}
         >
           <View style={styles.header}>
@@ -115,7 +109,7 @@ const ProfileScreen = ({ navigation }) => {
                 containerStyle={styles.avatar}
               >
                 <Avatar.Accessory
-                  size={30}
+                  size={25}
                   onPress={handleEditProfile}
                   containerStyle={styles.avatarAccessory}
                 />
@@ -176,7 +170,7 @@ const ProfileScreen = ({ navigation }) => {
                     <Icon
                       name={item.icon}
                       type="material"
-                      color="#FF6A88"
+                      color="#ff4500"
                       containerStyle={styles.menuIcon}
                     />
                     <ListItem.Content>
@@ -214,7 +208,7 @@ const ProfileScreen = ({ navigation }) => {
               name="logout"
               type="material"
               size={20}
-              color="#FF6B6B"
+              color="#ff4500"
               style={{ marginRight: 10 }}
             />
           }
@@ -232,77 +226,78 @@ const ProfileScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
   },
   headerGradient: {
     borderBottomLeftRadius: 30,
     borderBottomRightRadius: 30,
     elevation: 5,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
   },
   header: {
-    alignItems: 'center',
+    alignItems: "center",
     paddingTop: 30,
     paddingBottom: 40,
   },
   avatarContainer: {
     marginBottom: 15,
     elevation: 10,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 5 },
     shadowOpacity: 0.34,
     shadowRadius: 6.27,
   },
   avatar: {
     borderWidth: 4,
-    borderColor: '#FFF',
+    borderColor: "#FFF",
   },
   avatarAccessory: {
-    backgroundColor: '#FF6A88',
-    borderColor: '#FFF',
+    backgroundColor: "#ff4500",
+    borderColor: "#FFF",
+    borderRadius: 12,
   },
   name: {
-    color: '#FFF',
+    color: "#FFF",
     marginBottom: 5,
-    fontWeight: 'bold',
-    textShadowColor: 'rgba(0, 0, 0, 0.1)',
+    fontWeight: "bold",
+    textShadowColor: "rgba(0, 0, 0, 0.1)",
     textShadowOffset: { width: 0, height: 1 },
     textShadowRadius: 3,
   },
   email: {
-    color: '#FFF',
+    color: "#FFF",
     fontSize: 16,
     marginBottom: 20,
     opacity: 0.9,
   },
   statsContainer: {
-    flexDirection: 'row',
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    flexDirection: "row",
+    backgroundColor: "rgba(255, 255, 255, 0.2)",
     borderRadius: 15,
     paddingVertical: 15,
     paddingHorizontal: 30,
   },
   statItem: {
-    alignItems: 'center',
+    alignItems: "center",
     paddingHorizontal: 15,
   },
   statNumber: {
-    color: '#FFF',
+    color: "#FFF",
     fontSize: 20,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 5,
   },
   statLabel: {
-    color: '#FFF',
+    color: "#FFF",
     fontSize: 12,
     opacity: 0.9,
   },
   statDivider: {
     width: 1,
-    backgroundColor: 'rgba(255, 255, 255, 0.3)',
+    backgroundColor: "rgba(255, 255, 255, 0.3)",
     marginHorizontal: 10,
   },
   menuContainer: {
@@ -314,8 +309,8 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 18,
-    fontWeight: 'bold',
-    color: '#2D3436',
+    fontWeight: "bold",
+    color: "#2D3436",
     marginBottom: 10,
     paddingLeft: 10,
   },
@@ -323,35 +318,35 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   menuItem: {
-    backgroundColor: '#FFF',
+    backgroundColor: "#FFF",
     borderRadius: 15,
     elevation: 2,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.22,
     shadowRadius: 2.22,
   },
   menuIcon: {
-    backgroundColor: 'rgba(255, 106, 136, 0.1)',
+    backgroundColor: "#ffe0cc",
     padding: 8,
     borderRadius: 10,
   },
   menuTitle: {
-    color: '#2D3436',
+    color: "#2D3436",
     fontSize: 16,
-    fontWeight: '500',
+    fontWeight: "500",
   },
   badge: {
-    backgroundColor: '#FF6A88',
+    backgroundColor: "#ff4500",
     borderRadius: 12,
     paddingHorizontal: 8,
     paddingVertical: 4,
     marginRight: 10,
   },
   badgeText: {
-    color: '#FFF',
+    color: "#FFF",
     fontSize: 12,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   logoutButtonContainer: {
     marginTop: 10,
@@ -359,9 +354,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
   },
   logoutButtonText: {
-    color: '#FF6B6B',
+    color: "#ff4500",
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
   },
 });
 

@@ -143,7 +143,7 @@ const AllActivitiesScreen = ({ navigation }) => {
     <SafeAreaView style={styles.container}>
       <Animated.View style={[styles.header, { opacity: fadeAnim }]}>
         <LinearGradient
-          colors={['#FF9A8B', '#FF6A88', '#FF99AC']}
+          colors={["#ff4500", "#cc3700"]}
           style={styles.headerGradient}
         >
           <Text style={styles.title}>Activities</Text>
@@ -174,10 +174,12 @@ const AllActivitiesScreen = ({ navigation }) => {
               ]}
               onPress={() => setSelectedFilter(item.id)}
             >
-              <Text style={[
-                styles.filterButtonText,
-                selectedFilter === item.id && styles.filterButtonTextActive,
-              ]}>
+              <Text
+                style={[
+                  styles.filterButtonText,
+                  selectedFilter === item.id && styles.filterButtonTextActive,
+                ]}
+              >
                 {item.label}
               </Text>
             </TouchableOpacity>
@@ -200,35 +202,37 @@ const AllActivitiesScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F8F9FA',
+    backgroundColor: "#fff",
   },
   header: {
     marginBottom: 12,
   },
   headerGradient: {
     padding: 20,
+    borderBottomRightRadius: 20,
+    borderBottomLeftRadius: 20,
   },
   title: {
     fontSize: 28,
-    fontWeight: 'bold',
-    color: '#FFF',
+    fontWeight: "bold",
+    color: "#FFF",
     marginBottom: 15,
   },
   searchContainer: {
-    backgroundColor: 'transparent',
+    backgroundColor: "transparent",
     borderTopWidth: 0,
     borderBottomWidth: 0,
     paddingHorizontal: 0,
   },
   searchInputContainer: {
-    backgroundColor: '#FFF',
+    backgroundColor: "#FFF",
     borderRadius: 12,
   },
   searchInput: {
     fontSize: 16,
   },
   filterContainer: {
-    backgroundColor: '#FFF',
+    backgroundColor: "#FFF",
     paddingVertical: 12,
     marginBottom: 12,
   },
@@ -239,30 +243,30 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 8,
     borderRadius: 20,
-    backgroundColor: '#F5F6FA',
+    backgroundColor: "#F5F6FA",
     marginRight: 8,
   },
   filterButtonActive: {
-    backgroundColor: '#FF6B6B',
+    backgroundColor: "#ff4500",
   },
   filterButtonText: {
-    color: '#636E72',
+    color: "#636E72",
     fontSize: 14,
   },
   filterButtonTextActive: {
-    color: '#FFF',
-    fontWeight: '500',
+    color: "#FFF",
+    fontWeight: "500",
   },
   activitiesList: {
     padding: 20,
   },
   activityItem: {
-    flexDirection: 'row',
-    backgroundColor: '#FFF',
+    flexDirection: "row",
+    backgroundColor: "#FFF",
     borderRadius: 16,
     padding: 16,
     marginBottom: 12,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
@@ -272,54 +276,54 @@ const styles = StyleSheet.create({
     width: 48,
     height: 48,
     borderRadius: 24,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     marginRight: 16,
   },
   bookingIcon: {
-    backgroundColor: '#4CAF50',
+    backgroundColor: "#4CAF50",
   },
   paymentIcon: {
-    backgroundColor: '#2196F3',
+    backgroundColor: "#2196F3",
   },
   reviewIcon: {
-    backgroundColor: '#FFB800',
+    backgroundColor: "#FFB800",
   },
   messageIcon: {
-    backgroundColor: '#FF6B6B',
+    backgroundColor: "#ff4500",
   },
   activityContent: {
     flex: 1,
   },
   activityHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "flex-start",
     marginBottom: 4,
   },
   activityTitle: {
     fontSize: 16,
-    fontWeight: '600',
-    color: '#2D3436',
+    fontWeight: "600",
+    color: "#2D3436",
   },
   activityTime: {
     fontSize: 14,
-    color: '#636E72',
+    color: "#636E72",
   },
   activityDescription: {
     fontSize: 14,
-    color: '#636E72',
+    color: "#636E72",
     marginBottom: 4,
   },
   activityAmount: {
     fontSize: 16,
-    fontWeight: '600',
-    color: '#2196F3',
+    fontWeight: "600",
+    color: "#2196F3",
   },
   messagePreview: {
     fontSize: 14,
-    color: '#636E72',
-    fontStyle: 'italic',
+    color: "#636E72",
+    fontStyle: "italic",
   },
 });
 

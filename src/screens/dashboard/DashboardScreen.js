@@ -59,13 +59,13 @@ const DashboardScreen = ({ navigation }) => {
     backgroundGradientFrom: "#ffffff",
     backgroundGradientTo: "#ffffff",
     decimalPlaces: 0,
-    color: (opacity = 1) => `rgba(255, 107, 107, ${opacity})`,
+    color: (opacity = 1) => `rgba(255, 85, 0, ${opacity})`,
     labelColor: () => "#636E72",
     style: { borderRadius: 16 },
     propsForDots: {
       r: "4",
       strokeWidth: "2",
-      stroke: "#FF6B6B",
+      stroke: "#ff4500",
     },
     propsForBackgroundLines: {
       strokeDasharray: "",
@@ -239,7 +239,7 @@ const DashboardScreen = ({ navigation }) => {
             label="Today's Revenue"
             value="$1,458"
             trend={12.5}
-            color="#FF6B6B"
+            color="#ff4500"
             type="revenue"
           />
           <StatCard
@@ -337,7 +337,7 @@ const DashboardScreen = ({ navigation }) => {
             style={styles.seeAllButton}
           >
             <Text style={styles.seeAllText}>View All</Text>
-            <Ionicons name="chevron-forward" size={16} color="#FF6B6B" />
+            <Ionicons name="chevron-forward" size={16} color="#ff4500" />
           </TouchableOpacity>
         </View>
 
@@ -457,7 +457,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   statCard: {
-    width:"47%",
+    width: "47%",
     height: 150,
     marginBottom: 10,
     backgroundColor: "#FFF",
@@ -542,7 +542,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   periodButtonActive: {
-    backgroundColor: "#FF6B6B",
+    backgroundColor: "#ff4500",
   },
   periodButtonText: {
     fontSize: 13,
@@ -578,7 +578,7 @@ const styles = StyleSheet.create({
     padding: 8,
   },
   seeAllText: {
-    color: "#FF6B6B",
+    color: "#ff4500",
     fontSize: 14,
     marginRight: 4,
   },
@@ -704,7 +704,7 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     color: "#2D3436",
     marginBottom: 16,
-    paddingHorizontal: 6
+    paddingHorizontal: 6,
   },
   seeAllButton: {
     flexDirection: "row",
@@ -712,12 +712,12 @@ const styles = StyleSheet.create({
     padding: 8,
   },
   seeAllText: {
-    color: "#FF6B6B",
+    color: "#ff4500",
     fontSize: 14,
     marginRight: 4,
   },
   statCardNew: {
-    width:'50%',
+    width: "50%",
     borderRadius: 16,
     padding: 16,
   },

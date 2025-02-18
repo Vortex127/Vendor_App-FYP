@@ -92,7 +92,9 @@ const CustomersListScreen = ({ navigation }) => {
     >
       <View style={styles.customerHeader}>
         <View style={styles.customerInfo}>
-          <View style={[styles.avatarContainer, styles[`${customer.status}Avatar`]]}>
+          <View
+            style={[styles.avatarContainer, styles[`${customer.status}Avatar`]]}
+          >
             <Text style={styles.avatarText}>{customer.name[0]}</Text>
           </View>
           <View style={styles.customerDetails}>
@@ -105,12 +107,7 @@ const CustomersListScreen = ({ navigation }) => {
           onPress={() => handleMessageCustomer(customer)}
           style={styles.messageButton}
         >
-          <Icon
-            name="message"
-            type="material"
-            size={20}
-            color="#FF6B6B"
-          />
+          <Icon name="message" type="material" size={20} color="#ff4500" />
         </TouchableOpacity>
       </View>
 
@@ -149,9 +146,9 @@ const CustomersListScreen = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Animated.View style={[styles.header, { opacity: fadeAnim }]}>
+      <Animated.View style={styles.header}>
         <LinearGradient
-          colors={['#FF9A8B', '#FF6A88', '#FF99AC']}
+          colors={["#ff4500", "#cc3700"]}
           style={styles.headerGradient}
         >
           <Text style={styles.title}>Customers</Text>
@@ -182,10 +179,12 @@ const CustomersListScreen = ({ navigation }) => {
               ]}
               onPress={() => setSelectedFilter(item.id)}
             >
-              <Text style={[
-                styles.filterButtonText,
-                selectedFilter === item.id && styles.filterButtonTextActive,
-              ]}>
+              <Text
+                style={[
+                  styles.filterButtonText,
+                  selectedFilter === item.id && styles.filterButtonTextActive,
+                ]}
+              >
                 {item.label}
               </Text>
             </TouchableOpacity>
@@ -208,35 +207,37 @@ const CustomersListScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F8F9FA',
+    backgroundColor: "#fff",
   },
   header: {
     marginBottom: 12,
   },
   headerGradient: {
     padding: 20,
+    borderBottomRightRadius: 20,
+    borderBottomLeftRadius: 20,
   },
   title: {
     fontSize: 28,
-    fontWeight: 'bold',
-    color: '#FFF',
+    fontWeight: "bold",
+    color: "#FFF",
     marginBottom: 15,
   },
   searchContainer: {
-    backgroundColor: 'transparent',
+    backgroundColor: "transparent",
     borderTopWidth: 0,
     borderBottomWidth: 0,
     paddingHorizontal: 0,
   },
   searchInputContainer: {
-    backgroundColor: '#FFF',
+    backgroundColor: "#FFF",
     borderRadius: 12,
   },
   searchInput: {
     fontSize: 16,
   },
   filterContainer: {
-    backgroundColor: '#FFF',
+    backgroundColor: "#FFF",
     paddingVertical: 12,
     marginBottom: 12,
   },
@@ -247,113 +248,113 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 8,
     borderRadius: 20,
-    backgroundColor: '#F5F6FA',
+    backgroundColor: "#F5F6FA",
     marginRight: 8,
   },
   filterButtonActive: {
-    backgroundColor: '#FF6B6B',
+    backgroundColor: "#ff4500",
   },
   filterButtonText: {
-    color: '#636E72',
+    color: "#636E72",
     fontSize: 14,
   },
   filterButtonTextActive: {
-    color: '#FFF',
-    fontWeight: '500',
+    color: "#FFF",
+    fontWeight: "500",
   },
   customersList: {
     padding: 20,
   },
   customerCard: {
-    backgroundColor: '#FFF',
+    backgroundColor: "#FFF",
     borderRadius: 16,
     padding: 16,
     marginBottom: 12,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 3,
   },
   customerHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "flex-start",
     marginBottom: 16,
   },
   customerInfo: {
-    flexDirection: 'row',
+    flexDirection: "row",
     flex: 1,
   },
   avatarContainer: {
     width: 50,
     height: 50,
     borderRadius: 25,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     marginRight: 12,
   },
   vipAvatar: {
-    backgroundColor: '#FF6B6B',
+    backgroundColor: "#FF6B6B",
   },
   activeAvatar: {
-    backgroundColor: '#4CAF50',
+    backgroundColor: "#4CAF50",
   },
   newAvatar: {
-    backgroundColor: '#2196F3',
+    backgroundColor: "#2196F3",
   },
   avatarText: {
-    color: '#FFF',
+    color: "#FFF",
     fontSize: 20,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   customerDetails: {
     flex: 1,
   },
   customerName: {
     fontSize: 18,
-    fontWeight: '600',
-    color: '#2D3436',
+    fontWeight: "600",
+    color: "#2D3436",
     marginBottom: 4,
   },
   customerContact: {
     fontSize: 14,
-    color: '#636E72',
+    color: "#636E72",
     marginBottom: 2,
   },
   statsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     paddingVertical: 12,
     borderTopWidth: 1,
     borderBottomWidth: 1,
-    borderColor: '#F5F6FA',
+    borderColor: "#F5F6FA",
   },
   statItem: {
     flex: 1,
-    alignItems: 'center',
+    alignItems: "center",
   },
   statLabel: {
     fontSize: 12,
-    color: '#636E72',
+    color: "#636E72",
     marginBottom: 4,
   },
   statValue: {
     fontSize: 16,
-    fontWeight: '600',
-    color: '#2D3436',
+    fontWeight: "600",
+    color: "#2D3436",
   },
   statDivider: {
     width: 1,
     height: 30,
-    backgroundColor: '#F5F6FA',
+    backgroundColor: "#F5F6FA",
     marginHorizontal: 10,
   },
   customerFooter: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginTop: 12,
   },
   statusBadge: {
@@ -362,35 +363,35 @@ const styles = StyleSheet.create({
     borderRadius: 12,
   },
   vipBadge: {
-    backgroundColor: '#FFE9E9',
+    backgroundColor: "#FFE9E9",
   },
   activeBadge: {
-    backgroundColor: '#E8F5E9',
+    backgroundColor: "#E8F5E9",
   },
   newBadge: {
-    backgroundColor: '#E3F2FD',
+    backgroundColor: "#E3F2FD",
   },
   statusText: {
     fontSize: 12,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   vipText: {
-    color: '#FF6B6B',
+    color: "#FF6B6B",
   },
   activeText: {
-    color: '#4CAF50',
+    color: "#4CAF50",
   },
   newText: {
-    color: '#2196F3',
+    color: "#2196F3",
   },
   viewProfileText: {
-    color: '#FF6B6B',
+    color: "#FF6B6B",
     fontSize: 14,
     marginRight: 4,
   },
   messageButton: {
     padding: 8,
-    backgroundColor: '#FFE9E9',
+    backgroundColor: "#ffe0cc",
     borderRadius: 8,
   },
 });

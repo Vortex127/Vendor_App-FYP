@@ -57,7 +57,7 @@ const NotificationPreferences = ({ preferences, onToggle }) => {
           <Switch
             value={value}
             onValueChange={(newValue) => onToggle(key, newValue)}
-            trackColor={{ false: '#DFE6E9', true: '#FF6B6B' }}
+            trackColor={{ false: '#DFE6E9', true: '#ff4500' }}
             thumbColor="#FFFFFF"
           />
         </View>
@@ -88,7 +88,7 @@ const NotificationItem = ({ notification }) => {
             name={getNotificationIcon(notification.type)}
             type="material"
             size={24}
-            color="#FF6B6B"
+            color="#ff4500"
           />
         </View>
         <View style={styles.notificationContent}>
@@ -119,9 +119,6 @@ const NotificationsScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
-        <Text h4 style={styles.title}>Notifications</Text>
-      </View>
 
       <ScrollView style={styles.content}>
         <NotificationPreferences
@@ -146,16 +143,16 @@ const NotificationsScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
   },
   header: {
     padding: 20,
-    backgroundColor: '#F5F6FA',
+    backgroundColor: "#F5F6FA",
   },
   title: {
-    color: '#2D3436',
+    color: "#2D3436",
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   content: {
     flex: 1,
@@ -168,17 +165,17 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 18,
-    fontWeight: 'bold',
-    color: '#2D3436',
+    fontWeight: "bold",
+    color: "#2D3436",
     marginBottom: 10,
   },
   divider: {
     marginBottom: 15,
   },
   preferenceItem: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginBottom: 15,
   },
   preferenceInfo: {
@@ -187,12 +184,12 @@ const styles = StyleSheet.create({
   },
   preferenceTitle: {
     fontSize: 16,
-    color: '#2D3436',
+    color: "#2D3436",
     marginBottom: 5,
   },
   preferenceDescription: {
     fontSize: 14,
-    color: '#636E72',
+    color: "#636E72",
   },
   notificationsSection: {
     marginTop: 20,
@@ -203,15 +200,15 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   readNotification: {
-    backgroundColor: '#F5F6FA',
+    backgroundColor: "#F5F6FA",
   },
   notificationHeader: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
+    flexDirection: "row",
+    alignItems: "flex-start",
   },
   notificationIcon: {
     marginRight: 15,
-    backgroundColor: '#FFE9E9',
+    backgroundColor: "#ffe0cc",
     padding: 10,
     borderRadius: 10,
   },
@@ -220,24 +217,24 @@ const styles = StyleSheet.create({
   },
   notificationTitle: {
     fontSize: 16,
-    fontWeight: 'bold',
-    color: '#2D3436',
+    fontWeight: "bold",
+    color: "#2D3436",
     marginBottom: 5,
   },
   notificationMessage: {
     fontSize: 14,
-    color: '#636E72',
+    color: "#636E72",
     marginBottom: 5,
   },
   notificationTime: {
     fontSize: 12,
-    color: '#95A5A6',
+    color: "#95A5A6",
   },
   unreadDot: {
     width: 8,
     height: 8,
     borderRadius: 4,
-    backgroundColor: '#FF6B6B',
+    backgroundColor: "#ff4500",
     marginLeft: 10,
   },
 });
