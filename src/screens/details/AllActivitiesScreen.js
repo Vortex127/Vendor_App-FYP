@@ -5,8 +5,9 @@ import {
   FlatList,
   TouchableOpacity,
   Animated,
+  Text,
 } from 'react-native';
-import { Text, SearchBar, Icon, Button } from 'react-native-elements';
+import { SearchBar, Icon, Button } from 'react-native-elements';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 
@@ -21,15 +22,7 @@ const ACTIVITY_FILTERS = [
 const AllActivitiesScreen = ({ navigation }) => {
   const [selectedFilter, setSelectedFilter] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
-  const fadeAnim = new Animated.Value(0);
-
-  React.useEffect(() => {
-    Animated.timing(fadeAnim, {
-      toValue: 1,
-      duration: 500,
-      useNativeDriver: true,
-    }).start();
-  }, []);
+  const fadeAnim = new Animated.Value(1);
 
   // Mock activities data
   const activities = [
@@ -140,8 +133,8 @@ const AllActivitiesScreen = ({ navigation }) => {
   );
 
   return (
-    <SafeAreaView style={styles.container}>
-      <Animated.View style={[styles.header, { opacity: fadeAnim }]}>
+    <SafeAreaView style={styles.container} edges={['top']}>
+      <View style={styles.headerContainer}>
         <LinearGradient
           colors={["#ff4500", "#cc3700"]}
           style={styles.headerGradient}
@@ -158,7 +151,7 @@ const AllActivitiesScreen = ({ navigation }) => {
             round
           />
         </LinearGradient>
-      </Animated.View>
+      </View>
 
       <View style={styles.filterContainer}>
         <FlatList
@@ -204,8 +197,9 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#fff",
   },
-  header: {
-    marginBottom: 12,
+  headerContainer: {
+    overflow: 'hidden',
+    backgroundColor: "#ff4500",
   },
   headerGradient: {
     padding: 20,

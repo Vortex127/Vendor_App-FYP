@@ -127,6 +127,7 @@ const MainTabNavigator = () => {
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
+        headerShown: false,
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
 
@@ -148,13 +149,14 @@ const MainTabNavigator = () => {
         name="Dashboard" 
         component={DashboardScreen}
         options={{
-          title: 'Home'
+          headerShown: false
         }}
       />
-       <Tab.Screen 
+      <Tab.Screen 
         name="Profile" 
         component={ProfileStackNavigator}
-        options={{ headerShown: false,
+        options={{ 
+          headerShown: false,
         }}
       />
     </Tab.Navigator>

@@ -13,6 +13,7 @@ import { LineChart } from "react-native-chart-kit";
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { useAuth } from "../../contexts/AuthContext";
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const DashboardScreen = ({ navigation }) => {
   const { width, height } = useWindowDimensions();
@@ -167,221 +168,222 @@ const DashboardScreen = ({ navigation }) => {
   );
 
   return (
-    <ScrollView
-      style={styles.container}
-      contentContainerStyle={styles.contentContainer}
-      refreshControl={
-        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-      }
-    >
-      {/* Main Balance Card */}
-      <View style={styles.balanceCard}>
-        <LinearGradient
-          colors={["#ff4500", "#cc3700"]}
-          style={styles.balanceGradient}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 1 }}
-        >
-          <View style={styles.balanceHeader}>
-            <View>
-              <Text style={styles.balanceLabel}>Total Balance</Text>
-              <Text style={styles.balanceAmount}>$28,458.00</Text>
-            </View>
-            <TouchableOpacity
-              style={styles.avatarContainer}
-              onPress={() => navigation.navigate("Profile")}
-            >
-              <Image
-                source={{
-                  uri: `https://ui-avatars.com/api/?name=${initials}&background=ff4500&color=fff`,
-                }}
-                style={styles.avatar}
-              />
-            </TouchableOpacity>
-          </View>
-
-          <View style={styles.quickActions}>
-            <TouchableOpacity
-              style={styles.actionButton}
-              onPress={handleAddBalance}
-            >
-              <Ionicons name="add-circle-outline" size={24} color="#fff" />
-              <Text style={styles.actionText}>Add</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.actionButton}
-              onPress={handleSendMoney}
-            >
-              <Ionicons name="arrow-up-circle-outline" size={24} color="#fff" />
-              <Text style={styles.actionText}>Send</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.actionButton}
-              onPress={handleReceiveMoney}
-            >
-              <Ionicons
-                name="arrow-down-circle-outline"
-                size={24}
-                color="#fff"
-              />
-              <Text style={styles.actionText}>Receive</Text>
-            </TouchableOpacity>
-          </View>
-        </LinearGradient>
-      </View>
-
-      {/* Stats Grid */}
-      <View style={styles.statsContainer}>
-        <Text style={styles.statsTitle}>Overview</Text>
-        <View style={styles.statsGrid}>
-          <StatCard
-            icon="wallet-outline"
-            label="Today's Revenue"
-            value="$1,458"
-            trend={12.5}
-            color="#ff4500"
-            type="revenue"
-          />
-          <StatCard
-            icon="calendar-outline"
-            label="New Bookings"
-            value="8"
-            trend={-5.2}
-            color="#4834d4"
-            type="bookings"
-          />
-          <StatCard
-            icon="people-outline"
-            label="Total Customers"
-            value="248"
-            trend={8.1}
-            color="#20bf6b"
-            type="customers"
-          />
-          <StatCard
-            icon="star-outline"
-            label="Avg Rating"
-            value="4.8"
-            trend={2.3}
-            color="#f39c12"
-            type="ratings"
-          />
-        </View>
-      </View>
-
-      {/* Chart Section - Updated */}
-      <View style={styles.chartContainer}>
-        <View style={styles.chartHeader}>
-          <View>
-            <Text style={styles.chartTitle}>Revenue</Text>
-            <Text style={styles.chartTitle}>Overview</Text>
-          </View>
-          <View style={styles.periodSelector}>
-            <TouchableOpacity
-              onPress={() => setSelectedPeriod("weekly")}
-              style={[
-                styles.periodButton,
-                selectedPeriod === "weekly" && styles.periodButtonActive,
-              ]}
-            >
-              <Text
-                style={[
-                  styles.periodButtonText,
-                  selectedPeriod === "weekly" && styles.periodButtonTextActive,
-                ]}
-              >
-                Week
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => setSelectedPeriod("monthly")}
-              style={[
-                styles.periodButton,
-                selectedPeriod === "monthly" && styles.periodButtonActive,
-              ]}
-            >
-              <Text
-                style={[
-                  styles.periodButtonText,
-                  selectedPeriod === "monthly" && styles.periodButtonTextActive,
-                ]}
-              >
-                Month
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-        <LineChart
-          data={chartData}
-          width={width - 50}
-          height={180}
-          chartConfig={{
-            ...chartConfig,
-            propsForBackgroundLines: {
-              strokeDasharray: "",
-              strokeWidth: 0.5,
-              stroke: "rgba(0, 0, 0, 0.05)",
-            },
-          }}
-          bezier
-          style={styles.chart}
-        />
-      </View>
-
-      {/* Recent Activity */}
-      <View style={styles.activityContainer}>
-        <View style={styles.sectionHeader}>
-          <Text style={styles.sectionTitle}>Recent Activity</Text>
-          <TouchableOpacity
-            onPress={() => navigation.navigate("AllActivities")}
-            style={styles.seeAllButton}
+    <SafeAreaView style={styles.container} edges={['top']}>
+      <ScrollView
+        contentContainerStyle={styles.contentContainer}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      >
+        {/* Main Balance Card */}
+        <View style={styles.balanceCard}>
+          <LinearGradient
+            colors={["#ff4500", "#cc3700"]}
+            style={styles.balanceGradient}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
           >
-            <Text style={styles.seeAllText}>View All</Text>
-            <Ionicons name="chevron-forward" size={16} color="#ff4500" />
-          </TouchableOpacity>
+            <View style={styles.balanceHeader}>
+              <View>
+                <Text style={styles.balanceLabel}>Total Balance</Text>
+                <Text style={styles.balanceAmount}>$28,458.00</Text>
+              </View>
+              <TouchableOpacity
+                style={styles.avatarContainer}
+                onPress={() => navigation.navigate("Profile")}
+              >
+                <Image
+                  source={{
+                    uri: `https://ui-avatars.com/api/?name=${initials}&background=ff4500&color=fff`,
+                  }}
+                  style={styles.avatar}
+                />
+              </TouchableOpacity>
+            </View>
+
+            <View style={styles.quickActions}>
+              <TouchableOpacity
+                style={styles.actionButton}
+                onPress={handleAddBalance}
+              >
+                <Ionicons name="add-circle-outline" size={24} color="#fff" />
+                <Text style={styles.actionText}>Add</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.actionButton}
+                onPress={handleSendMoney}
+              >
+                <Ionicons name="arrow-up-circle-outline" size={24} color="#fff" />
+                <Text style={styles.actionText}>Send</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.actionButton}
+                onPress={handleReceiveMoney}
+              >
+                <Ionicons
+                  name="arrow-down-circle-outline"
+                  size={24}
+                  color="#fff"
+                />
+                <Text style={styles.actionText}>Receive</Text>
+              </TouchableOpacity>
+            </View>
+          </LinearGradient>
         </View>
 
-        <ActivityItem
-          type="booking"
-          title="New Booking Request"
-          description="Wedding Reception - Sarah Johnson"
-          time="2 hours ago"
-          amount="$2,500"
-          onPress={() =>
-            navigation.navigate("BookingDetails", {
-              bookingId: "1",
-              title: "Wedding Reception - Sarah Johnson",
-            })
-          }
-        />
-        <ActivityItem
-          type="payment"
-          title="Payment Received"
-          description="Corporate Event - Tech Corp"
-          time="5 hours ago"
-          amount="$1,800"
-          onPress={() =>
-            navigation.navigate("PaymentDetails", {
-              paymentId: "1",
-              title: "Corporate Event - Tech Corp",
-            })
-          }
-        />
-        <ActivityItem
-          type="review"
-          title="New Review"
-          description="Birthday Party - John Smith"
-          time="Yesterday"
-          rating={4.5}
-          onPress={() =>
-            navigation.navigate("ReviewDetails", {
-              reviewId: "1",
-              title: "Birthday Party - John Smith",
-            })
-          }
-        />
-      </View>
-    </ScrollView>
+        {/* Stats Grid */}
+        <View style={styles.statsContainer}>
+          <Text style={styles.statsTitle}>Overview</Text>
+          <View style={styles.statsGrid}>
+            <StatCard
+              icon="wallet-outline"
+              label="Today's Revenue"
+              value="$1,458"
+              trend={12.5}
+              color="#ff4500"
+              type="revenue"
+            />
+            <StatCard
+              icon="calendar-outline"
+              label="New Bookings"
+              value="8"
+              trend={-5.2}
+              color="#4834d4"
+              type="bookings"
+            />
+            <StatCard
+              icon="people-outline"
+              label="Total Customers"
+              value="248"
+              trend={8.1}
+              color="#20bf6b"
+              type="customers"
+            />
+            <StatCard
+              icon="star-outline"
+              label="Avg Rating"
+              value="4.8"
+              trend={2.3}
+              color="#f39c12"
+              type="ratings"
+            />
+          </View>
+        </View>
+
+        {/* Chart Section - Updated */}
+        <View style={styles.chartContainer}>
+          <View style={styles.chartHeader}>
+            <View>
+              <Text style={styles.chartTitle}>Revenue</Text>
+              <Text style={styles.chartTitle}>Overview</Text>
+            </View>
+            <View style={styles.periodSelector}>
+              <TouchableOpacity
+                onPress={() => setSelectedPeriod("weekly")}
+                style={[
+                  styles.periodButton,
+                  selectedPeriod === "weekly" && styles.periodButtonActive,
+                ]}
+              >
+                <Text
+                  style={[
+                    styles.periodButtonText,
+                    selectedPeriod === "weekly" && styles.periodButtonTextActive,
+                  ]}
+                >
+                  Week
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => setSelectedPeriod("monthly")}
+                style={[
+                  styles.periodButton,
+                  selectedPeriod === "monthly" && styles.periodButtonActive,
+                ]}
+              >
+                <Text
+                  style={[
+                    styles.periodButtonText,
+                    selectedPeriod === "monthly" && styles.periodButtonTextActive,
+                  ]}
+                >
+                  Month
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+          <LineChart
+            data={chartData}
+            width={width - 50}
+            height={180}
+            chartConfig={{
+              ...chartConfig,
+              propsForBackgroundLines: {
+                strokeDasharray: "",
+                strokeWidth: 0.5,
+                stroke: "rgba(0, 0, 0, 0.05)",
+              },
+            }}
+            bezier
+            style={styles.chart}
+          />
+        </View>
+
+        {/* Recent Activity */}
+        <View style={styles.activityContainer}>
+          <View style={styles.sectionHeader}>
+            <Text style={styles.sectionTitle}>Recent Activity</Text>
+            <TouchableOpacity
+              onPress={() => navigation.navigate("AllActivities")}
+              style={styles.seeAllButton}
+            >
+              <Text style={styles.seeAllText}>View All</Text>
+              <Ionicons name="chevron-forward" size={16} color="#ff4500" />
+            </TouchableOpacity>
+          </View>
+
+          <ActivityItem
+            type="booking"
+            title="New Booking Request"
+            description="Wedding Reception - Sarah Johnson"
+            time="2 hours ago"
+            amount="$2,500"
+            onPress={() =>
+              navigation.navigate("BookingDetails", {
+                bookingId: "1",
+                title: "Wedding Reception - Sarah Johnson",
+              })
+            }
+          />
+          <ActivityItem
+            type="payment"
+            title="Payment Received"
+            description="Corporate Event - Tech Corp"
+            time="5 hours ago"
+            amount="$1,800"
+            onPress={() =>
+              navigation.navigate("PaymentDetails", {
+                paymentId: "1",
+                title: "Corporate Event - Tech Corp",
+              })
+            }
+          />
+          <ActivityItem
+            type="review"
+            title="New Review"
+            description="Birthday Party - John Smith"
+            time="Yesterday"
+            rating={4.5}
+            onPress={() =>
+              navigation.navigate("ReviewDetails", {
+                reviewId: "1",
+                title: "Birthday Party - John Smith",
+              })
+            }
+          />
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 
@@ -425,31 +427,70 @@ const styles = StyleSheet.create({
   contentContainer: {
     paddingBottom: 24,
   },
-  header: {
-    paddingTop: 60,
-    paddingHorizontal: 24,
-    paddingBottom: 24,
-    backgroundColor: "#FFF",
+  balanceCard: {
+    marginTop: 20,
+    marginHorizontal: 16,
+    borderRadius: 24,
+    overflow: "hidden",
+    elevation: 4,
+    shadowColor: "#FF6B6B",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
   },
-  headerContent: {
+  balanceGradient: {
+    padding: 24,
+  },
+  balanceHeader: {
     flexDirection: "row",
     justifyContent: "space-between",
-    alignItems: "center",
+    alignItems: "flex-start",
+    marginBottom: 24,
   },
-  welcomeText: {
-    fontSize: 24,
+  balanceLabel: {
+    fontSize: 16,
+    color: "rgba(255, 255, 255, 0.9)",
+    marginBottom: 8,
+  },
+  balanceAmount: {
+    fontSize: 32,
     fontWeight: "600",
-    color: "#2D3436",
-    marginBottom: 4,
+    color: "#ffffff",
   },
-  dateText: {
-    fontSize: 14,
-    color: "#636E72",
+  avatarContainer: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    justifyContent: "center",
+    alignItems: "center",
   },
   avatar: {
     width: 40,
     height: 40,
     borderRadius: 20,
+  },
+  quickActions: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    marginTop: 16,
+  },
+  actionButton: {
+    alignItems: "center",
+  },
+  actionText: {
+    color: "#ffffff",
+    marginTop: 8,
+    fontSize: 12,
+  },
+  statsContainer: {
+    padding: 10,
+  },
+  statsTitle: {
+    fontSize: 20,
+    fontWeight: "600",
+    color: "#2D3436",
+    marginBottom: 16,
+    paddingHorizontal: 6,
   },
   statsGrid: {
     flexDirection: "row",
@@ -650,71 +691,6 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     color: "#2D3436",
     marginLeft: 4,
-  },
-  seeAllButtonContainer: {
-    padding: 8,
-  },
-  balanceCard: {
-    margin: 16,
-    borderRadius: 24,
-    overflow: "hidden",
-    elevation: 4,
-    shadowColor: "#FF6B6B",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.2,
-    shadowRadius: 8,
-  },
-  balanceGradient: {
-    padding: 24,
-  },
-  balanceHeader: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "flex-start",
-    marginBottom: 24,
-  },
-  balanceLabel: {
-    fontSize: 16,
-    color: "rgba(255, 255, 255, 0.9)",
-    marginBottom: 8,
-  },
-  balanceAmount: {
-    fontSize: 32,
-    fontWeight: "600",
-    color: "#ffffff",
-  },
-  quickActions: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-    marginTop: 16,
-  },
-  actionButton: {
-    alignItems: "center",
-  },
-  actionText: {
-    color: "#ffffff",
-    marginTop: 8,
-    fontSize: 12,
-  },
-  statsContainer: {
-    padding: 10,
-  },
-  statsTitle: {
-    fontSize: 20,
-    fontWeight: "600",
-    color: "#2D3436",
-    marginBottom: 16,
-    paddingHorizontal: 6,
-  },
-  seeAllButton: {
-    flexDirection: "row",
-    alignItems: "center",
-    padding: 8,
-  },
-  seeAllText: {
-    color: "#ff4500",
-    fontSize: 14,
-    marginRight: 4,
   },
   statCardNew: {
     width: "50%",

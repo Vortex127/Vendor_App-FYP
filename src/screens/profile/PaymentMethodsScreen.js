@@ -131,12 +131,9 @@ const PaymentMethodsScreen = ({ navigation }) => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
-        <Text h4 style={styles.title}>Payment Methods</Text>
-      </View>
-
+    <SafeAreaView style={styles.container} edges={['top']}>
       <ScrollView style={styles.content}>
+
         {paymentMethods.map((method) => (
           <PaymentMethodCard
             key={method.id}
@@ -172,22 +169,38 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   header: {
-    padding: 20,
-    backgroundColor: '#F5F6FA',
+    backgroundColor: '#fff',
+    borderBottomWidth: 1,
+    borderBottomColor: '#F5F6FA',
+    paddingVertical: 15,
+  },
+  headerContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+  },
+  backButton: {
+    marginRight: 15,
   },
   title: {
-    color: '#2D3436',
-    fontSize: 24,
+    fontSize: 20,
     fontWeight: 'bold',
+    color: '#2D3436',
   },
   content: {
     flex: 1,
-    padding: 20,
+    paddingHorizontal: 20,
+    paddingTop: 20,
   },
   paymentCard: {
     borderRadius: 12,
     padding: 15,
     marginBottom: 15,
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
   },
   cardHeader: {
     flexDirection: 'row',
@@ -205,7 +218,7 @@ const styles = StyleSheet.create({
     color: '#2D3436',
   },
   defaultBadge: {
-    backgroundColor: '#FF6B6B',
+    backgroundColor: '#ff4500',
     paddingHorizontal: 10,
     paddingVertical: 5,
     borderRadius: 15,
@@ -231,7 +244,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   actionButtonText: {
-    color: '#FF6B6B',
+    color: '#ff4500',
     fontSize: 14,
   },
   deleteButton: {
@@ -239,9 +252,10 @@ const styles = StyleSheet.create({
   },
   addButtonContainer: {
     marginTop: 20,
+    marginBottom: 30,
   },
   addButton: {
-    backgroundColor: '#FF6B6B',
+    backgroundColor: '#ff4500',
     borderRadius: 12,
     paddingVertical: 15,
   },

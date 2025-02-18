@@ -80,7 +80,7 @@ const SupportCategory = ({ category, onPress }) => (
             name={category.icon}
             type="material"
             size={24}
-            color="#FF6B6B"
+            color="#ff4500"
           />
         </View>
         <View style={styles.categoryInfo}>
@@ -116,12 +116,9 @@ const HelpSupportScreen = ({ navigation }) => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
-        <Text h4 style={styles.title}>Help & Support</Text>
-      </View>
-
+    <SafeAreaView style={styles.container} edges={['top']}>
       <ScrollView style={styles.content}>
+
         <Card containerStyle={styles.contactCard}>
           <Text style={styles.contactTitle}>Need Help?</Text>
           <Text style={styles.contactDescription}>
@@ -175,22 +172,30 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
   },
-  header: {
-    padding: 20,
-    backgroundColor: '#F5F6FA',
-  },
-  title: {
-    color: '#2D3436',
-    fontSize: 24,
-    fontWeight: 'bold',
-  },
   content: {
     flex: 1,
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
     padding: 20,
+    backgroundColor: '#fff',
+    borderBottomWidth: 1,
+    borderBottomColor: '#F5F6FA',
+  },
+  backButton: {
+    marginRight: 15,
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#2D3436',
   },
   contactCard: {
     borderRadius: 12,
     padding: 20,
+    marginHorizontal: 20,
+    marginTop: 20,
     marginBottom: 20,
     backgroundColor: '#F5F6FA',
   },
@@ -206,7 +211,7 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   contactButton: {
-    backgroundColor: '#FF6B6B',
+    backgroundColor: '#ff4500',
     borderRadius: 12,
     paddingVertical: 12,
   },
@@ -215,6 +220,7 @@ const styles = StyleSheet.create({
   },
   categoriesSection: {
     marginBottom: 20,
+    paddingHorizontal: 20,
   },
   sectionTitle: {
     fontSize: 18,
@@ -233,7 +239,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   categoryIcon: {
-    backgroundColor: '#FFE9E9',
+    backgroundColor: '#fff1eb',
     padding: 10,
     borderRadius: 10,
     marginRight: 15,
@@ -253,6 +259,7 @@ const styles = StyleSheet.create({
   },
   faqSection: {
     marginBottom: 20,
+    paddingHorizontal: 20,
   },
   faqCard: {
     borderRadius: 12,
