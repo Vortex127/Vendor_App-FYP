@@ -39,7 +39,7 @@ const MenuItemDetailsScreen = ({ route, navigation }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView>
+      <ScrollView style={styles.scrollView}>
         <Image 
           source={{ uri: item.image }} 
           style={styles.image}
@@ -81,6 +81,8 @@ const MenuItemDetailsScreen = ({ route, navigation }) => {
               ))}
             </View>
           </InfoSection>
+          
+          <View style={styles.spacing} />
         </View>
       </ScrollView>
       
@@ -109,70 +111,68 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#FFF',
   },
+  scrollView: {
+    flex: 1,
+  },
   image: {
     width: '100%',
-    height: 250,
+    height: 300,
+    resizeMode: 'cover',
   },
   content: {
-    padding: 20,
+    padding: 24,
+    paddingBottom: 32,
   },
   name: {
-    fontSize: 24,
+    fontSize: 28,
     fontWeight: 'bold',
     color: '#2D3436',
-    marginBottom: 8,
+    marginBottom: 12,
   },
   description: {
     fontSize: 16,
     color: '#636E72',
-    marginBottom: 12,
+    marginBottom: 16,
     lineHeight: 24,
   },
   price: {
-    fontSize: 20,
+    fontSize: 24,
     fontWeight: '600',
     color: '#ff4500',
-  },
-  footer: {
-    padding: 20,
-    borderTopWidth: 1,
-    borderTopColor: '#F5F6FA',
-  },
-  editButton: {
-    backgroundColor: '#ff4500',
-    borderRadius: 12,
-    paddingVertical: 12,
+    marginBottom: 24,
   },
   category: {
     fontSize: 14,
     color: '#ff4500',
     fontWeight: '600',
-    marginBottom: 4,
+    marginBottom: 8,
+    letterSpacing: 1,
   },
   section: {
-    marginTop: 24,
+    marginTop: 32,
   },
   sectionTitle: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: '600',
     color: '#2D3436',
-    marginBottom: 12,
+    marginBottom: 16,
   },
   tagContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    marginHorizontal: -4,
+    marginHorizontal: -6,
   },
   tag: {
     backgroundColor: '#F5F6FA',
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 16,
-    margin: 4,
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 20,
+    margin: 6,
   },
   tagText: {
     color: '#636E72',
     fontSize: 14,
+    fontWeight: '500',
   },
   allergenTag: {
     backgroundColor: '#FFE9E9',
@@ -183,23 +183,45 @@ const styles = StyleSheet.create({
   nutritionGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    marginHorizontal: -8,
+    marginHorizontal: -12,
   },
   nutritionItem: {
     width: '50%',
-    padding: 8,
+    padding: 12,
   },
   nutritionValue: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: '600',
     color: '#2D3436',
-    marginBottom: 4,
+    marginBottom: 6,
   },
   nutritionLabel: {
     fontSize: 14,
     color: '#636E72',
     textTransform: 'capitalize',
   },
+  footer: {
+    padding: 24,
+    backgroundColor: '#FFF',
+    borderTopWidth: 1,
+    borderTopColor: '#F5F6FA',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: -3,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  editButton: {
+    backgroundColor: '#ff4500',
+    borderRadius: 12,
+    paddingVertical: 14,
+  },
+  spacing: {
+    height: 24,
+  },
 });
 
-export default MenuItemDetailsScreen; 
+export default MenuItemDetailsScreen;

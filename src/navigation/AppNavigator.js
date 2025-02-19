@@ -3,6 +3,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Icon } from 'react-native-elements';
 import { useAuth } from '../contexts/AuthContext';
+import { BookingsProvider } from '../contexts/BookingsContext';
 
 // Auth Screens
 import WelcomeScreen from '../screens/auth/WelcomeScreen';
@@ -166,86 +167,88 @@ const AppNavigator = () => {
   const { user } = useAuth();
 
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
-      {/* {!user ? (
-        // Auth Stack
-        <> */}
-          <Stack.Screen name="Welcome" component={WelcomeScreen} />
-          <Stack.Screen name="Login" component={LoginScreen} />
-          <Stack.Screen name="Signup" component={SignupScreen} />
-        {/* </>
-      ) : (
-        // Main App Stack
-        <> */}
-          { <Stack.Screen name="MainApp" component={MainTabNavigator} /> }
-          {/* <Stack.Screen 
-            name="VendorDetails" 
-            component={VendorDetailsScreen}
-            options={{ headerShown: true }}
-          />
-          <Stack.Screen 
-            name="ContactVendor" 
-            component={ContactVendorScreen}
-            options={{ 
-              title: 'Contact Vendor',
-              headerStyle: {
-                backgroundColor: '#F5F6FA',
-              },
-              headerTintColor: '#2D3436',
-            }}
-          /> */} 
-          <Stack.Screen name="AddBalance" component={AddBalanceScreen} />
-          <Stack.Screen name="SendMoney" component={SendMoneyScreen} />
-          <Stack.Screen name="ReceiveMoney" component={ReceiveMoneyScreen} />
-          <Stack.Screen name="RevenueDetails" component={RevenueDetailsScreen} />
-          <Stack.Screen name="BookingsList" component={BookingsListScreen} />
-          <Stack.Screen name="CustomersList" component={CustomersListScreen} />
-          <Stack.Screen name="CustomerDetails" component={CustomerDetailsScreen} />
-          <Stack.Screen name="RatingsReviews" component={RatingsReviewsScreen} />
-          <Stack.Screen name="AllActivities" component={AllActivitiesScreen} />
-          <Stack.Screen name="BookingDetails" component={BookingDetailsScreen} />
-          <Stack.Screen name="PaymentDetails" component={PaymentDetailsScreen} />
-          <Stack.Screen name="ReviewDetails" component={ReviewDetailsScreen} />
-          <Stack.Screen name="Chat" component={ChatScreen} options={{ headerShown: false }} />
-          <Stack.Screen 
-            name="AddMenuItem" 
-            component={AddMenuItemScreen}
-            options={{
-              headerShown: true,
-              title: 'Add Menu Item',
-              headerStyle: {
-                backgroundColor: '#F8F9FA',
-              },
-              headerTintColor: '#2D3436',
-            }}
-          />
-          <Stack.Screen 
-            name="MenuItemDetails" 
-            component={MenuItemDetailsScreen}
-            options={{
-              headerShown: true,
-              title: 'Menu Item Details',
-              headerStyle: {
-                backgroundColor: '#F8F9FA',
-              },
-              headerTintColor: '#2D3436',
-            }}
-          />
-          <Stack.Screen 
-            name="EditMenuItem" 
-            component={EditMenuItemScreen}
-            options={{
-              headerShown: true,
-              title: 'Edit Menu Item',
-              headerStyle: {
-                backgroundColor: '#F8F9FA',
-              },
-              headerTintColor: '#2D3436',
-            }}
-          />
-        {/* </>
-      // )} */}
-    </Stack.Navigator>
+    <BookingsProvider>
+      <Stack.Navigator screenOptions={{ headerShown: false }}>
+        {/* {!user ? (
+          // Auth Stack
+          <> */}
+            <Stack.Screen name="Welcome" component={WelcomeScreen} />
+            <Stack.Screen name="Login" component={LoginScreen} />
+            <Stack.Screen name="Signup" component={SignupScreen} />
+          {/* </>
+        ) : (
+          // Main App Stack
+          <> */}
+            { <Stack.Screen name="MainApp" component={MainTabNavigator} /> }
+            {/* <Stack.Screen 
+              name="VendorDetails" 
+              component={VendorDetailsScreen}
+              options={{ headerShown: true }}
+            />
+            <Stack.Screen 
+              name="ContactVendor" 
+              component={ContactVendorScreen}
+              options={{ 
+                title: 'Contact Vendor',
+                headerStyle: {
+                  backgroundColor: '#F5F6FA',
+                },
+                headerTintColor: '#2D3436',
+              }}
+            /> */} 
+            <Stack.Screen name="AddBalance" component={AddBalanceScreen} />
+            <Stack.Screen name="SendMoney" component={SendMoneyScreen} />
+            <Stack.Screen name="ReceiveMoney" component={ReceiveMoneyScreen} />
+            <Stack.Screen name="RevenueDetails" component={RevenueDetailsScreen} />
+            <Stack.Screen name="BookingsList" component={BookingsListScreen} />
+            <Stack.Screen name="CustomersList" component={CustomersListScreen} />
+            <Stack.Screen name="CustomerDetails" component={CustomerDetailsScreen} />
+            <Stack.Screen name="RatingsReviews" component={RatingsReviewsScreen} />
+            <Stack.Screen name="AllActivities" component={AllActivitiesScreen} />
+            <Stack.Screen name="BookingDetails" component={BookingDetailsScreen} />
+            <Stack.Screen name="PaymentDetails" component={PaymentDetailsScreen} />
+            <Stack.Screen name="ReviewDetails" component={ReviewDetailsScreen} />
+            <Stack.Screen name="Chat" component={ChatScreen} options={{ headerShown: false }} />
+            <Stack.Screen 
+              name="AddMenuItem" 
+              component={AddMenuItemScreen}
+              options={{
+                headerShown: true,
+                title: 'Add Menu Item',
+                headerStyle: {
+                  backgroundColor: '#F8F9FA',
+                },
+                headerTintColor: '#2D3436',
+              }}
+            />
+            <Stack.Screen 
+              name="MenuItemDetails" 
+              component={MenuItemDetailsScreen}
+              options={{
+                headerShown: true,
+                title: 'Menu Item Details',
+                headerStyle: {
+                  backgroundColor: '#F8F9FA',
+                },
+                headerTintColor: '#2D3436',
+              }}
+            />
+            <Stack.Screen 
+              name="EditMenuItem" 
+              component={EditMenuItemScreen}
+              options={{
+                headerShown: true,
+                title: 'Edit Menu Item',
+                headerStyle: {
+                  backgroundColor: '#F8F9FA',
+                },
+                headerTintColor: '#2D3436',
+              }}
+            />
+          {/* </>
+        // )} */}
+      </Stack.Navigator>
+    </BookingsProvider>
   );
 };
 

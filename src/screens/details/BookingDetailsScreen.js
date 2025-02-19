@@ -1,19 +1,33 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   View,
   ScrollView,
   TouchableOpacity,
   Animated,
+  Alert,
 } from "react-native";
 import { Text, Button, Icon, Divider } from "react-native-elements";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
+import { useBookings } from '../../contexts/BookingsContext';
 
 const BookingDetailsScreen = ({ route, navigation }) => {
   const { bookingId } = route.params;
   const [loading, setLoading] = useState(false);
   const fadeAnim = new Animated.Value(0);
+  const { bookings, updateBookingStatus } = useBookings();
+
+  // Find the current booking from context
+  const currentBooking = bookings.find(b => b.id === bookingId);
+  const [bookingData, setBookingData] = useState(currentBooking);
+
+  // Update local state when context changes
+  useEffect(() => {
+    if (currentBooking) {
+      setBookingData(currentBooking);
+    }
+  }, [currentBooking]);
 
   React.useEffect(() => {
     Animated.timing(fadeAnim, {
@@ -23,49 +37,119 @@ const BookingDetailsScreen = ({ route, navigation }) => {
     }).start();
   }, []);
 
-  // Mock booking data
-  const booking = {
-    id: bookingId,
-    customerName: "Sarah Johnson",
-    eventType: "Wedding Reception",
-    date: "24 Feb 2024",
-    time: "6:00 PM - 11:00 PM",
-    venue: "123 Wedding Hall, New York",
-    status: "pending",
-    services: [
-      { name: "Catering Service", price: 1500 },
-      { name: "Decoration", price: 800 },
-      { name: "Photography", price: 200 },
-    ],
-    notes: "Special dietary requirements: 5 vegetarian meals needed.",
-    customer: {
-      phone: "+1 234-567-8900",
-      email: "sarah.j@email.com",
-    },
-    customerId: "sarah.j@email.com",
-    customerAvatar: "https://via.placeholder.com/50",
-  };
-
   const handleAcceptBooking = async () => {
     setLoading(true);
     try {
-      // TODO: Implement booking acceptance logic
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-      navigation.goBack();
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const newStatus = 'confirmed';
+      updateBookingStatus(bookingId, newStatus);
+      setBookingData(prev => ({
+        ...prev,
+        status: newStatus
+      }));
+      Alert.alert('Success', 'Booking accepted successfully');
     } catch (error) {
-      alert("Failed to accept booking. Please try again.");
+      Alert.alert('Error', 'Failed to accept booking. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleRejectBooking = async () => {
+    setLoading(true);
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const newStatus = 'rejected';
+      updateBookingStatus(bookingId, newStatus);
+      setBookingData(prev => ({
+        ...prev,
+        status: newStatus
+      }));
+      Alert.alert('Success', 'Booking rejected');
+    } catch (error) {
+      Alert.alert('Error', 'Failed to reject booking');
     } finally {
       setLoading(false);
     }
   };
 
   const handleMessageCustomer = () => {
+    if (bookingData.status === 'pending' || bookingData.status === 'upcoming') {
+      const newStatus = 'in_discussion';
+      updateBookingStatus(bookingId, newStatus);
+      setBookingData(prev => ({
+        ...prev,
+        status: newStatus
+      }));
+    }
     navigation.navigate("Chat", {
-      customerId: booking.customerId,
-      customerName: booking.customerName,
-      customerAvatar: booking.customerAvatar,
+      customerId: bookingData.customerId,
+      customerName: bookingData.customerName,
+      customerAvatar: bookingData.customerAvatar,
     });
   };
+
+  const renderFooterButtons = () => {
+    switch (bookingData.status) {
+      case 'pending':
+      case 'upcoming':
+        return (
+          <>
+            <Button
+              title="Reject"
+              onPress={handleRejectBooking}
+              buttonStyle={styles.rejectButton}
+              containerStyle={[styles.buttonContainer]}
+              titleStyle={styles.rejectButtonText}
+              loading={loading}
+            />
+            <Button
+              title="Accept Booking"
+              onPress={handleAcceptBooking}
+              loading={loading}
+              buttonStyle={styles.acceptButton}
+              containerStyle={styles.buttonContainer}
+            />
+          </>
+        );
+      case 'rejected':
+        return (
+          <Button
+            title="Booking Rejected"
+            disabled
+            buttonStyle={styles.rejectedButton}
+            containerStyle={styles.fullWidthButton}
+          />
+        );
+      case 'confirmed':
+        return (
+          <Button
+            title="Booking Confirmed"
+            disabled
+            buttonStyle={styles.confirmedButton}
+            containerStyle={styles.fullWidthButton}
+          />
+        );
+      default:
+        return null;
+    }
+  };
+
+  // Add safety check for undefined booking data
+  if (!bookingData) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <View style={styles.errorContainer}>
+          <Text style={styles.errorText}>Booking not found</Text>
+          <Button
+            title="Go Back"
+            onPress={() => navigation.goBack()}
+            buttonStyle={styles.errorButton}
+          />
+        </View>
+      </SafeAreaView>
+    );
+  }
 
   const DetailItem = ({ icon, label, value }) => (
     <View style={styles.detailItem}>
@@ -74,7 +158,7 @@ const BookingDetailsScreen = ({ route, navigation }) => {
       </View>
       <View style={styles.detailContent}>
         <Text style={styles.detailLabel}>{label}</Text>
-        <Text style={styles.detailValue}>{value}</Text>
+        <Text style={styles.detailValue}>{value || 'N/A'}</Text>
       </View>
     </View>
   );
@@ -89,26 +173,26 @@ const BookingDetailsScreen = ({ route, navigation }) => {
           >
             <View style={styles.statusContainer}>
               <View
-                style={[styles.statusBadge, styles[`${booking.status}Badge`]]}
+                style={[styles.statusBadge, styles[`${bookingData.status}Badge`]]}
               >
                 <Text
-                  style={[styles.statusText, styles[`${booking.status}Text`]]}
+                  style={[styles.statusText, styles[`${bookingData.status}Text`]]}
                 >
-                  {booking.status.toUpperCase()}
+                  {bookingData.status.toUpperCase()}
                 </Text>
               </View>
             </View>
-            <Text style={styles.bookingId}>Booking #{booking.id}</Text>
-            <Text style={styles.customerName}>{booking.customerName}</Text>
-            <Text style={styles.eventType}>{booking.eventType}</Text>
+            <Text style={styles.bookingId}>Booking #{bookingData.id}</Text>
+            <Text style={styles.customerName}>{bookingData.customerName}</Text>
+            <Text style={styles.eventType}>{bookingData.eventType}</Text>
           </LinearGradient>
         </Animated.View>
 
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Event Details</Text>
-          <DetailItem icon="event" label="Date" value={booking.date} />
-          <DetailItem icon="schedule" label="Time" value={booking.time} />
-          <DetailItem icon="location-on" label="Venue" value={booking.venue} />
+          <DetailItem icon="event" label="Date" value={bookingData.date} />
+          <DetailItem icon="schedule" label="Time" value={bookingData.time} />
+          <DetailItem icon="location-on" label="Venue" value={bookingData.venue} />
         </View>
 
         <View style={styles.section}>
@@ -116,18 +200,18 @@ const BookingDetailsScreen = ({ route, navigation }) => {
           <DetailItem
             icon="phone"
             label="Phone"
-            value={booking.customer.phone}
+            value={bookingData.customer?.phone || 'N/A'}
           />
           <DetailItem
             icon="email"
             label="Email"
-            value={booking.customer.email}
+            value={bookingData.customer?.email || 'N/A'}
           />
         </View>
 
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Services & Pricing</Text>
-          {booking.services.map((service, index) => (
+          {(bookingData.services || []).map((service, index) => (
             <View key={index} style={styles.serviceItem}>
               <Text style={styles.serviceName}>{service.name}</Text>
               <Text style={styles.servicePrice}>${service.price}</Text>
@@ -138,7 +222,7 @@ const BookingDetailsScreen = ({ route, navigation }) => {
             <Text style={styles.totalLabel}>Total Amount</Text>
             <Text style={styles.totalAmount}>
               $
-              {booking.services.reduce(
+              {bookingData.services.reduce(
                 (sum, service) => sum + service.price,
                 0
               )}
@@ -146,55 +230,32 @@ const BookingDetailsScreen = ({ route, navigation }) => {
           </View>
         </View>
 
-        {booking.notes && (
+        {bookingData.notes && (
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Additional Notes</Text>
-            <Text style={styles.notes}>{booking.notes}</Text>
+            <Text style={styles.notes}>{bookingData.notes}</Text>
           </View>
         )}
       </ScrollView>
 
       <View style={styles.footer}>
-        <View style={styles.buttonContainer}>
-          <Button
-            title="Message"
-            icon={
-              <Icon
-                name="message"
-                type="material"
-                size={20}
-                color="#ff4500"
-                style={styles.buttonIcon}
-              />
-            }
-            type="outline"
-            buttonStyle={styles.messageButton}
-            titleStyle={styles.messageButtonText}
-            onPress={handleMessageCustomer}
-          />
-        </View>
-        <View style={styles.buttonContainer}>
-          <Button
-            title={loading ? "Accepting..." : "Accept Booking"}
-            onPress={handleAcceptBooking}
-            loading={loading}
-            disabled={loading || booking.status !== "pending"}
-            icon={
-              !loading && (
-                <Icon
-                  name="check"
-                  type="material"
-                  size={20}
-                  color="#fff"
-                  style={styles.buttonIcon}
-                />
-              )
-            }
-            type="outline"
-            buttonStyle={styles.acceptButton}
-            titleStyle={styles.acceptButtonText}
-          />
-        </View>
+        <Button
+          title="Message Customer"
+          onPress={handleMessageCustomer}
+          buttonStyle={styles.messageButton}
+          containerStyle={styles.buttonContainer}
+          icon={
+            <Icon
+              name="message"
+              type="material"
+              size={20}
+              color="#ff4500"
+              style={styles.buttonIcon}
+            />
+          }
+          type="outline"
+        />
+        {renderFooterButtons()}
       </View>
     </SafeAreaView>
   );
@@ -355,14 +416,6 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     paddingVertical: 12,
   },
-  messageButtonText: {
-    color: "#ff4500",
-    fontSize: 13,
-  },
-  acceptButtonText: {
-    color: "#fff",
-    fontSize: 13,
-  },
   acceptButton: {
     backgroundColor: "#ff4500",
     borderRadius: 12,
@@ -370,6 +423,45 @@ const styles = StyleSheet.create({
   },
   buttonIcon: {
     marginRight: 8,
+  },
+  rejectButton: {
+    backgroundColor: '#FFF',
+    borderColor: '#FF6B6B',
+    borderWidth: 1,
+    borderRadius: 12,
+    paddingVertical: 12,
+  },
+  rejectButtonText: {
+    color: '#FF6B6B',
+  },
+  rejectedButton: {
+    backgroundColor: '#FF6B6B',
+    borderRadius: 12,
+    paddingVertical: 12,
+  },
+  confirmedButton: {
+    backgroundColor: '#4CAF50',
+    borderRadius: 12,
+    paddingVertical: 12,
+  },
+  fullWidthButton: {
+    flex: 1,
+    marginHorizontal: 5,
+  },
+  errorContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  errorText: {
+    fontSize: 18,
+    color: '#636E72',
+    marginBottom: 20,
+  },
+  errorButton: {
+    backgroundColor: '#ff4500',
+    paddingHorizontal: 30,
   },
 });
 

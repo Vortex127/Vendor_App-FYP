@@ -10,42 +10,56 @@ import {
 import { Text, SearchBar, Icon, Button } from 'react-native-elements';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useBookings } from '../../contexts/BookingsContext';
 
 const BOOKING_FILTERS = [
   { id: 'all', label: 'All Bookings' },
   { id: 'confirmed', label: 'Confirmed' },
-  { id: 'upcoming', label: 'Upcoming' },
+  { id: 'pending', label: 'Pending' },
   { id: 'completed', label: 'Completed' },
+  { id: 'rejected', label: 'Rejected' },
 ];
 
 const BookingsScreen = ({ navigation }) => {
   const [selectedFilter, setSelectedFilter] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const fadeAnim = new Animated.Value(0);
+  const { bookings } = useBookings();
 
-  // Mock bookings data
-  const bookings = [
-    {
-      id: '1',
-      customerName: 'Sarah Johnson',
-      eventType: 'Wedding Reception',
-      date: '24 Feb 2024',
-      time: '6:00 PM',
-      guests: 150,
-      status: 'confirmed',
-      amount: '$2,500',
-    },
-    {
-      id: '2',
-      customerName: 'Mike Anderson',
-      eventType: 'Corporate Event',
-      date: '25 Feb 2024',
-      time: '2:00 PM',
-      guests: 80,
-      status: 'upcoming',
-      amount: '$1,800',
-    },
-  ];
+  const filteredBookings = bookings.filter((booking) => {
+    const matchesFilter =
+      selectedFilter === 'all' || booking.status === selectedFilter;
+    const matchesSearch =
+      booking.customerName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      booking.eventType.toLowerCase().includes(searchQuery.toLowerCase());
+    return matchesFilter && matchesSearch;
+  });
+
+  const getStatusStyles = (status) => {
+    const styles = {
+      pending: {
+        badge: { backgroundColor: '#FFF3E0' },
+        text: { color: '#FF9800' }
+      },
+      confirmed: {
+        badge: { backgroundColor: '#E8F5E9' },
+        text: { color: '#4CAF50' }
+      },
+      completed: {
+        badge: { backgroundColor: '#E3F2FD' },
+        text: { color: '#2196F3' }
+      },
+      rejected: {
+        badge: { backgroundColor: '#FFEBEE' },
+        text: { color: '#F44336' }
+      },
+      in_discussion: {
+        badge: { backgroundColor: '#E0F7FA' },
+        text: { color: '#00BCD4' }
+      }
+    };
+    return styles[status] || styles.pending;
+  };
 
   const BookingCard = ({ booking }) => (
     <TouchableOpacity
@@ -62,8 +76,14 @@ const BookingsScreen = ({ navigation }) => {
             <Text style={styles.eventType}>{booking.eventType}</Text>
           </View>
         </View>
-        <View style={[styles.statusBadge, styles[`${booking.status}Badge`]]}>
-          <Text style={[styles.statusText, styles[`${booking.status}Text`]]}>
+        <View style={[
+          styles.statusBadge, 
+          getStatusStyles(booking.status).badge
+        ]}>
+          <Text style={[
+            styles.statusText, 
+            getStatusStyles(booking.status).text
+          ]}>
             {booking.status.toUpperCase()}
           </Text>
         </View>
@@ -154,7 +174,7 @@ const BookingsScreen = ({ navigation }) => {
       </View>
 
       <FlatList
-        data={bookings}
+        data={filteredBookings}
         renderItem={({ item }) => <BookingCard booking={item} />}
         keyExtractor={item => item.id}
         contentContainerStyle={styles.bookingsList}

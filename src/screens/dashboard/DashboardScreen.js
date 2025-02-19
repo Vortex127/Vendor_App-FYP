@@ -82,13 +82,13 @@ const DashboardScreen = ({ navigation }) => {
     setTimeout(() => setRefreshing(false), 2000);
   }, []);
 
-  const handleAddBalance = () => {
-    navigation.navigate('AddBalance');
-  };
+  // const handleAddBalance = () => {
+  //   navigation.navigate('AddBalance');
+  // };
 
-  const handleSendMoney = () => {
-    navigation.navigate('SendMoney');
-  };
+  // const handleSendMoney = () => {
+  //   navigation.navigate('SendMoney');
+  // };
 
   const handleReceiveMoney = () => {
     navigation.navigate('ReceiveMoney');
@@ -184,38 +184,38 @@ const DashboardScreen = ({ navigation }) => {
             end={{ x: 1, y: 1 }}
           >
             <View style={styles.balanceHeader}>
-              <View>
+        <View>
                 <Text style={styles.balanceLabel}>Total Balance</Text>
                 <Text style={styles.balanceAmount}>$28,458.00</Text>
-              </View>
+        </View>
               <TouchableOpacity
                 style={styles.avatarContainer}
                 onPress={() => navigation.navigate("Profile")}
               >
-                <Image
+          <Image
                   source={{
                     uri: `https://ui-avatars.com/api/?name=${initials}&background=ff4500&color=fff`,
                   }}
-                  style={styles.avatar}
-                />
+            style={styles.avatar}
+          />
               </TouchableOpacity>
             </View>
 
             <View style={styles.quickActions}>
-              <TouchableOpacity
+              {/* <TouchableOpacity
                 style={styles.actionButton}
                 onPress={handleAddBalance}
               >
                 <Ionicons name="add-circle-outline" size={24} color="#fff" />
                 <Text style={styles.actionText}>Add</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
+              </TouchableOpacity> */}
+              {/* <TouchableOpacity
                 style={styles.actionButton}
                 onPress={handleSendMoney}
               >
                 <Ionicons name="arrow-up-circle-outline" size={24} color="#fff" />
                 <Text style={styles.actionText}>Send</Text>
-              </TouchableOpacity>
+              </TouchableOpacity> */}
               <TouchableOpacity
                 style={styles.actionButton}
                 onPress={handleReceiveMoney}
@@ -267,17 +267,17 @@ const DashboardScreen = ({ navigation }) => {
               color="#f39c12"
               type="ratings"
             />
-          </View>
         </View>
+      </View>
 
         {/* Chart Section - Updated */}
-        <View style={styles.chartContainer}>
-          <View style={styles.chartHeader}>
-            <View>
+      <View style={styles.chartContainer}>
+        <View style={styles.chartHeader}>
+          <View>
               <Text style={styles.chartTitle}>Revenue</Text>
               <Text style={styles.chartTitle}>Overview</Text>
-            </View>
-            <View style={styles.periodSelector}>
+          </View>
+          <View style={styles.periodSelector}>
               <TouchableOpacity
                 onPress={() => setSelectedPeriod("weekly")}
                 style={[
@@ -312,7 +312,7 @@ const DashboardScreen = ({ navigation }) => {
               </TouchableOpacity>
             </View>
           </View>
-          <LineChart
+        <LineChart
             data={chartData}
             width={width - 50}
             height={180}
@@ -324,10 +324,10 @@ const DashboardScreen = ({ navigation }) => {
                 stroke: "rgba(0, 0, 0, 0.05)",
               },
             }}
-            bezier
-            style={styles.chart}
-          />
-        </View>
+          bezier
+          style={styles.chart}
+        />
+      </View>
 
         {/* Recent Activity */}
         <View style={styles.activityContainer}>
@@ -340,7 +340,7 @@ const DashboardScreen = ({ navigation }) => {
               <Text style={styles.seeAllText}>View All</Text>
               <Ionicons name="chevron-forward" size={16} color="#ff4500" />
             </TouchableOpacity>
-          </View>
+      </View>
 
           <ActivityItem
             type="booking"
@@ -381,8 +381,8 @@ const DashboardScreen = ({ navigation }) => {
               })
             }
           />
-        </View>
-      </ScrollView>
+      </View>
+    </ScrollView>
     </SafeAreaView>
   );
 };

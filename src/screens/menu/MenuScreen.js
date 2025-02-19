@@ -25,7 +25,7 @@ const MENU_FILTERS = [
   { id: 'drinks', label: 'Drinks' },
 ];
 
-const MenuScreen = ({ navigation }) => {
+const MenuScreen = ({ navigation, route }) => {
   const [selectedFilter, setSelectedFilter] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [menuItemsState, setMenuItemsState] = useState([
@@ -48,6 +48,13 @@ const MenuScreen = ({ navigation }) => {
       status: 'active',
     },
   ]);
+
+  useEffect(() => {
+    if (route.params?.newItem) {
+      setMenuItemsState(prevItems => [route.params.newItem, ...prevItems]);
+      navigation.setParams({ newItem: null });
+    }
+  }, [route.params?.newItem]);
   const [isExpanded, setIsExpanded] = useState(false);
   const buttonWidth = useSharedValue(56);
   const textOpacity = useSharedValue(0);
@@ -416,4 +423,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default MenuScreen; 
+export default MenuScreen;
