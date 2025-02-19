@@ -60,7 +60,13 @@ const ProfileScreen = ({ navigation }) => {
           onPress: async () => {
             const result = await logout();
             if (!result.success) {
-              Alert.alert('Error', 'Failed to logout. Please try again.');
+              Alert.alert("Error", "Failed to logout. Please try again.");
+            } else {
+              // Navigate to Welcome Screen
+              navigation.reset({
+                index: 0,
+                routes: [{ name: "Welcome" }],
+              });
             }
           },
         },

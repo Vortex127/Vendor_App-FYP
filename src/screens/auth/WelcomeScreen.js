@@ -12,14 +12,15 @@ import {
 import { Button } from 'react-native-elements';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
+import { Icon } from 'react-native-elements';
 
 const { width, height } = Dimensions.get('window');
 
 const onboardingData = [
   {
     id: '1',
-    title: 'Delicious Food',
-    subtitle: 'At Your Doorstep',
+    title: 'Grow Your Business',
+    subtitle: 'Join our platform and reach more customers',
     images: [
       require('../../../assets/biryani.jpg'),
       require('../../../assets/tandoori.jpg'),
@@ -28,14 +29,14 @@ const onboardingData = [
   },
   {
     id: '2',
-    title: 'Premium',
-    subtitle: 'Local Restaurants',
+    title: 'Manage Orders',
+    subtitle: 'Easy order management and tracking',
     image: require('../../../assets/cochi.jpg'),
   },
   {
     id: '3',
-    title: 'Join our community of',
-    subtitle: 'happy food lovers',
+    title: 'Boost Your Revenue',
+    subtitle: 'with our growing customer base',
     avatars: Array(6).fill([
       require('../../../assets/biryani.jpg'),
       require('../../../assets/tandoori.jpg'),
@@ -109,6 +110,9 @@ const OnboardingScreen = ({ navigation }) => {
                     ]}
                   >
                     <Image source={image} style={styles.foodImage} />
+                    <View style={styles.cardOverlay}>
+                      <Icon name="trending-up" type="material" color="#FFFFFF" size={24} />
+                    </View>
                   </Animated.View>
                 ))}
               </View>
@@ -118,8 +122,9 @@ const OnboardingScreen = ({ navigation }) => {
               <View style={styles.restaurantContainer}>
                 <View style={styles.restaurantCard}>
                   <Image source={item.image} style={styles.restaurantImage} />
-                  <View style={styles.ratingBadge}>
-                    <Text style={styles.ratingText}>4.9 ★</Text>
+                  <View style={styles.orderManagementOverlay}>
+                    <Icon name="assignment" type="material" color="#FFFFFF" size={40} />
+                    <Text style={styles.orderManagementText}>Smart Order Management</Text>
                   </View>
                 </View>
               </View>
@@ -127,6 +132,10 @@ const OnboardingScreen = ({ navigation }) => {
 
             {index === 2 && (
               <View style={styles.communityContainer}>
+                <View style={styles.revenueCircle}>
+                  <Icon name="attach-money" type="material" color="#FFFFFF" size={40} />
+                  <Text style={styles.revenueText}>Increased Revenue</Text>
+                </View>
                 {item.avatars.map((avatarSet, idx) => {
                   const randomImage = avatarSet[Math.floor(Math.random() * avatarSet.length)];
                   return (
@@ -161,10 +170,7 @@ const OnboardingScreen = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <LinearGradient
-        colors={['#FF9A8B', '#FF6A88', '#FF99AC']}
-        style={styles.gradient}
-      >
+      <LinearGradient colors={["#ff4500", "#cc3700"]} style={styles.gradient}>
         <FlatList
           ref={slideRef}
           data={onboardingData}
@@ -191,14 +197,14 @@ const OnboardingScreen = ({ navigation }) => {
                 buttonStyle={styles.primaryButton}
                 titleStyle={styles.primaryButtonText}
                 containerStyle={styles.buttonWrapper}
-                onPress={() => navigation.navigate('Signup')}
+                onPress={() => navigation.navigate("Signup")}
               />
               <Button
                 title="I already have an account"
                 type="clear"
                 titleStyle={styles.secondaryButtonText}
                 containerStyle={styles.buttonWrapper}
-                onPress={() => navigation.navigate('Login')}
+                onPress={() => navigation.navigate("Login")}
               />
             </>
           ) : (
@@ -297,20 +303,6 @@ const styles = StyleSheet.create({
     height: '100%',
     resizeMode: 'cover',
   },
-  ratingBadge: {
-    position: 'absolute',
-    bottom: 20,
-    right: 20,
-    backgroundColor: '#FF6A88',
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 15,
-  },
-  ratingText: {
-    color: '#FFFFFF',
-    fontWeight: 'bold',
-    fontSize: 16,
-  },
   communityContainer: {
     width: width * 0.8,
     height: width * 0.8,
@@ -392,7 +384,7 @@ const styles = StyleSheet.create({
     marginVertical: 8,
   },
   primaryButton: {
-    backgroundColor: '#FF6B6B',
+    backgroundColor: '#ff4500',
     borderRadius: 25,
     paddingVertical: 15,
   },
@@ -407,7 +399,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   nextButton: {
-    backgroundColor: '#FF6B6B',
+    backgroundColor: '#ff4500',
     paddingHorizontal: 30,
     paddingVertical: 15,
     borderRadius: 25,
@@ -417,6 +409,52 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  cardOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.3)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 20,
+  },
+  orderManagementOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 30,
+  },
+  orderManagementText: {
+    color: '#FFFFFF',
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginTop: 10,
+    textAlign: 'center',
+  },
+  revenueCircle: {
+    position: 'absolute',
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    backgroundColor: 'transparent',
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 2,
+  },
+  revenueText: {
+    color: '#FFFFFF',
+    fontSize: 14,
+    fontWeight: 'bold',
+    marginTop: 5,
+    textAlign: 'center',
   },
 });
 
