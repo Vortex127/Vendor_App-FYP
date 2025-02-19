@@ -10,14 +10,15 @@ import LoginScreen from '../screens/auth/LoginScreen';
 import SignupScreen from '../screens/auth/SignupScreen';
 
 // Main App Screens
-import VendorListScreen from '../screens/vendor/VendorListScreen';
-import VendorDetailsScreen from '../screens/vendor/VendorDetailsScreen';
+// import VendorListScreen from '../screens/vendor/VendorListScreen';
+// import VendorDetailsScreen from '../screens/vendor/VendorDetailsScreen';
 import DashboardScreen from '../screens/dashboard/DashboardScreen';
 import ProfileScreen from '../screens/dashboard/ProfileScreen';
-import ContactVendorScreen from '../screens/vendor/ContactVendorScreen';
+import MenuScreen from '../screens/menu/MenuScreen';
+// import ContactVendorScreen from '../screens/vendor/ContactVendorScreen';
 
 // Profile Screens
-import BookingsScreen from '../screens/profile/BookingsScreen';
+import BookingsScreen from '../screens/bookings/BookingsScreen';
 import PaymentMethodsScreen from '../screens/profile/PaymentMethodsScreen';
 import NotificationsScreen from '../screens/profile/NotificationsScreen';
 import HelpSupportScreen from '../screens/profile/HelpSupportScreen';
@@ -40,6 +41,11 @@ import BookingDetailsScreen from '../screens/details/BookingDetailsScreen';
 import PaymentDetailsScreen from '../screens/details/PaymentDetailsScreen';
 import ReviewDetailsScreen from '../screens/details/ReviewDetailsScreen';
 import ChatScreen from '../screens/chat/ChatScreen';
+
+// Menu Screens
+import AddMenuItemScreen from '../screens/menu/AddMenuItemScreen';
+import MenuItemDetailsScreen from '../screens/menu/MenuItemDetailsScreen';
+import EditMenuItemScreen from '../screens/menu/EditMenuItemScreen';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -134,8 +140,10 @@ const MainTabNavigator = () => {
 
           if (route.name === 'Dashboard') {
             iconName = focused ? 'dashboard' : 'dashboard';
-          } else if (route.name === 'Vendors') {
-            iconName = focused ? 'store' : 'store';
+          } else if (route.name === 'Menu') {
+            iconName = focused ? 'restaurant-menu' : 'restaurant-menu';
+          } else if (route.name === 'Bookings') {
+            iconName = focused ? 'event' : 'event';
           } else if (route.name === 'Profile') {
             iconName = focused ? 'person' : 'person-outline';
           }
@@ -146,20 +154,10 @@ const MainTabNavigator = () => {
         tabBarInactiveTintColor: 'gray',
       })}
     >
-      <Tab.Screen 
-        name="Dashboard" 
-        component={DashboardScreen}
-        options={{
-          headerShown: false
-        }}
-      />
-      <Tab.Screen 
-        name="Profile" 
-        component={ProfileStackNavigator}
-        options={{ 
-          headerShown: false,
-        }}
-      />
+      <Tab.Screen name="Dashboard" component={DashboardScreen} />
+      <Tab.Screen name="Menu" component={MenuScreen} />
+      <Tab.Screen name="Bookings" component={BookingsScreen} />
+      <Tab.Screen name="Profile" component={ProfileStackNavigator} />
     </Tab.Navigator>
   );
 };
@@ -179,8 +177,8 @@ const AppNavigator = () => {
       ) : (
         // Main App Stack
         <> */}
-          <Stack.Screen name="MainApp" component={MainTabNavigator} />
-          <Stack.Screen 
+          { <Stack.Screen name="MainApp" component={MainTabNavigator} /> }
+          {/* <Stack.Screen 
             name="VendorDetails" 
             component={VendorDetailsScreen}
             options={{ headerShown: true }}
@@ -195,7 +193,7 @@ const AppNavigator = () => {
               },
               headerTintColor: '#2D3436',
             }}
-          />
+          /> */} 
           <Stack.Screen name="AddBalance" component={AddBalanceScreen} />
           <Stack.Screen name="SendMoney" component={SendMoneyScreen} />
           <Stack.Screen name="ReceiveMoney" component={ReceiveMoneyScreen} />
@@ -209,6 +207,42 @@ const AppNavigator = () => {
           <Stack.Screen name="PaymentDetails" component={PaymentDetailsScreen} />
           <Stack.Screen name="ReviewDetails" component={ReviewDetailsScreen} />
           <Stack.Screen name="Chat" component={ChatScreen} options={{ headerShown: false }} />
+          <Stack.Screen 
+            name="AddMenuItem" 
+            component={AddMenuItemScreen}
+            options={{
+              headerShown: true,
+              title: 'Add Menu Item',
+              headerStyle: {
+                backgroundColor: '#F8F9FA',
+              },
+              headerTintColor: '#2D3436',
+            }}
+          />
+          <Stack.Screen 
+            name="MenuItemDetails" 
+            component={MenuItemDetailsScreen}
+            options={{
+              headerShown: true,
+              title: 'Menu Item Details',
+              headerStyle: {
+                backgroundColor: '#F8F9FA',
+              },
+              headerTintColor: '#2D3436',
+            }}
+          />
+          <Stack.Screen 
+            name="EditMenuItem" 
+            component={EditMenuItemScreen}
+            options={{
+              headerShown: true,
+              title: 'Edit Menu Item',
+              headerStyle: {
+                backgroundColor: '#F8F9FA',
+              },
+              headerTintColor: '#2D3436',
+            }}
+          />
         {/* </>
       // )} */}
     </Stack.Navigator>
