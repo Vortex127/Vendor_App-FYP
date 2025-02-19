@@ -10,7 +10,7 @@ import {
 import { Text, Button, Icon, Divider } from "react-native-elements";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
-import { useBookings } from '../../contexts/BookingsContext';
+import { useBookings } from "../../contexts/BookingsContext";
 
 const BookingDetailsScreen = ({ route, navigation }) => {
   const { bookingId } = route.params;
@@ -19,7 +19,7 @@ const BookingDetailsScreen = ({ route, navigation }) => {
   const { bookings, updateBookingStatus } = useBookings();
 
   // Find the current booking from context
-  const currentBooking = bookings.find(b => b.id === bookingId);
+  const currentBooking = bookings.find((b) => b.id === bookingId);
   const [bookingData, setBookingData] = useState(currentBooking);
 
   // Update local state when context changes
@@ -41,15 +41,15 @@ const BookingDetailsScreen = ({ route, navigation }) => {
     setLoading(true);
     try {
       await new Promise((resolve) => setTimeout(resolve, 1000));
-      const newStatus = 'confirmed';
+      const newStatus = "confirmed";
       updateBookingStatus(bookingId, newStatus);
-      setBookingData(prev => ({
+      setBookingData((prev) => ({
         ...prev,
-        status: newStatus
+        status: newStatus,
       }));
-      Alert.alert('Success', 'Booking accepted successfully');
+      Alert.alert("Success", "Booking accepted successfully");
     } catch (error) {
-      Alert.alert('Error', 'Failed to accept booking. Please try again.');
+      Alert.alert("Error", "Failed to accept booking. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -59,27 +59,27 @@ const BookingDetailsScreen = ({ route, navigation }) => {
     setLoading(true);
     try {
       await new Promise((resolve) => setTimeout(resolve, 1000));
-      const newStatus = 'rejected';
+      const newStatus = "rejected";
       updateBookingStatus(bookingId, newStatus);
-      setBookingData(prev => ({
+      setBookingData((prev) => ({
         ...prev,
-        status: newStatus
+        status: newStatus,
       }));
-      Alert.alert('Success', 'Booking rejected');
+      Alert.alert("Success", "Booking rejected");
     } catch (error) {
-      Alert.alert('Error', 'Failed to reject booking');
+      Alert.alert("Error", "Failed to reject booking");
     } finally {
       setLoading(false);
     }
   };
 
   const handleMessageCustomer = () => {
-    if (bookingData.status === 'pending' || bookingData.status === 'upcoming') {
-      const newStatus = 'in_discussion';
+    if (bookingData.status === "pending" || bookingData.status === "upcoming") {
+      const newStatus = "in_discussion";
       updateBookingStatus(bookingId, newStatus);
-      setBookingData(prev => ({
+      setBookingData((prev) => ({
         ...prev,
-        status: newStatus
+        status: newStatus,
       }));
     }
     navigation.navigate("Chat", {
@@ -91,8 +91,8 @@ const BookingDetailsScreen = ({ route, navigation }) => {
 
   const renderFooterButtons = () => {
     switch (bookingData.status) {
-      case 'pending':
-      case 'upcoming':
+      case "pending":
+      case "upcoming":
         return (
           <>
             <Button
@@ -112,7 +112,7 @@ const BookingDetailsScreen = ({ route, navigation }) => {
             />
           </>
         );
-      case 'rejected':
+      case "rejected":
         return (
           <Button
             title="Booking Rejected"
@@ -121,7 +121,7 @@ const BookingDetailsScreen = ({ route, navigation }) => {
             containerStyle={styles.fullWidthButton}
           />
         );
-      case 'confirmed':
+      case "confirmed":
         return (
           <Button
             title="Booking Confirmed"
@@ -158,7 +158,7 @@ const BookingDetailsScreen = ({ route, navigation }) => {
       </View>
       <View style={styles.detailContent}>
         <Text style={styles.detailLabel}>{label}</Text>
-        <Text style={styles.detailValue}>{value || 'N/A'}</Text>
+        <Text style={styles.detailValue}>{value || "N/A"}</Text>
       </View>
     </View>
   );
@@ -173,18 +173,60 @@ const BookingDetailsScreen = ({ route, navigation }) => {
           >
             <View style={styles.statusContainer}>
               <View
-                style={[styles.statusBadge, styles[`${bookingData.status}Badge`]]}
+                style={[
+                  styles.statusBadge,
+                  styles[`${bookingData.status}Badge`],
+                ]}
               >
                 <Text
-                  style={[styles.statusText, styles[`${bookingData.status}Text`]]}
+                  style={[
+                    styles.statusText,
+                    styles[`${bookingData.status}Text`],
+                  ]}
                 >
                   {bookingData.status.toUpperCase()}
                 </Text>
               </View>
             </View>
             <Text style={styles.bookingId}>Booking #{bookingData.id}</Text>
-            <Text style={styles.customerName}>{bookingData.customerName}</Text>
+
+            {/* <Text style={styles.customerName}>{bookingData.customerName}</Text> */}
+            <View style={styles.nameRow}>
+              <Text style={styles.customerName}>
+                {bookingData.customerName}
+              </Text>
+              <Button
+                onPress={handleMessageCustomer}
+                buttonStyle={styles.messageButton}
+                containerStyle={styles.buttonContainer1}
+                icon={
+                  <Icon
+                    name="message"
+                    type="material"
+                    size={20}
+                    color="#ff4500"
+                    style={styles.buttonIcon}
+                  />
+                }
+                type="outline"
+              />
+            </View>
             <Text style={styles.eventType}>{bookingData.eventType}</Text>
+            {/* <Button
+              onPress={handleMessageCustomer}
+              buttonStyle={styles.messageButton}
+              containerStyle={styles.buttonContainer}
+              icon={
+                <Icon
+                  name="message"
+                  type="material"
+                  size={20}
+                  color="#ff4500"
+                  style={styles.buttonIcon}
+                />
+              }
+              type="outline"
+            /> */}
           </LinearGradient>
         </Animated.View>
 
@@ -192,7 +234,11 @@ const BookingDetailsScreen = ({ route, navigation }) => {
           <Text style={styles.sectionTitle}>Event Details</Text>
           <DetailItem icon="event" label="Date" value={bookingData.date} />
           <DetailItem icon="schedule" label="Time" value={bookingData.time} />
-          <DetailItem icon="location-on" label="Venue" value={bookingData.venue} />
+          <DetailItem
+            icon="location-on"
+            label="Venue"
+            value={bookingData.venue}
+          />
         </View>
 
         <View style={styles.section}>
@@ -200,12 +246,12 @@ const BookingDetailsScreen = ({ route, navigation }) => {
           <DetailItem
             icon="phone"
             label="Phone"
-            value={bookingData.customer?.phone || 'N/A'}
+            value={bookingData.customer?.phone || "N/A"}
           />
           <DetailItem
             icon="email"
             label="Email"
-            value={bookingData.customer?.email || 'N/A'}
+            value={bookingData.customer?.email || "N/A"}
           />
         </View>
 
@@ -238,25 +284,7 @@ const BookingDetailsScreen = ({ route, navigation }) => {
         )}
       </ScrollView>
 
-      <View style={styles.footer}>
-        <Button
-          title="Message Customer"
-          onPress={handleMessageCustomer}
-          buttonStyle={styles.messageButton}
-          containerStyle={styles.buttonContainer}
-          icon={
-            <Icon
-              name="message"
-              type="material"
-              size={20}
-              color="#ff4500"
-              style={styles.buttonIcon}
-            />
-          }
-          type="outline"
-        />
-        {renderFooterButtons()}
-      </View>
+      <View style={styles.footer}>{renderFooterButtons()}</View>
     </SafeAreaView>
   );
 };
@@ -314,12 +342,12 @@ const styles = StyleSheet.create({
     opacity: 0.9,
     marginBottom: 8,
   },
-  customerName: {
-    color: "#FFF",
-    fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 4,
-  },
+  // customerName: {
+  //   color: "#FFF",
+  //   fontSize: 24,
+  //   fontWeight: "bold",
+  //   marginBottom: 4,
+  // },
   eventType: {
     color: "#FFF",
     fontSize: 16,
@@ -409,38 +437,58 @@ const styles = StyleSheet.create({
     flex: 1,
     marginHorizontal: 5,
   },
+
+  nameRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    width: "100%",
+    paddingHorizontal: 10,
+    marginBottom: 4,
+  },
+
+  customerName: {
+    color: "#FFF",
+    fontSize: 24,
+    fontWeight: "bold",
+    flexShrink: 1,
+  },
+
+  buttonContainer1: {
+    marginLeft: 10,
+  },
+
   messageButton: {
     backgroundColor: "#FFF",
     borderColor: "#ff4500",
     borderWidth: 1,
-    borderRadius: 12,
-    paddingVertical: 12,
+    borderRadius: 50,
+    padding: 8,
+    alignItems: "center",
+    justifyContent: "center",
   },
   acceptButton: {
     backgroundColor: "#ff4500",
     borderRadius: 12,
     paddingVertical: 12,
   },
-  buttonIcon: {
-    marginRight: 8,
-  },
   rejectButton: {
-    backgroundColor: '#FFF',
-    borderColor: '#FF6B6B',
+    backgroundColor: "#FFF",
+    borderColor: "#FF6B6B",
     borderWidth: 1,
     borderRadius: 12,
     paddingVertical: 12,
   },
   rejectButtonText: {
-    color: '#FF6B6B',
+    color: "#FF6B6B",
   },
   rejectedButton: {
-    backgroundColor: '#FF6B6B',
+    backgroundColor: "#FF6B6B",
     borderRadius: 12,
     paddingVertical: 12,
   },
   confirmedButton: {
-    backgroundColor: '#4CAF50',
+    backgroundColor: "#4CAF50",
     borderRadius: 12,
     paddingVertical: 12,
   },
@@ -450,17 +498,17 @@ const styles = StyleSheet.create({
   },
   errorContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     padding: 20,
   },
   errorText: {
     fontSize: 18,
-    color: '#636E72',
+    color: "#636E72",
     marginBottom: 20,
   },
   errorButton: {
-    backgroundColor: '#ff4500',
+    backgroundColor: "#ff4500",
     paddingHorizontal: 30,
   },
 });

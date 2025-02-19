@@ -59,6 +59,7 @@ const AddMenuItemScreen = ({ navigation }) => {
       };
       
       navigation.navigate('Menu', { newItem });
+
     } catch (error) {
       alert('Failed to save menu item');
     } finally {
@@ -88,17 +89,25 @@ const AddMenuItemScreen = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={styles.keyboardAvoidingView}
       >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <ScrollView style={styles.content}>
-            <TouchableOpacity style={styles.imageContainer} onPress={handleImagePick}>
+            <TouchableOpacity
+              style={styles.imageContainer}
+              onPress={handleImagePick}
+            >
               {item.image ? (
                 <Image source={{ uri: item.image }} style={styles.image} />
               ) : (
                 <View style={styles.imagePlaceholder}>
-                  <Icon name="add-photo-alternate" type="material" size={40} color="#636E72" />
+                  <Icon
+                    name="add-photo-alternate"
+                    type="material"
+                    size={40}
+                    color="#636E72"
+                  />
                   <Text style={styles.imagePlaceholderText}>Add Photo</Text>
                 </View>
               )}
@@ -107,7 +116,9 @@ const AddMenuItemScreen = ({ navigation }) => {
             <Input
               placeholder="Item Name*"
               value={item.name}
-              onChangeText={(text) => setItem(prev => ({ ...prev, name: text }))}
+              onChangeText={(text) =>
+                setItem((prev) => ({ ...prev, name: text }))
+              }
               containerStyle={styles.inputContainer}
               inputContainerStyle={styles.inputField}
               inputStyle={styles.input}
@@ -118,7 +129,9 @@ const AddMenuItemScreen = ({ navigation }) => {
             <Input
               placeholder="Description"
               value={item.description}
-              onChangeText={(text) => setItem(prev => ({ ...prev, description: text }))}
+              onChangeText={(text) =>
+                setItem((prev) => ({ ...prev, description: text }))
+              }
               multiline
               numberOfLines={3}
               containerStyle={styles.inputContainer}
@@ -129,7 +142,12 @@ const AddMenuItemScreen = ({ navigation }) => {
             <Input
               placeholder="Price*"
               value={item.price}
-              onChangeText={(text) => setItem(prev => ({ ...prev, price: text.replace(/[^0-9.]/g, '') }))}
+              onChangeText={(text) =>
+                setItem((prev) => ({
+                  ...prev,
+                  price: text.replace(/[^0-9.]/g, ""),
+                }))
+              }
               keyboardType="decimal-pad"
               leftIcon={<Text style={styles.currencySymbol}>$</Text>}
               containerStyle={styles.inputContainer}
@@ -142,8 +160,8 @@ const AddMenuItemScreen = ({ navigation }) => {
               placeholder="Category* (appetizers, main, desserts, drinks)"
               value={item.category}
               onChangeText={(text) => {
-                setItem(prev => ({ ...prev, category: text }));
-                setCategoryError('');
+                setItem((prev) => ({ ...prev, category: text }));
+                setCategoryError("");
               }}
               containerStyle={styles.inputContainer}
               inputContainerStyle={styles.inputField}
@@ -152,19 +170,18 @@ const AddMenuItemScreen = ({ navigation }) => {
               autoCapitalize="none"
               returnKeyType="done"
             />
+            <View style={styles.footer}>
+              <Button
+                title="Save Item"
+                onPress={handleSave}
+                loading={loading}
+                buttonStyle={styles.saveButton}
+                containerStyle={styles.buttonContainer}
+              />
+            </View>
           </ScrollView>
         </TouchableWithoutFeedback>
       </KeyboardAvoidingView>
-
-      <View style={styles.footer}>
-        <Button
-          title="Save Item"
-          onPress={handleSave}
-          loading={loading}
-          buttonStyle={styles.saveButton}
-          containerStyle={styles.buttonContainer}
-        />
-      </View>
     </SafeAreaView>
   );
 };
