@@ -58,7 +58,10 @@ const AddMenuItemScreen = ({ navigation }) => {
         image: item.image || 'https://picsum.photos/200'
       };
       
-      navigation.navigate('Menu', { newItem });
+      navigation.navigate('MainApp', {
+        screen: 'Menu',
+        params: { newItem }
+      });
 
     } catch (error) {
       alert('Failed to save menu item');
