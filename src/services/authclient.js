@@ -1,5 +1,27 @@
-import { createClient } from "@supabase/supabase-js";
+// Local authentication service
+const users = [];
 
-const supabaseUrl = "https://hewtthcxwprunyvxtqms.supabase.co";
-const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhld3R0aGN4d3BydW55dnh0cW1zIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mzk3NzM1NDAsImV4cCI6MjA1NTM0OTU0MH0.9iViLsrB0JXS16nGWXnW9U0ZvnX2a8sY-JT41g-w5PU";
-export const supabase = createClient(supabaseUrl, supabaseKey);
+export const authService = {
+  login: async (email, password) => {
+    const user = users.find(u => u.email === email && u.password === password);
+    if (!user) {
+      throw new Error('Invalid email or password');
+    }
+    return user;
+  },
+
+  signup: async (userData) => {
+    const existingUser = users.find(u => u.email === userData.email);
+    if (existingUser) {
+      throw new Error('Email already exists');
+    }
+    const newUser = { ...userData, id: Date.now().toString() };
+    users.push(newUser);
+    return newUser;
+  },
+
+  logout: async () => {
+    // Nothing to do for local auth
+    return true;
+  }
+};

@@ -15,7 +15,6 @@ import {
 import { Button, Input, Icon } from "react-native-elements";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useAuth } from "../../contexts/AuthContext";
-import { supabase } from "../../services/authclient";
 import { LinearGradient } from "expo-linear-gradient";
 
 const { width, height } = Dimensions.get("window");
@@ -101,6 +100,7 @@ const SignupScreen = ({ navigation }) => {
   }, []);
 
   const handleSignup = async () => {
+    setSignupError(null);
     try {
       Keyboard.dismiss();
       // Form validation
@@ -110,34 +110,38 @@ const SignupScreen = ({ navigation }) => {
         !formData.email ||
         !formData.password
       ) {
-        alert("Please fill in all fields");
+        setSignupError("Please fill in all fields");
         return;
       }
 
       if (formData.password !== formData.confirmPassword) {
-        alert("Passwords don't match");
+        setSignupError("Passwords don't match");
         return;
       }
 
       if (formData.password.length < 6) {
-        alert("Password must be at least 6 characters long");
+        setSignupError("Password must be at least 6 characters long");
         return;
       }
-      const result = await signup(
-        formData.fullName,
-        formData.cnicNumber,
-        formData.email,
-        formData.password
-      );
 
-      if (result.success) {
-        alert("Success", "Check your email for the verification link");
-        navigation.navigate("Login");
-      } else {
-        alert("Signup Failed", result.error);
-      }
+      navigation.navigate("Login");
+
+      // const result = await signup(
+      //   formData.fullName,
+      //   formData.cnicNumber,
+      //   formData.email,
+      //   formData.password
+      // );
+
+      // if (result.success) {
+      //   alert("Success! Check your email for the verification link");
+      //   navigation.navigate("Login");
+      // } else {
+      //   alert("Error!!!!!!!");
+      //   setSignupError(result.error);
+      // }
     } catch (error) {
-      alert(error);
+      setSignupError(error.message);
     }
   };
 

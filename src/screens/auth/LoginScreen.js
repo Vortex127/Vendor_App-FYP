@@ -724,15 +724,18 @@ const LoginScreen = ({ navigation }) => {
 
      Keyboard.dismiss();
 
-     const { success, error } = await login(email, password);
+     navigation.navigate("MainApp");
 
-     if (success) {
-      //  alert("Login successful");
-       navigation.navigate("MainApp");
-     } else {
-      //  alert(error);
-       console.log(error);
-     }
+
+    //  const { success, error } = await login(email, password);
+
+    //  if (success) {
+    //   //  alert("Login successful");
+    //    navigation.navigate("MainApp");
+    //  } else {
+    //   //  alert(error);
+    //    console.log(error);
+    //  }
    };
 
   return (

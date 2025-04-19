@@ -2,261 +2,360 @@ import React, { useState } from 'react';
 import {
   StyleSheet,
   View,
-  ScrollView,
+  Text,
+  TextInput,
   TouchableOpacity,
   Image,
-  KeyboardAvoidingView,
+  ScrollView,
   Platform,
+  Alert,
+  KeyboardAvoidingView,
   TouchableWithoutFeedback,
   Keyboard,
 } from 'react-native';
-import { Text, Input, Button, Icon } from 'react-native-elements';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { Picker } from '@react-native-picker/picker';
 import * as ImagePicker from 'expo-image-picker';
 
 const AddMenuItemScreen = ({ navigation }) => {
-  const [item, setItem] = useState({
-    id: Math.random().toString(36).substr(2, 9),
-    name: '',
-    description: '',
-    price: '',
-    category: '',
-    image: null,
-    status: 'active'
-  });
-  const [loading, setLoading] = useState(false);
-  const [categoryError, setCategoryError] = useState('');
+  const [itemName, setItemName] = useState('');
+  const [description, setDescription] = useState('');
+  const [price, setPrice] = useState('');
+  const [category, setCategory] = useState('main');
+  const [image, setImage] = useState(null);
+  const [preparationTime, setPreparationTime] = useState('');
+  const [isVegetarian, setIsVegetarian] = useState(false);
+  const [isSpicy, setIsSpicy] = useState(false);
+  const [errors, setErrors] = useState({});
 
-  const validateCategory = (category) => {
-    const validCategories = ['appetizers', 'main', 'desserts', 'drinks'];
-    return validCategories.includes(category.toLowerCase());
-  };
-
-  const handleSave = async () => {
-    if (!item.name || !item.price || !item.category) {
-      alert('Please fill in all required fields');
-      return;
+  const pickImage = async () => {
+    if (Platform.OS !== 'web') {
+      const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      if (status !== 'granted') {
+        Alert.alert('Permission needed', 'Sorry, we need camera roll permissions to upload images.');
+        return;
+      }
     }
 
-    if (!validateCategory(item.category)) {
-      setCategoryError('Please select a valid category: Appetizers, Main, Desserts, or Drinks');
-      return;
-    }
-
-    const priceNum = parseFloat(item.price);
-    if (isNaN(priceNum) || priceNum <= 0) {
-      alert('Please enter a valid price');
-      return;
-    }
-
-    setLoading(true);
-    try {
-      const newItem = {
-        ...item,
-        price: priceNum,
-        category: item.category.toLowerCase(),
-        image: item.image || 'https://picsum.photos/200'
-      };
-      
-      navigation.navigate('MainApp', {
-        screen: 'Menu',
-        params: { newItem }
-      });
-
-    } catch (error) {
-      alert('Failed to save menu item');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleImagePick = async () => {
-    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    if (status !== 'granted') {
-      alert('Sorry, we need camera roll permissions to add images.');
-      return;
-    }
-
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaType.Images,
       allowsEditing: true,
       aspect: [4, 3],
       quality: 1,
     });
 
     if (!result.canceled) {
-      setItem({ ...item, image: result.assets[0].uri });
+      setImage(result.assets[0].uri);
+    }
+  };
+
+  const validateForm = () => {
+    let tempErrors = {};
+
+    if (!itemName) tempErrors.itemName = 'Item name is required';
+    if (!description) tempErrors.description = 'Description is required';
+    if (!price) tempErrors.price = 'Price is required';
+    else if (isNaN(parseFloat(price))) tempErrors.price = 'Price must be a number';
+    if (!image) tempErrors.image = 'Please upload an image';
+
+    setErrors(tempErrors);
+    return Object.keys(tempErrors).length === 0;
+  };
+
+  const handleSubmit = () => {
+    if (validateForm()) {
+      const menuItem = {
+        name: itemName,
+        description,
+        price: parseFloat(price),
+        category,
+        image,
+        preparationTime: preparationTime ? parseInt(preparationTime) : 0,
+        isVegetarian,
+        isSpicy,
+      };
+
+      console.log('Submitting menu item:', menuItem);
+
+      Alert.alert(
+        'Success',
+        'Menu item added successfully!',
+        [
+          {
+            text: 'Add Another',
+            onPress: () => {
+              setItemName('');
+              setDescription('');
+              setPrice('');
+              setCategory('main');
+              setImage(null);
+              setPreparationTime('');
+              setIsVegetarian(false);
+              setIsSpicy(false);
+              setErrors({});
+            },
+          },
+          {
+            text: 'Go to Menu',
+            onPress: () => navigation.navigate('Menu'),
+          },
+        ]
+      );
     }
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={styles.keyboardAvoidingView}
-      >
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <ScrollView style={styles.content}>
-            <TouchableOpacity
-              style={styles.imageContainer}
-              onPress={handleImagePick}
-            >
-              {item.image ? (
-                <Image source={{ uri: item.image }} style={styles.image} />
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={{ flex: 1 }}
+    >
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <ScrollView
+          contentContainerStyle={styles.scrollContent}
+          keyboardShouldPersistTaps="handled"
+        >
+          <View style={styles.header}>
+            <Text style={styles.headerTitle}>Add New Menu Item</Text>
+          </View>
+
+          <View style={styles.formContainer}>
+            <TouchableOpacity style={styles.imageUpload} onPress={pickImage}>
+              {image ? (
+                <Image source={{ uri: image }} style={styles.uploadedImage} />
               ) : (
-                <View style={styles.imagePlaceholder}>
-                  <Icon
-                    name="add-photo-alternate"
-                    type="material"
-                    size={40}
-                    color="#636E72"
-                  />
-                  <Text style={styles.imagePlaceholderText}>Add Photo</Text>
+                <View style={styles.uploadPlaceholder}>
+                  <Text style={styles.uploadText}>Tap to upload image</Text>
                 </View>
               )}
             </TouchableOpacity>
+            {errors.image && <Text style={styles.errorText}>{errors.image}</Text>}
 
-            <Input
-              placeholder="Item Name*"
-              value={item.name}
-              onChangeText={(text) =>
-                setItem((prev) => ({ ...prev, name: text }))
-              }
-              containerStyle={styles.inputContainer}
-              inputContainerStyle={styles.inputField}
-              inputStyle={styles.input}
-              autoCapitalize="words"
-              returnKeyType="next"
-            />
+            <View style={styles.inputGroup}>
+              <Text style={styles.label}>Item Name*</Text>
+              <TextInput
+                style={[styles.input, styles.textInput, errors.itemName && styles.inputError]}
+                value={itemName}
+                onChangeText={setItemName}
+                placeholder="Enter item name"
+                placeholderTextColor="#999"
+                multiline
+              />
+              {errors.itemName && <Text style={styles.errorText}>{errors.itemName}</Text>}
+            </View>
 
-            <Input
-              placeholder="Description"
-              value={item.description}
-              onChangeText={(text) =>
-                setItem((prev) => ({ ...prev, description: text }))
-              }
-              multiline
-              numberOfLines={3}
-              containerStyle={styles.inputContainer}
-              inputContainerStyle={styles.inputField}
-              inputStyle={styles.input}
-            />
+            <View style={styles.inputGroup}>
+              <Text style={styles.label}>Description*</Text>
+              <TextInput
+                style={[styles.input, styles.textArea, errors.description && styles.inputError]}
+                value={description}
+                onChangeText={setDescription}
+                placeholder="Enter item description"
+                placeholderTextColor="#999"
+                multiline
+              />
+              {errors.description && <Text style={styles.errorText}>{errors.description}</Text>}
+            </View>
 
-            <Input
-              placeholder="Price*"
-              value={item.price}
-              onChangeText={(text) =>
-                setItem((prev) => ({
-                  ...prev,
-                  price: text.replace(/[^0-9.]/g, ""),
-                }))
-              }
-              keyboardType="decimal-pad"
-              leftIcon={<Text style={styles.currencySymbol}>$</Text>}
-              containerStyle={styles.inputContainer}
-              inputContainerStyle={styles.inputField}
-              inputStyle={styles.input}
-              returnKeyType="next"
-            />
+            <View style={styles.inputGroup}>
+              <Text style={styles.label}>Price*</Text>
+              <TextInput
+                style={[styles.input, errors.price && styles.inputError]}
+                value={price}
+                onChangeText={setPrice}
+                placeholder="Enter price"
+                placeholderTextColor="#999"
+                keyboardType="numeric"
+              />
+              {errors.price && <Text style={styles.errorText}>{errors.price}</Text>}
+            </View>
 
-            <Input
-              placeholder="Category* (appetizers, main, desserts, drinks)"
-              value={item.category}
-              onChangeText={(text) => {
-                setItem((prev) => ({ ...prev, category: text }));
-                setCategoryError("");
-              }}
-              containerStyle={styles.inputContainer}
-              inputContainerStyle={styles.inputField}
-              inputStyle={styles.input}
-              errorMessage={categoryError}
-              autoCapitalize="none"
-              returnKeyType="done"
-            />
-            <View style={styles.footer}>
-              <Button
-                title="Save Item"
-                onPress={handleSave}
-                loading={loading}
-                buttonStyle={styles.saveButton}
-                containerStyle={styles.buttonContainer}
+            <View style={styles.inputGroup}>
+              <Text style={styles.label}>Category</Text>
+              <View style={styles.pickerContainer}>
+                <Picker
+                  selectedValue={category}
+                  onValueChange={(itemValue) => setCategory(itemValue)}
+                  style={styles.picker}
+                >
+                  <Picker.Item label="Appetizer" value="appetizer" />
+                  <Picker.Item label="Main Course" value="main" />
+                  <Picker.Item label="Dessert" value="dessert" />
+                  <Picker.Item label="Beverage" value="beverage" />
+                  <Picker.Item label="Side Dish" value="side" />
+                </Picker>
+              </View>
+            </View>
+
+            <View style={styles.inputGroup}>
+              <Text style={styles.label}>Preparation Time (minutes)</Text>
+              <TextInput
+                style={styles.input}
+                value={preparationTime}
+                onChangeText={setPreparationTime}
+                placeholder="Enter preparation time"
+                placeholderTextColor="#999"
+                keyboardType="numeric"
               />
             </View>
-          </ScrollView>
-        </TouchableWithoutFeedback>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+
+            <View style={styles.attributesContainer}>
+              <TouchableOpacity
+                style={[styles.attributeButton, isVegetarian && styles.attributeButtonActive]}
+                onPress={() => setIsVegetarian(!isVegetarian)}
+              >
+                <Text style={[styles.attributeText, isVegetarian && styles.attributeTextActive]}>
+                  Vegetarian
+                </Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={[styles.attributeButton, isSpicy && styles.attributeButtonActive]}
+                onPress={() => setIsSpicy(!isSpicy)}
+              >
+                <Text style={[styles.attributeText, isSpicy && styles.attributeTextActive]}>
+                  Spicy
+                </Text>
+              </TouchableOpacity>
+            </View>
+
+            <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
+              <Text style={styles.submitButtonText}>Add Menu Item</Text>
+            </TouchableOpacity>
+          </View>
+        </ScrollView>
+      </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F8F9FA',
+    backgroundColor: '#FFF8F2',
   },
-  keyboardAvoidingView: {
-    flex: 1,
+  scrollContent: {
+    flexGrow: 1,
   },
-  content: {
-    padding: 20,
+  header: {
+    backgroundColor: '#FF8C42',
+    paddingVertical: 20,
+    paddingHorizontal: 16,
+    marginBottom: 20,
   },
-  imageContainer: {
+  headerTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#FFFFFF',
+    textAlign: 'center',
+  },
+  formContainer: {
+    paddingHorizontal: 16,
+    paddingBottom: 30,
+  },
+  imageUpload: {
     width: '100%',
     height: 200,
-    borderRadius: 12,
+    borderRadius: 10,
     marginBottom: 20,
     overflow: 'hidden',
-    backgroundColor: '#F5F6FA',
+    borderWidth: 2,
+    borderColor: '#FF8C42',
+    borderStyle: 'dashed',
   },
-  image: {
-    width: '100%',
-    height: '100%',
-  },
-  imagePlaceholder: {
-    width: '100%',
-    height: '100%',
-    backgroundColor: '#F5F6FA',
+  uploadPlaceholder: {
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: '#FFF0E6',
   },
-  imagePlaceholderText: {
-    marginTop: 8,
-    color: '#636E72',
+  uploadedImage: {
+    width: '100%',
+    height: '100%',
+    resizeMode: 'cover',
   },
-  inputContainer: {
-    paddingHorizontal: 0,
-    marginBottom: 10,
+  uploadText: {
+    color: '#FF8C42',
+    fontSize: 16,
+    fontWeight: '500',
   },
-  inputField: {
-    borderWidth: 1,
-    borderColor: '#DFE6E9',
-    borderRadius: 8,
-    paddingHorizontal: 10,
-    height: undefined,
+  inputGroup: {
+    marginBottom: 16,
+  },
+  label: {
+    fontSize: 16,
+    fontWeight: '500',
+    marginBottom: 8,
+    color: '#333',
   },
   input: {
-    color: '#2D3436',
+    backgroundColor: '#FFFFFF',
+    borderWidth: 1,
+    borderColor: '#E0E0E0',
+    borderRadius: 8,
+    padding: 12,
     fontSize: 16,
-    paddingVertical: 8,
+    color: '#333',
+    minHeight: 48,
   },
-  currencySymbol: {
-    fontSize: 16,
-    color: '#636E72',
-    marginRight: 8,
+  inputError: {
+    borderColor: '#FF3B30',
   },
-  footer: {
-    padding: 20,
-    backgroundColor: '#FFF',
-    borderTopWidth: 1,
-    borderTopColor: '#F5F6FA',
+  errorText: {
+    color: '#FF3B30',
+    fontSize: 14,
+    marginTop: 4,
   },
-  buttonContainer: {
+  textArea: {
+    height: 100,
+    textAlignVertical: 'top',
+  },
+  pickerContainer: {
+    backgroundColor: '#FFFFFF',
+    borderWidth: 1,
+    borderColor: '#E0E0E0',
+    borderRadius: 8,
+    overflow: 'hidden',
+  },
+  picker: {
+    height: 50,
     width: '100%',
   },
-  saveButton: {
-    backgroundColor: '#ff4500',
-    borderRadius: 12,
-    paddingVertical: 12,
+  attributesContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 24,
+  },
+  attributeButton: {
+    flex: 1,
+    backgroundColor: '#FFFFFF',
+    borderWidth: 1,
+    borderColor: '#FF8C42',
+    borderRadius: 8,
+    padding: 12,
+    marginHorizontal: 5,
+    alignItems: 'center',
+  },
+  attributeButtonActive: {
+    backgroundColor: '#FF8C42',
+  },
+  attributeText: {
+    color: '#FF8C42',
+    fontSize: 16,
+    fontWeight: '500',
+  },
+  attributeTextActive: {
+    color: '#FFFFFF',
+  },
+  submitButton: {
+    backgroundColor: '#FF8C42',
+    borderRadius: 8,
+    padding: 16,
+    alignItems: 'center',
+    marginTop: 10,
+  },
+  submitButtonText: {
+    color: '#FFFFFF',
+    fontSize: 18,
+    fontWeight: 'bold',
   },
 });
 

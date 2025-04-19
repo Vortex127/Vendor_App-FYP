@@ -7,7 +7,8 @@ import {
   ScrollView,
   Image,
 } from 'react-native';
-import { Text, SearchBar, Icon } from 'react-native-elements';
+import { SearchBar, Icon } from 'react-native-elements';
+import { Text } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import Animated, {
