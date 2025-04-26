@@ -1,27 +1,31 @@
-// Local authentication service
-const users = [];
+// Authentication service using Node.js backend API
+import { apiClient } from './api';
 
 export const authService = {
   login: async (email, password) => {
-    const user = users.find(u => u.email === email && u.password === password);
-    if (!user) {
-      throw new Error('Invalid email or password');
+    try {
+      const user = await apiClient.login(email, password);
+      return user;
+    } catch (error) {
+      throw new Error(error.message || 'Login failed');
     }
-    return user;
   },
 
   signup: async (userData) => {
-    const existingUser = users.find(u => u.email === userData.email);
-    if (existingUser) {
-      throw new Error('Email already exists');
+    try {
+      const user = await apiClient.signup(userData);
+      return user;
+    } catch (error) {
+      throw new Error(error.message || 'Signup failed');
     }
-    const newUser = { ...userData, id: Date.now().toString() };
-    users.push(newUser);
-    return newUser;
   },
 
   logout: async () => {
-    // Nothing to do for local auth
-    return true;
+    try {
+      await apiClient.logout();
+      return true;
+    } catch (error) {
+      throw new Error(error.message || 'Logout failed');
+    }
   }
 };
