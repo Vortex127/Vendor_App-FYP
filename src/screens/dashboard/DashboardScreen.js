@@ -13,23 +13,45 @@ import { LineChart } from "react-native-chart-kit";
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { useAuth } from "../../contexts/AuthContext";
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView } from "react-native-safe-area-context";
+import { useEffect } from "react";
+import { useProfile } from "../../contexts/ProfileContext";
 
 const DashboardScreen = ({ navigation }) => {
   const { width, height } = useWindowDimensions();
   const [refreshing, setRefreshing] = useState(false);
-  const [selectedPeriod, setSelectedPeriod] = useState('monthly');
+  const [selectedPeriod, setSelectedPeriod] = useState("monthly");
   const isSmallDevice = width < 375;
-    const { user } = useAuth();
+  // const { user, loading } = useAuth();
+  // const { profile, loadingProfile, errorProfile } = useProfile();
 
-    // Avatar Function
-    const fullName = user?.user_metadata?.fullName || "User";
-    const initials = fullName
-      .split(" ")
-      .map((n) => n[0])
-      .join("")
-      .toUpperCase();
+  // useEffect(() => {
+  //   console.log("User is loged in by user name:", user);
+  //   console.log("Profile is loged in by user name:", profile);
+  // }, []);
 
+  const { user, loading } = useAuth();
+  const { profile, loadingProfile } = useProfile(); // ✅ use profile
+
+  useEffect(() => {
+    if (user) {
+      console.log("User is logged in:", user);
+    }
+  }, [user]);
+
+  useEffect(() => {
+    if (profile) {
+      console.log("Fetched Profile:", profile);
+    }
+  }, [profile]); // ✅ ensure console logs when profile is fetched
+
+  // Avatar Function
+  const fullName = user?.name || "User";
+  const initials = fullName
+    .split(" ")
+    .map((n) => n[0])
+    .join("")
+    .toUpperCase();
 
   const weeklyData = {
     labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
@@ -53,7 +75,7 @@ const DashboardScreen = ({ navigation }) => {
     ],
   };
 
-  const chartData = selectedPeriod === 'weekly' ? weeklyData : monthlyData;
+  const chartData = selectedPeriod === "weekly" ? weeklyData : monthlyData;
 
   const chartConfig = {
     backgroundColor: "#ffffff",
@@ -91,22 +113,22 @@ const DashboardScreen = ({ navigation }) => {
   // };
 
   const handleReceiveMoney = () => {
-    navigation.navigate('ReceiveMoney');
+    navigation.navigate("ReceiveMoney");
   };
 
   const handleStatCardPress = (type) => {
     switch (type) {
-      case 'revenue':
-        navigation.navigate('RevenueDetails');
+      case "revenue":
+        navigation.navigate("RevenueDetails");
         break;
-      case 'bookings':
-        navigation.navigate('BookingsList');
+      case "bookings":
+        navigation.navigate("BookingsList");
         break;
-      case 'customers':
-        navigation.navigate('CustomersList');
+      case "customers":
+        navigation.navigate("CustomersList");
         break;
-      case 'ratings':
-        navigation.navigate('RatingsReviews');
+      case "ratings":
+        navigation.navigate("RatingsReviews");
         break;
     }
   };
@@ -168,7 +190,7 @@ const DashboardScreen = ({ navigation }) => {
   );
 
   return (
-    <SafeAreaView style={styles.container} edges={['top']}>
+    <SafeAreaView style={styles.container} edges={["top"]}>
       <ScrollView
         contentContainerStyle={styles.contentContainer}
         refreshControl={
@@ -184,20 +206,20 @@ const DashboardScreen = ({ navigation }) => {
             end={{ x: 1, y: 1 }}
           >
             <View style={styles.balanceHeader}>
-        <View>
+              <View>
                 <Text style={styles.balanceLabel}>Total Balance</Text>
                 <Text style={styles.balanceAmount}>$28,458.00</Text>
-        </View>
+              </View>
               <TouchableOpacity
                 style={styles.avatarContainer}
                 onPress={() => navigation.navigate("Profile")}
               >
-          <Image
+                <Image
                   source={{
                     uri: `https://ui-avatars.com/api/?name=${initials}&background=ff4500&color=fff`,
                   }}
-            style={styles.avatar}
-          />
+                  style={styles.avatar}
+                />
               </TouchableOpacity>
             </View>
 
@@ -267,17 +289,17 @@ const DashboardScreen = ({ navigation }) => {
               color="#f39c12"
               type="ratings"
             />
+          </View>
         </View>
-      </View>
 
         {/* Chart Section - Updated */}
-      <View style={styles.chartContainer}>
-        <View style={styles.chartHeader}>
-          <View>
+        <View style={styles.chartContainer}>
+          <View style={styles.chartHeader}>
+            <View>
               <Text style={styles.chartTitle}>Revenue</Text>
               <Text style={styles.chartTitle}>Overview</Text>
-          </View>
-          <View style={styles.periodSelector}>
+            </View>
+            <View style={styles.periodSelector}>
               <TouchableOpacity
                 onPress={() => setSelectedPeriod("weekly")}
                 style={[
@@ -288,7 +310,8 @@ const DashboardScreen = ({ navigation }) => {
                 <Text
                   style={[
                     styles.periodButtonText,
-                    selectedPeriod === "weekly" && styles.periodButtonTextActive,
+                    selectedPeriod === "weekly" &&
+                      styles.periodButtonTextActive,
                   ]}
                 >
                   Week
@@ -304,7 +327,8 @@ const DashboardScreen = ({ navigation }) => {
                 <Text
                   style={[
                     styles.periodButtonText,
-                    selectedPeriod === "monthly" && styles.periodButtonTextActive,
+                    selectedPeriod === "monthly" &&
+                      styles.periodButtonTextActive,
                   ]}
                 >
                   Month
@@ -312,7 +336,7 @@ const DashboardScreen = ({ navigation }) => {
               </TouchableOpacity>
             </View>
           </View>
-        <LineChart
+          <LineChart
             data={chartData}
             width={width - 50}
             height={180}
@@ -324,10 +348,10 @@ const DashboardScreen = ({ navigation }) => {
                 stroke: "rgba(0, 0, 0, 0.05)",
               },
             }}
-          bezier
-          style={styles.chart}
-        />
-      </View>
+            bezier
+            style={styles.chart}
+          />
+        </View>
 
         {/* Recent Activity */}
         <View style={styles.activityContainer}>
@@ -340,7 +364,7 @@ const DashboardScreen = ({ navigation }) => {
               <Text style={styles.seeAllText}>View All</Text>
               <Ionicons name="chevron-forward" size={16} color="#ff4500" />
             </TouchableOpacity>
-      </View>
+          </View>
 
           <ActivityItem
             type="booking"
@@ -381,23 +405,31 @@ const DashboardScreen = ({ navigation }) => {
               })
             }
           />
-      </View>
-    </ScrollView>
+        </View>
+      </ScrollView>
     </SafeAreaView>
   );
 };
 
-const ActivityItem = ({ type, title, description, time, amount, rating, onPress }) => (
-  <TouchableOpacity 
-    style={styles.activityItem}
-    onPress={onPress}
-  >
+const ActivityItem = ({
+  type,
+  title,
+  description,
+  time,
+  amount,
+  rating,
+  onPress,
+}) => (
+  <TouchableOpacity style={styles.activityItem} onPress={onPress}>
     <View style={styles.activityLeft}>
       <View style={[styles.activityIcon, styles[`${type}Icon`]]}>
         <Ionicons
           name={
-            type === 'booking' ? 'calendar' :
-            type === 'payment' ? 'wallet' : 'star'
+            type === "booking"
+              ? "calendar"
+              : type === "payment"
+              ? "wallet"
+              : "star"
           }
           size={20}
           color="#fff"
@@ -704,3 +736,27 @@ const styles = StyleSheet.create({
 });
 
 export default DashboardScreen;
+
+// import React, { useEffect } from "react";
+// import { View, Text } from "react-native";
+// import { useAuth } from "../../contexts/AuthContext";
+
+// const DashboardScreen = () => {
+//   const { user, loading } = useAuth();
+
+//   useEffect(() => {
+//     if (user) {
+//       console.log("Logged-in User Info:", user);
+//     }
+//   }, [user]);
+
+//   if (loading) return <Text>Loading...</Text>;
+
+//   return (
+//     <View>
+//       <Text>Welcome, {user?.name || "Guest"}!</Text>
+//     </View>
+//   );
+// };
+
+// export default DashboardScreen;

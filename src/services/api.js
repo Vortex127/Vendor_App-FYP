@@ -4,7 +4,9 @@ import axios from "axios";
 // Define the base URL for the API
 // 192.168.18.8
 // const API_URL = "http://localhost:5000/api";
-const API_URL = "http://192.168.18.8:5000/api";
+// const API_URL = "http://192.168.18.8:5000/api";
+const API_URL = "http://192.168.43.159:5000/api";//ushna /  hamza bhai ke mobile ka
+// const API_URL = "http://192.168.72.42:5000/api";//mere mobile ka
 
 // Helper function to handle API responses
 const handleResponse = async (response) => {
@@ -27,8 +29,25 @@ const getAuthHeaders = async () => {
 // API client for authentication and user operations
 export const apiClient = {
   // User authentication
+  // login: async (email, password) => {
+  //   const response = await fetch(`${API_URL}/login`, {
+  //     method: "POST",
+  //     headers: { "Content-Type": "application/json" },
+  //     body: JSON.stringify({ email, password }),
+  //   });
+
+  //   const data = await handleResponse(response);
+
+  //   // Store the token
+  //   if (data.token) {
+  //     await AsyncStorage.setItem("auth_token", data.token);
+  //   }
+
+  //   return data.user;
+  // },
+
   login: async (email, password) => {
-    const response = await fetch(`${API_URL}/auth/login`, {
+    const response = await fetch(`${API_URL}/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password }),
@@ -36,12 +55,12 @@ export const apiClient = {
 
     const data = await handleResponse(response);
 
-    // Store the token
     if (data.token) {
       await AsyncStorage.setItem("auth_token", data.token);
     }
 
-    return data.user;
+    // return full response: token and user
+    return { token: data.token, user: data.user };
   },
 
   signup: async (userData) => {
@@ -51,23 +70,23 @@ export const apiClient = {
       const url = `${API_URL}/signup`;
       console.log("Signup API URL:", url);
 
-      // const response = await axios.post(url, userData);
-      // console.log("Signup response:", response.data);
-
-      // const { token, user } = response.data;
-
-      // if (token) {
-      //   await AsyncStorage.setItem("auth_token", token);
-      // }
-
-      // return user;
-
-      const response = await axios.post(
-        "http://192.168.18.8:5000/api/signup",
-        userData
-      );
+      const response = await axios.post(url, userData);
       console.log("Signup response:", response.data);
-      return response.data;
+
+      const { token, user } = response.data;
+
+      if (token) {
+        await AsyncStorage.setItem("auth_token", token);
+      }
+
+      return user;
+
+      // const response = await axios.post(
+      //   "http://192.168.18.8:5000/api/signup",
+      //   userData
+      // );
+      // console.log("Signup response:", response.data);
+      // return response.data;
     } catch (error) {
       console.error("Full Axios Error:", JSON.stringify(error, null, 2));
       console.error(
@@ -85,12 +104,39 @@ export const apiClient = {
   },
 
   // Get current user profile
-  getCurrentUser: async () => {
+  // getCurrentUser: async () => {
+  //   const headers = await getAuthHeaders();
+  //   const response = await fetch(`${API_URL}/profile`, {
+  //     headers,
+  //   });
+  //   return handleResponse(response);
+  // },
+
+  // Get all vendor profiles (admin or public view)
+  getAllProfiles: async () => {
     const headers = await getAuthHeaders();
-    const response = await fetch(`${API_URL}/users/me`, {
-      headers,
-    });
+    const response = await fetch(`${API_URL}/profile`, { headers });
     return handleResponse(response);
+  },
+
+  // Get vendor profile by ID
+  // getProfileById: async (id) => {
+  //   const headers = await getAuthHeaders();
+  //   const response = await fetch(`${API_URL}/profile/${id}`, {
+  //     headers,
+  //   });
+  //   const data = await handleResponse(response);
+
+  //   // return full response: profile
+  //   return { profile: data.profile };
+  // },
+
+  // In apiClient
+  getProfileById: async (id) => {
+    const headers = await getAuthHeaders();
+    const response = await fetch(`${API_URL}/profile/${id}`, { headers }); // ✅ template string fix
+    const data = await handleResponse(response);
+    return { profile: data.profile }; // ✅ match this with what server returns
   },
 
   // Update user profile

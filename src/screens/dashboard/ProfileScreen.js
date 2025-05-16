@@ -122,7 +122,7 @@ const ProfileScreen = ({ navigation }) => {
               </Avatar>
             </View>
             <Text h3 style={styles.name}>
-              {user?.user_metadata?.fullName || "User"}
+              {user?.name || "User"}
             </Text>
             <Text style={styles.email}>
               {user?.email || "email@example.com"}
