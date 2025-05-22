@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { API_URL } from './config';
+import { API_URL } from './url';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // Set up axios instance
@@ -13,7 +13,8 @@ const api = axios.create({
 // Add token to requests if available
 api.interceptors.request.use(
   async (config) => {
-    const token = await AsyncStorage.getItem('token');
+    const token = await AsyncStorage.getItem("auth_token");
+    console.log(token);
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -27,7 +28,7 @@ api.interceptors.request.use(
 // Menu Management Services
 export const createMenu = async (menuData) => {
   try {
-    const response = await api.post('/api/menus', menuData);
+    const response = await api.post('/menu', menuData);
     return response.data;
   } catch (error) {
     throw error.response ? error.response.data : { message: error.message };

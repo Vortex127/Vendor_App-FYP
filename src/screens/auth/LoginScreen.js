@@ -642,6 +642,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useAuth } from "../../contexts/AuthContext";
 import { supabase } from "../../services/authclient";
 import { LinearGradient } from "expo-linear-gradient";
+import { apiClient } from "../../services/api";
 
 const { width, height } = Dimensions.get("window");
 
@@ -702,41 +703,46 @@ const FoodDoodle = ({ style, name, size, rotation, delay }) => {
 };
 
 const LoginScreen = ({ navigation }) => {
-   const [email, setEmail] = useState("");
-   const [password, setPassword] = useState("");
-   const [showPassword, setShowPassword] = useState(false);
-   const { login, loading, error } = useAuth();
-   const [fadeAnim] = useState(new Animated.Value(0));
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const { login, loading, error } = useAuth();
 
-   useEffect(() => {
-     Animated.timing(fadeAnim, {
-       toValue: 1,
-       duration: 1000,
-       useNativeDriver: true,
-     }).start();
-   }, []);
+  const [fadeAnim] = useState(new Animated.Value(0));
 
-   const handleLogin = async () => {
-     if (!email || !password) {
-       alert("Please enter email and password");
-       return;
-     }
+  useEffect(() => {
+    Animated.timing(fadeAnim, {
+      toValue: 1,
+      duration: 1000,
+      useNativeDriver: true,
+    }).start();
+  }, []);
 
-     Keyboard.dismiss();
+  const handleLogin = async () => {
+    if (!email || !password) {
+      alert("Please enter email and password");
+      return;
+    }
 
-     navigation.navigate("MainApp");
+    try {
+      Keyboard.dismiss();
 
+      // Call the API to login
+      const result = await login(email, password);
+      // console.log("Logged in user:", user);
 
-    //  const { success, error } = await login(email, password);
-
-    //  if (success) {
-    //   //  alert("Login successful");
-    //    navigation.navigate("MainApp");
-    //  } else {
-    //   //  alert(error);
-    //    console.log(error);
-    //  }
-   };
+      if (result.success) {
+        console.log("Logged in user:", result);
+        // Navigate to main app on successful login
+        navigation.navigate("MainApp");
+      } else {
+        console.log("Login failed:", result.error);
+      }
+    } catch (error) {
+      console.error("Login error:", error);
+      alert(error.message || "Login failed. Please try again.");
+    }
+  };
 
   return (
     <SafeAreaView style={styles.container}>

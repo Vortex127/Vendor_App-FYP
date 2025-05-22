@@ -1,5 +1,5 @@
 import React, { createContext, useState, useContext } from "react";
-import { authService } from "../services/authclient";
+import { apiClient } from "../services/api";
 
 const AuthContext = createContext(null);
 
@@ -9,14 +9,32 @@ export const AuthProvider = ({ children }) => {
   const [error, setError] = useState(null);
 
   // Login function
+  // const login = async (email, password) => {
+  //   setLoading(true);
+  //   setError(null);
+
+  //   try {
+  //     const user = await apiClient.login(email, password);
+  //     console.log("User after login:", user); // 👈 Add this line
+  //     setUser(user);
+  //     return { success: true, user };
+  //   } catch (err) {
+  //     setError(err.message);
+  //     return { success: false, error: err.message };
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
   const login = async (email, password) => {
     setLoading(true);
     setError(null);
 
     try {
-      const user = await authService.login(email, password);
+      const { user, token } = await apiClient.login(email, password);
+      console.log("User after login:", user);
       setUser(user);
-      return { success: true, user };
+      return { success: true, user, token };
     } catch (err) {
       setError(err.message);
       return { success: false, error: err.message };
@@ -25,17 +43,18 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  
   // Signup function
-  const signup = async (fullName, cnicNumber, email, password) => {
+  const signup = async (name, phone_number, email, password) => {
     setLoading(true);
     setError(null);
 
     try {
-      const user = await authService.signup({
+      const user = await apiClient.signup({
         email,
         password,
-        fullName,
-        cnicNumber
+        name,
+        phone_number,
       });
       setUser(user);
       return { success: true, user };
@@ -53,7 +72,7 @@ export const AuthProvider = ({ children }) => {
     setError(null);
 
     try {
-      await authService.logout();
+      await apiClient.logout();
       setUser(null);
       return { success: true };
     } catch (err) {

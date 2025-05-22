@@ -15,6 +15,7 @@ import {
 } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import * as ImagePicker from 'expo-image-picker';
+import { createMenu } from '../../services/menuService';
 
 const AddMenuItemScreen = ({ navigation }) => {
   const [itemName, setItemName] = useState('');
@@ -55,51 +56,95 @@ const AddMenuItemScreen = ({ navigation }) => {
     if (!description) tempErrors.description = 'Description is required';
     if (!price) tempErrors.price = 'Price is required';
     else if (isNaN(parseFloat(price))) tempErrors.price = 'Price must be a number';
-    if (!image) tempErrors.image = 'Please upload an image';
+    // if (!image) tempErrors.image = 'Please upload an image';
 
     setErrors(tempErrors);
     return Object.keys(tempErrors).length === 0;
   };
 
-  const handleSubmit = () => {
+  // const handleSubmit = () => {
+  //   if (validateForm()) {
+  //     const menuItem = {
+  //       name: itemName,
+  //       description,
+  //       price: parseFloat(price),
+  //       category,
+  //       image,
+  //       preparationTime: preparationTime ? parseInt(preparationTime) : 0,
+  //       isVegetarian,
+  //       isSpicy,
+  //     };
+
+  //     console.log('Submitting menu item:', menuItem);
+
+  //     Alert.alert(
+  //       'Success',
+  //       'Menu item added successfully!',
+  //       [
+  //         {
+  //           text: 'Add Another',
+  //           onPress: () => {
+  //             setItemName('');
+  //             setDescription('');
+  //             setPrice('');
+  //             setCategory('main');
+  //             setImage(null);
+  //             setPreparationTime('');
+  //             setIsVegetarian(false);
+  //             setIsSpicy(false);
+  //             setErrors({});
+  //           },
+  //         },
+  //         {
+  //           text: 'Go to Menu',
+  //           onPress: () => navigation.navigate('Menu'),
+  //         },
+  //       ]
+  //     );
+  //   }
+  // };
+
+  const handleSubmit = async () => {
     if (validateForm()) {
       const menuItem = {
         name: itemName,
         description,
         price: parseFloat(price),
         category,
-        image,
-        preparationTime: preparationTime ? parseInt(preparationTime) : 0,
-        isVegetarian,
-        isSpicy,
+        is_available: true, // You had this in your example JSON
       };
 
-      console.log('Submitting menu item:', menuItem);
+      try {
+        const response = await createMenu(menuItem); // API call
+        console.log("Menu item created:", response);
 
-      Alert.alert(
-        'Success',
-        'Menu item added successfully!',
-        [
+        Alert.alert("Success", "Menu item added successfully!", [
           {
-            text: 'Add Another',
+            text: "Add Another",
             onPress: () => {
-              setItemName('');
-              setDescription('');
-              setPrice('');
-              setCategory('main');
+              setItemName("");
+              setDescription("");
+              setPrice("");
+              setCategory("main");
               setImage(null);
-              setPreparationTime('');
+              setPreparationTime("");
               setIsVegetarian(false);
               setIsSpicy(false);
               setErrors({});
             },
           },
           {
-            text: 'Go to Menu',
-            onPress: () => navigation.navigate('Menu'),
+            text: "Go to Menu",
+            onPress: () => navigation.navigate("Menu"),
           },
-        ]
-      );
+        ]);
+      } catch (error) {
+        console.error("Error creating menu item:", error);
+        Alert.alert(
+          "Error",
+          error.message || "Something went wrong. Please try again."
+        );
+      }
     }
   };
 
@@ -118,7 +163,7 @@ const AddMenuItemScreen = ({ navigation }) => {
           </View>
 
           <View style={styles.formContainer}>
-            <TouchableOpacity style={styles.imageUpload} onPress={pickImage}>
+            {/* <TouchableOpacity style={styles.imageUpload} onPress={pickImage}>
               {image ? (
                 <Image source={{ uri: image }} style={styles.uploadedImage} />
               ) : (
@@ -127,7 +172,7 @@ const AddMenuItemScreen = ({ navigation }) => {
                 </View>
               )}
             </TouchableOpacity>
-            {errors.image && <Text style={styles.errorText}>{errors.image}</Text>}
+            {errors.image && <Text style={styles.errorText}>{errors.image}</Text>} */}
 
             <View style={styles.inputGroup}>
               <Text style={styles.label}>Item Name*</Text>
@@ -185,7 +230,7 @@ const AddMenuItemScreen = ({ navigation }) => {
               </View>
             </View>
 
-            <View style={styles.inputGroup}>
+            {/* <View style={styles.inputGroup}>
               <Text style={styles.label}>Preparation Time (minutes)</Text>
               <TextInput
                 style={styles.input}
@@ -195,9 +240,9 @@ const AddMenuItemScreen = ({ navigation }) => {
                 placeholderTextColor="#999"
                 keyboardType="numeric"
               />
-            </View>
+            </View> */}
 
-            <View style={styles.attributesContainer}>
+            {/* <View style={styles.attributesContainer}>
               <TouchableOpacity
                 style={[styles.attributeButton, isVegetarian && styles.attributeButtonActive]}
                 onPress={() => setIsVegetarian(!isVegetarian)}
@@ -215,7 +260,7 @@ const AddMenuItemScreen = ({ navigation }) => {
                   Spicy
                 </Text>
               </TouchableOpacity>
-            </View>
+            </View> */}
 
             <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
               <Text style={styles.submitButtonText}>Add Menu Item</Text>
