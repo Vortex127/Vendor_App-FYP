@@ -16,14 +16,72 @@ import { Button, Input, Icon } from "react-native-elements";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useAuth } from "../../contexts/AuthContext";
 import { LinearGradient } from "expo-linear-gradient";
-import axios from "axios";
+import { apiClient } from "../../services/api";
+
+const { width, height } = Dimensions.get("window");
+
+const FoodDoodle = ({ style, name, size, rotation, delay }) => {
+  const fadeAnim = useState(new Animated.Value(0))[0];
+  const moveAnim = useState(new Animated.Value(0))[0];
+
+  useEffect(() => {
+    Animated.sequence([
+      Animated.delay(delay),
+      Animated.parallel([
+        Animated.timing(fadeAnim, {
+          toValue: 1,
+          duration: 1000,
+          useNativeDriver: true,
+        }),
+        Animated.loop(
+          Animated.sequence([
+            Animated.timing(moveAnim, {
+              toValue: 1,
+              duration: 3000,
+              useNativeDriver: true,
+            }),
+            Animated.timing(moveAnim, {
+              toValue: 0,
+              duration: 3000,
+              useNativeDriver: true,
+            }),
+          ])
+        ),
+      ]),
+    ]).start();
+  }, []);
+
+  const translateY = moveAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0, 10],
+  });
+
+  return (
+    <Animated.View
+      style={[
+        style,
+        {
+          opacity: fadeAnim,
+          transform: [{ rotate: `${rotation}deg` }, { translateY }],
+        },
+      ]}
+    >
+      <Icon
+        name={name}
+        type="material-community"
+        size={size}
+        color="rgba(255, 255, 255, 0.08)"
+      />
+    </Animated.View>
+  );
+};
 
 const SignupScreen = ({ navigation }) => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     password: "",
-    cnic_number: "",
+    phone_number: "",
   });
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -46,9 +104,10 @@ const SignupScreen = ({ navigation }) => {
    try {
      Keyboard.dismiss();
 
+     // Form validation
      if (
        !formData.name ||
-       !formData.cnic_number ||
+       !formData.phone_number ||
        !formData.email ||
        !formData.password
      ) {
@@ -60,7 +119,6 @@ const SignupScreen = ({ navigation }) => {
 
      if (formData.password.length < 6) {
        const errorMessage = "Password must be at least 6 characters long";
-       alert(errorMessage);
        setSignupError(errorMessage);
        return;
      }
@@ -69,39 +127,19 @@ const SignupScreen = ({ navigation }) => {
        name: formData.name,
        email: formData.email,
        password: formData.password,
-       cnic_number: formData.cnic_number,
+       phone_number: formData.phone_number,
      };
 
      console.log("Sending signup data:", userData);
 
-     const response = await axios.post(
-       "http://192.168.18.8:5000/api/signup",
-       userData,
-       {
-         headers: {
-           "Content-Type": "application/json",
-         },
-       }
-     );
+     const user = await apiClient.signup(userData);
+     console.log("User after signup:", user);
 
-     console.log("Axios response:", response.data);
-
-     if (response.status !== 201 && response.status !== 200) {
-       throw new Error(response.data.message || "Signup failed");
-     }
-
-     alert("Signup successful! Welcome, " + response.data.user.name);
+     alert("Signup successful! Welcome, " + user.name);
      navigation.navigate("Login");
    } catch (error) {
      console.error("Signup API error:", error);
-     alert(
-       error.response?.data?.message ||
-         error.message ||
-         "Signup failed. Please try again later."
-     );
-     setSignupError(
-       error.response?.data?.message || error.message || "Signup failed"
-     );
+     setSignupError(error?.message || "Signup failed");
    }
  };
 
@@ -113,7 +151,194 @@ const SignupScreen = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       <LinearGradient colors={["#ff4500", "#cc3700"]} style={styles.gradient}>
-       
+        <View style={styles.doodleContainer}>
+          {/* First Row */}
+          <FoodDoodle
+            style={[styles.doodleBase, { top: "2%", left: "5%" }]}
+            name="food"
+            size={45}
+            rotation={15}
+            delay={0}
+          />
+          <FoodDoodle
+            style={[styles.doodleBase, { top: "8%", left: "25%" }]}
+            name="pizza"
+            size={38}
+            rotation={-20}
+            delay={200}
+          />
+          <FoodDoodle
+            style={[styles.doodleBase, { top: "5%", left: "45%" }]}
+            name="noodles"
+            size={42}
+            rotation={10}
+            delay={400}
+          />
+          <FoodDoodle
+            style={[styles.doodleBase, { top: "3%", left: "65%" }]}
+            name="food-variant"
+            size={40}
+            rotation={-15}
+            delay={600}
+          />
+          <FoodDoodle
+            style={[styles.doodleBase, { top: "7%", left: "85%" }]}
+            name="hamburger"
+            size={44}
+            rotation={25}
+            delay={800}
+          />
+
+          {/* Second Row */}
+          <FoodDoodle
+            style={[styles.doodleBase, { top: "20%", left: "8%" }]}
+            name="food-croissant"
+            size={40}
+            rotation={-10}
+            delay={300}
+          />
+          <FoodDoodle
+            style={[styles.doodleBase, { top: "25%", left: "30%" }]}
+            name="coffee"
+            size={36}
+            rotation={20}
+            delay={500}
+          />
+          <FoodDoodle
+            style={[styles.doodleBase, { top: "22%", left: "55%" }]}
+            name="food-apple"
+            size={42}
+            rotation={-25}
+            delay={700}
+          />
+          <FoodDoodle
+            style={[styles.doodleBase, { top: "18%", left: "78%" }]}
+            name="cookie"
+            size={38}
+            rotation={15}
+            delay={900}
+          />
+
+          {/* Third Row */}
+          <FoodDoodle
+            style={[styles.doodleBase, { top: "40%", left: "12%" }]}
+            name="food-fork-drink"
+            size={40}
+            rotation={12}
+            delay={600}
+          />
+          <FoodDoodle
+            style={[styles.doodleBase, { top: "45%", left: "35%" }]}
+            name="silverware-fork-knife"
+            size={35}
+            rotation={-18}
+            delay={800}
+          />
+          <FoodDoodle
+            style={[styles.doodleBase, { top: "42%", left: "60%" }]}
+            name="fruit-cherries"
+            size={38}
+            rotation={22}
+            delay={200}
+          />
+          <FoodDoodle
+            style={[styles.doodleBase, { top: "38%", left: "82%" }]}
+            name="ice-cream"
+            size={40}
+            rotation={-15}
+            delay={700}
+          />
+
+          {/* Fourth Row */}
+          <FoodDoodle
+            style={[styles.doodleBase, { top: "60%", left: "5%" }]}
+            name="food"
+            size={42}
+            rotation={-12}
+            delay={350}
+          />
+          <FoodDoodle
+            style={[styles.doodleBase, { top: "65%", left: "28%" }]}
+            name="pizza"
+            size={38}
+            rotation={25}
+            delay={550}
+          />
+          <FoodDoodle
+            style={[styles.doodleBase, { top: "62%", left: "52%" }]}
+            name="hamburger"
+            size={40}
+            rotation={-20}
+            delay={750}
+          />
+          <FoodDoodle
+            style={[styles.doodleBase, { top: "58%", left: "75%" }]}
+            name="noodles"
+            size={36}
+            rotation={15}
+            delay={950}
+          />
+
+          {/* Fifth Row */}
+          <FoodDoodle
+            style={[styles.doodleBase, { top: "80%", left: "15%" }]}
+            name="food-variant"
+            size={44}
+            rotation={-22}
+            delay={450}
+          />
+          <FoodDoodle
+            style={[styles.doodleBase, { top: "85%", left: "38%" }]}
+            name="cupcake"
+            size={40}
+            rotation={18}
+            delay={650}
+          />
+          <FoodDoodle
+            style={[styles.doodleBase, { top: "82%", left: "62%" }]}
+            name="food-croissant"
+            size={42}
+            rotation={-15}
+            delay={850}
+          />
+          <FoodDoodle
+            style={[styles.doodleBase, { top: "88%", left: "85%" }]}
+            name="coffee"
+            size={38}
+            rotation={20}
+            delay={1050}
+          />
+
+          {/* Additional Scattered Doodles */}
+          <FoodDoodle
+            style={[styles.doodleBase, { top: "15%", left: "42%" }]}
+            name="cookie"
+            size={35}
+            rotation={8}
+            delay={250}
+          />
+          <FoodDoodle
+            style={[styles.doodleBase, { top: "35%", left: "88%" }]}
+            name="food-apple"
+            size={38}
+            rotation={-28}
+            delay={550}
+          />
+          <FoodDoodle
+            style={[styles.doodleBase, { top: "55%", left: "18%" }]}
+            name="ice-cream"
+            size={40}
+            rotation={15}
+            delay={850}
+          />
+          <FoodDoodle
+            style={[styles.doodleBase, { top: "75%", left: "48%" }]}
+            name="fruit-cherries"
+            size={36}
+            rotation={-12}
+            delay={1150}
+          />
+        </View>
 
         <KeyboardAvoidingView
           behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -221,9 +446,9 @@ const SignupScreen = ({ navigation }) => {
                       />
                       <Input
                         placeholder="CNIC Number"
-                        value={formData.cnic_number}
+                        value={formData.phone_number}
                         onChangeText={(value) =>
-                          updateFormData("cnic_number", value)
+                          updateFormData("phone_number", value)
                         }
                         containerStyle={styles.inputContainer}
                         inputContainerStyle={styles.inputField}
