@@ -1,34 +1,66 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   StyleSheet,
   View,
   ScrollView,
   Image,
   TouchableOpacity,
+  ActivityIndicator,
 } from 'react-native';
 import { Text, Icon, Button } from 'react-native-elements';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { getMenuById } from '../../services/menuService';
 
 const MenuItemDetailsScreen = ({ route, navigation }) => {
   const { itemId } = route.params;
-  
-  // Mock data - replace with your actual data fetching logic
-  const item = {
-    id: itemId,
-    name: 'Grilled Salmon',
-    description: 'Fresh salmon fillet with herbs and lemon',
-    price: 24.99,
-    image: 'https://picsum.photos/200',
-    category: 'main',
-    ingredients: ['Salmon', 'Herbs', 'Lemon', 'Olive Oil'],
-    allergens: ['Fish'],
-    nutritionalInfo: {
-      calories: '350 kcal',
-      protein: '34g',
-      carbs: '0g',
-      fat: '18g',
-    },
-  };
+  const [item, setItem] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchMenuItem = async () => {
+      try {
+        const response = await getMenuById(itemId);
+        console.log('Menu item details:', response);
+        
+        if (response.success && response.menu_item) {
+          setItem(response.menu_item);
+        } else {
+          setError('Failed to load menu item');
+        }
+      } catch (err) {
+        console.error('Error fetching menu item:', err);
+        setError(err.message || 'Failed to load menu item');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchMenuItem();
+  }, [itemId]);
+
+  if (loading) {
+    return (
+      <SafeAreaView style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#FF4500" />
+        <Text style={styles.loadingText}>Loading menu item...</Text>
+      </SafeAreaView>
+    );
+  }
+
+  if (error || !item) {
+    return (
+      <SafeAreaView style={styles.errorContainer}>
+        <Icon name="error-outline" type="material" size={60} color="#FF4500" />
+        <Text style={styles.errorText}>{error || 'Menu item not found'}</Text>
+        <Button 
+          title="Go Back" 
+          onPress={() => navigation.goBack()} 
+          buttonStyle={styles.errorButton}
+        />
+      </SafeAreaView>
+    );
+  }
 
   const InfoSection = ({ title, children }) => (
     <View style={styles.section}>
@@ -41,19 +73,25 @@ const MenuItemDetailsScreen = ({ route, navigation }) => {
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.scrollView}>
         <Image 
-          source={{ uri: item.image }} 
+          source={{ uri: item.image || 'https://via.placeholder.com/400' }} 
           style={styles.image}
           onError={(e) => console.log('Image failed to load:', e.nativeEvent.error)}
         />
         <View style={styles.content}>
-          <Text style={styles.category}>{item.category.toUpperCase()}</Text>
+          <Text style={styles.category}>{item.category?.toUpperCase()}</Text>
           <Text style={styles.name}>{item.name}</Text>
           <Text style={styles.description}>{item.description}</Text>
-          <Text style={styles.price}>${item.price.toFixed(2)}</Text>
+          <Text style={styles.price}>${parseFloat(item.price).toFixed(2)}</Text>
           
+          <View style={styles.availabilitySection}>
+            <Text style={[styles.availabilityText, item.is_available ? styles.availableText : styles.unavailableText]}>
+              {item.is_available ? 'Available' : 'Currently Unavailable'}
+            </Text>
+          </View>
+
           <InfoSection title="Ingredients">
             <View style={styles.tagContainer}>
-              {item.ingredients.map((ingredient, index) => (
+              {item.ingredients?.map((ingredient, index) => (
                 <View key={index} style={styles.tag}>
                   <Text style={styles.tagText}>{ingredient}</Text>
                 </View>
@@ -63,7 +101,7 @@ const MenuItemDetailsScreen = ({ route, navigation }) => {
 
           <InfoSection title="Allergens">
             <View style={styles.tagContainer}>
-              {item.allergens.map((allergen, index) => (
+              {item.allergens?.map((allergen, index) => (
                 <View key={index} style={[styles.tag, styles.allergenTag]}>
                   <Text style={[styles.tagText, styles.allergenText]}>{allergen}</Text>
                 </View>
@@ -73,7 +111,7 @@ const MenuItemDetailsScreen = ({ route, navigation }) => {
 
           <InfoSection title="Nutritional Information">
             <View style={styles.nutritionGrid}>
-              {Object.entries(item.nutritionalInfo).map(([key, value]) => (
+              {Object.entries(item.nutritionalInfo || {}).map(([key, value]) => (
                 <View key={key} style={styles.nutritionItem}>
                   <Text style={styles.nutritionValue}>{value}</Text>
                   <Text style={styles.nutritionLabel}>{key}</Text>
@@ -111,6 +149,35 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#FFF',
   },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#FFF',
+  },
+  loadingText: {
+    marginTop: 10,
+    fontSize: 16,
+    color: '#636E72',
+  },
+  errorContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#FFF',
+    padding: 20,
+  },
+  errorText: {
+    marginTop: 10,
+    fontSize: 16,
+    color: '#636E72',
+    textAlign: 'center',
+    marginBottom: 20,
+  },
+  errorButton: {
+    backgroundColor: '#FF4500',
+    paddingHorizontal: 30,
+  },
   scrollView: {
     flex: 1,
   },
@@ -147,6 +214,23 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     marginBottom: 8,
     letterSpacing: 1,
+  },
+  availabilitySection: {
+    marginTop: 16,
+    padding: 12,
+    backgroundColor: '#F8F9FA',
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+  availabilityText: {
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  availableText: {
+    color: '#2ecc71',
+  },
+  unavailableText: {
+    color: '#e74c3c',
   },
   section: {
     marginTop: 32,

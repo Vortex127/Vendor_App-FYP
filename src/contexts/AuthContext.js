@@ -1,4 +1,5 @@
 import React, { createContext, useState, useContext } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { apiClient } from "../services/api";
 
 const AuthContext = createContext(null);
@@ -31,11 +32,27 @@ export const AuthProvider = ({ children }) => {
     setError(null);
 
     try {
-      const { user, token } = await apiClient.login(email, password);
-      console.log("User after login:", user);
-      setUser(user);
-      return { success: true, user, token };
+      const result = await apiClient.login(email, password);
+      console.log("Login result:", result);
+      
+      if (result.success && result.user && result.token) {
+        // Store user in state
+        setUser(result.user);
+        
+        // Explicitly store token in AsyncStorage
+        await AsyncStorage.setItem("auth_token", result.token);
+        console.log("Token stored in AsyncStorage:", result.token);
+        
+        return { 
+          success: true, 
+          user: result.user, 
+          token: result.token 
+        };
+      } else {
+        throw new Error(result.message || "Login failed");
+      }
     } catch (err) {
+      console.error("Login error in context:", err);
       setError(err.message);
       return { success: false, error: err.message };
     } finally {

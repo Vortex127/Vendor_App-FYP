@@ -13,14 +13,26 @@ const api = axios.create({
 // Add token to requests if available
 api.interceptors.request.use(
   async (config) => {
-    const token = await AsyncStorage.getItem("auth_token");
-    console.log(token);
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+    try {
+      const token = await AsyncStorage.getItem("auth_token");
+      console.log('Token being sent with request:', token);
+      
+      if (token) {
+        // Ensure proper format with Bearer prefix
+        config.headers.Authorization = `Bearer ${token}`;
+        console.log('Authorization header set:', config.headers.Authorization);
+      } else {
+        console.log('No auth token found in storage');
+      }
+      
+      return config;
+    } catch (error) {
+      console.error('Error setting auth token:', error);
+      return config;
     }
-    return config;
   },
   (error) => {
+    console.error('Request interceptor error:', error);
     return Promise.reject(error);
   }
 );
@@ -37,7 +49,7 @@ export const createMenu = async (menuData) => {
 
 export const getAllMenus = async (vendorId = null) => {
   try {
-    const url = vendorId ? `/api/menus?vendor_id=${vendorId}` : '/api/menus';
+    const url = vendorId ? `/menu?vendor_id=${vendorId}` : '/menu';
     const response = await api.get(url);
     return response.data;
   } catch (error) {
@@ -47,7 +59,7 @@ export const getAllMenus = async (vendorId = null) => {
 
 export const getMenuById = async (id) => {
   try {
-    const response = await api.get(`/api/menus/${id}`);
+    const response = await api.get(`/menu/${id}`);
     return response.data;
   } catch (error) {
     throw error.response ? error.response.data : { message: error.message };
@@ -56,7 +68,7 @@ export const getMenuById = async (id) => {
 
 export const updateMenu = async (id, menuData) => {
   try {
-    const response = await api.put(`/api/menus/${id}`, menuData);
+    const response = await api.put(`/menu/${id}`, menuData);
     return response.data;
   } catch (error) {
     throw error.response ? error.response.data : { message: error.message };
@@ -65,7 +77,7 @@ export const updateMenu = async (id, menuData) => {
 
 export const deleteMenu = async (id) => {
   try {
-    const response = await api.delete(`/api/menus/${id}`);
+    const response = await api.delete(`/menu/${id}`);
     return response.data;
   } catch (error) {
     throw error.response ? error.response.data : { message: error.message };

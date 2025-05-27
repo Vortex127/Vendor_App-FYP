@@ -5,7 +5,7 @@ import axios from "axios";
 // 192.168.18.8
 // const API_URL = "http://localhost:5000/api";
 // const API_URL = "http://192.168.18.8:5000/api";
-const API_URL = "http://192.168.43.159:5000/api";//ushna /  hamza bhai ke mobile ka
+const API_URL = "http://192.168.209.27:5000/api";//ushna /  hamza bhai ke mobile ka
 // const API_URL = "http://192.168.72.42:5000/api";//mere mobile ka
 
 // Helper function to handle API responses
@@ -47,20 +47,55 @@ export const apiClient = {
   // },
 
   login: async (email, password) => {
-    const response = await fetch(`${API_URL}/login`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
-    });
+    try {
+      console.log('Attempting login for:', email);
+      
+      // Use fetch instead of axios for more control
+      const response = await fetch(`${API_URL}/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
+      
+      console.log('Login response status:', response.status);
+      
+      // Parse the response data
+      const data = await response.json();
+      console.log('Login response data:', data);
+      
+      if (!data.success) {
+        throw new Error(data.message || 'Login failed');
+      }
 
-    const data = await handleResponse(response);
+      // Store token in AsyncStorage
+      if (data.token) {
+        console.log('Storing token in AsyncStorage');
+        await AsyncStorage.setItem("auth_token", data.token);
+      } else {
+        console.error('No token received from server');
+        throw new Error('No authentication token received');
+      }
 
-    if (data.token) {
-      await AsyncStorage.setItem("auth_token", data.token);
+      // Return full response
+      return { 
+        success: true, 
+        token: data.token, 
+        user: data.user 
+      };
+    } catch (error) {
+      console.error('Login API error:', error);
+      
+      if (error.response) {
+        console.error('Response error data:', error.response.data);
+      }
+      
+      throw new Error(
+        error.message || 
+        'Login failed. Please try again.'
+      );
     }
-
-    // return full response: token and user
-    return { token: data.token, user: data.user };
   },
 
   signup: async (userData) => {

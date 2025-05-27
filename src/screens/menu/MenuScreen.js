@@ -6,6 +6,9 @@ import {
   TouchableOpacity,
   ScrollView,
   Image,
+  ActivityIndicator,
+  Alert,
+  RefreshControl,
 } from 'react-native';
 import { SearchBar, Icon } from 'react-native-elements';
 import { Text } from 'react-native';
@@ -17,6 +20,7 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
+import { getAllMenus, deleteMenu, updateMenu } from '../../services/menuService';
 
 const MENU_FILTERS = [
   { id: 'all', label: 'All Items' },
@@ -29,30 +33,56 @@ const MENU_FILTERS = [
 const MenuScreen = ({ navigation, route }) => {
   const [selectedFilter, setSelectedFilter] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
-  const [menuItemsState, setMenuItemsState] = useState([
-    {
-      id: '1',
-      name: 'Grilled Salmon',
-      category: 'main',
-      price: 24.99,
-      description: 'Fresh salmon fillet with herbs and lemon',
-      image: 'https://picsum.photos/200',
-      status: 'active',
-    },
-    {
-      id: '2',
-      name: 'Chocolate Cake',
-      category: 'desserts',
-      price: 8.99,
-      description: 'Rich chocolate cake with ganache',
-      image: 'https://picsum.photos/201',
-      status: 'active',
-    },
-  ]);
+  const [menuItems, setMenuItems] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [refreshing, setRefreshing] = useState(false);
+
+  // Fetch menu items when component mounts or when returning to screen
+  const fetchMenuItems = async () => {
+    try {
+      setLoading(true);
+      console.log('Fetching menu items...');
+      const response = await getAllMenus();
+      console.log('Menu items response:', response);
+      
+      if (response.success && response.menu_items) {
+        setMenuItems(response.menu_items);
+      } else {
+        setError('Failed to load menu items');
+      }
+    } catch (err) {
+      console.error('Error fetching menu items:', err);
+      setError(err.message || 'Failed to load menu items');
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
+    }
+  };
 
   useEffect(() => {
+    fetchMenuItems();
+    
+    // Add listener for when screen comes into focus
+    const unsubscribe = navigation.addListener('focus', () => {
+      fetchMenuItems();
+    });
+    
+    // Clean up the listener when component unmounts
+    return unsubscribe;
+  }, [navigation]);
+  
+  // Handle pull-to-refresh
+  const onRefresh = () => {
+    setRefreshing(true);
+    fetchMenuItems();
+  };
+  
+  // Handle newly added items
+  useEffect(() => {
     if (route.params?.newItem) {
-      setMenuItemsState(prevItems => [route.params.newItem, ...prevItems]);
+      // Refresh the menu items list instead of manually adding
+      fetchMenuItems();
       navigation.setParams({ newItem: null });
     }
   }, [route.params?.newItem]);
@@ -102,75 +132,147 @@ const MenuScreen = ({ navigation, route }) => {
     display: textOpacity.value === 0 ? 'none' : 'flex',
   }));
 
-  const handleViewMenuItem = (itemId) => {
-    navigation.navigate('MenuItemDetails', { itemId });
+  // Toggle item availability
+  const toggleItemAvailability = (itemId) => {
+    try {
+      // Find the item
+      const item = menuItems.find(item => item.id === itemId);
+      if (!item) return;
+      
+      // Create updated item with toggled availability
+      const updatedItem = {
+        ...item,
+        is_available: !item.is_available
+      };
+      
+      // Update in the database
+      updateMenu(itemId, updatedItem)
+        .then(response => {
+          if (response.success) {
+            // Update local state
+            setMenuItems(prevItems =>
+              prevItems.map(item =>
+                item.id === itemId
+                  ? { ...item, is_available: !item.is_available }
+                  : item
+              )
+            );
+            Alert.alert('Success', `Item ${item.is_available ? 'hidden' : 'shown'} successfully`);
+          } else {
+            throw new Error(response.message || 'Failed to update item availability');
+          }
+        })
+        .catch(error => {
+          console.error('Error toggling item availability:', error);
+          Alert.alert('Error', error.message || 'Failed to update item availability');
+        });
+    } catch (error) {
+      console.error('Error in toggleItemAvailability:', error);
+      Alert.alert('Error', 'Something went wrong when updating item availability');
+    }
   };
 
-  const handleEditMenuItem = (itemId) => {
-    navigation.navigate('EditMenuItem', { itemId });
-  };
-
-  const toggleItemVisibility = (itemId) => {
-    setMenuItemsState(prevItems =>
-      prevItems.map(item =>
-        item.id === itemId
-          ? { ...item, status: item.status === 'active' ? 'inactive' : 'active' }
-          : item
-      )
+  const handleDeleteMenuItem = (itemId) => {
+    Alert.alert(
+      'Delete Item',
+      'Are you sure you want to delete this menu item?',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        { 
+          text: 'Delete', 
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              console.log('Deleting menu item with ID:', itemId);
+              const response = await deleteMenu(itemId);
+              console.log('Delete response:', response);
+              
+              if (response.success) {
+                // Refresh the menu items list
+                fetchMenuItems();
+                Alert.alert('Success', 'Menu item deleted successfully');
+              } else {
+                throw new Error(response.message || 'Failed to delete menu item');
+              }
+            } catch (error) {
+              console.error('Error deleting menu item:', error);
+              Alert.alert('Error', error.message || 'Failed to delete menu item');
+            }
+          }
+        },
+      ]
     );
   };
 
-  const filteredMenuItems = menuItemsState.filter(item => {
-    const matchesFilter = selectedFilter === 'all' || item.category === selectedFilter;
-    const matchesSearch = 
-      item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      item.description.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchesFilter && matchesSearch;
+  const filteredMenuItems = menuItems.filter((item) => {
+    // Filter by category
+    const categoryMatch =
+      selectedFilter === 'all' || item.category === selectedFilter;
+
+    // Filter by search query
+    const searchMatch = !searchQuery ? true : (
+      (item.name && item.name.toLowerCase().includes(searchQuery.toLowerCase())) ||
+      (item.description && item.description.toLowerCase().includes(searchQuery.toLowerCase()))
+    );
+
+    return categoryMatch && searchMatch;
   });
 
-  const MenuItem = ({ item }) => (
-    <TouchableOpacity
-      style={styles.menuItem}
-      onPress={() => handleViewMenuItem(item.id)}
-      activeOpacity={0.7}
-    >
-      <Image
-        source={{ uri: item.image }}
-        style={styles.menuItemImage}
-        onError={(e) => {
-          console.log('Image failed to load:', e.nativeEvent.error);
-        }}
-      />
-      <View style={styles.menuItemContent}>
-        <View style={styles.menuItemInfo}>
-          <Text style={styles.menuItemName}>{item.name}</Text>
-          <Text style={styles.menuItemDescription} numberOfLines={2}>
-            {item.description}
+  const renderMenuItem = ({ item }) => {
+    return (
+      <TouchableOpacity
+        style={styles.menuItemCard}
+        onPress={() => navigation.navigate('MenuItemDetails', { itemId: item.id })}
+      >
+        <View style={styles.menuItemImageContainer}>
+          <Image
+            source={{ uri: item.image || 'https://via.placeholder.com/150' }}
+            style={styles.menuItemImage}
+            resizeMode="cover"
+          />
+          {!item.is_available && (
+            <View style={styles.inactiveOverlay}>
+              <Text style={styles.inactiveText}>Unavailable</Text>
+            </View>
+          )}
+        </View>
+        <View style={styles.menuItemContent}>
+          <View style={styles.menuItemHeader}>
+            <Text style={styles.menuItemName}>{item.name}</Text>
+            <Text style={styles.menuItemPrice}>${parseFloat(item.price).toFixed(2)}</Text>
+          </View>
+          <Text style={styles.menuItemCategory}>
+            {item.category ? item.category.charAt(0).toUpperCase() + item.category.slice(1) : 'Other'}
           </Text>
-          <Text style={styles.menuItemPrice}>${item.price.toFixed(2)}</Text>
+          <Text numberOfLines={2} style={styles.menuItemDescription}>
+            {item.description || 'No description available'}
+          </Text>
+          <View style={styles.menuItemActions}>
+            <TouchableOpacity
+              style={styles.actionButton}
+              onPress={() => navigation.navigate('EditMenuItem', { itemId: item.id })}
+            >
+              <Icon name="edit" size={18} color="#555" />
+              <Text style={styles.actionText}>Edit</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.actionButton}
+              onPress={() => handleDeleteMenuItem(item.id)}
+            >
+              <Icon
+                name="delete"
+                size={18}
+                color="#FF4500"
+              />
+              <Text style={[styles.actionText, {color: '#FF4500'}]}>
+                Delete
+              </Text>
+            </TouchableOpacity>
+          </View>
         </View>
-        <View style={styles.menuItemActions}>
-          <TouchableOpacity 
-            style={styles.actionButton}
-            onPress={() => handleEditMenuItem(item.id)}
-          >
-            <Icon name="edit" type="material" size={20} color="#ff4500" />
-          </TouchableOpacity>
-          <TouchableOpacity 
-            style={styles.actionButton}
-            onPress={() => toggleItemVisibility(item.id)}
-          >
-            <Icon 
-              name={item.status === 'active' ? 'visibility' : 'visibility-off'} 
-              type="material" 
-              size={20} 
-              color="#ff4500" 
-            />
-          </TouchableOpacity>
-        </View>
-      </View>
-    </TouchableOpacity>
-  );
+      </TouchableOpacity>
+    );
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -226,13 +328,51 @@ const MenuScreen = ({ navigation, route }) => {
           </ScrollView>
         </View>
 
+        {loading && !refreshing ? (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="#FF4500" />
+          <Text style={styles.loadingText}>Loading menu items...</Text>
+        </View>
+      ) : error && menuItems.length === 0 ? (
+        <View style={styles.errorContainer}>
+          <Icon name="error-outline" type="material" size={60} color="#FF4500" />
+          <Text style={styles.errorText}>{error}</Text>
+          <TouchableOpacity 
+            style={styles.retryButton}
+            onPress={fetchMenuItems}
+          >
+            <Text style={styles.retryButtonText}>Retry</Text>
+          </TouchableOpacity>
+        </View>
+      ) : filteredMenuItems.length === 0 ? (
+        <View style={styles.emptyContainer}>
+          <Icon name="restaurant-menu" type="material" size={60} color="#CCCCCC" />
+          <Text style={styles.emptyText}>
+            {searchQuery ? 'No items match your search' : 'No menu items found'}
+          </Text>
+          <TouchableOpacity 
+            style={styles.addFirstButton}
+            onPress={() => navigation.navigate('AddMenuItem')}
+          >
+            <Text style={styles.addFirstButtonText}>Add Your First Item</Text>
+          </TouchableOpacity>
+        </View>
+      ) : (
         <FlatList
           data={filteredMenuItems}
-          renderItem={({ item }) => <MenuItem item={item} />}
-          keyExtractor={item => item.id}
+          renderItem={renderMenuItem}
+          keyExtractor={(item) => item.id.toString()}
           contentContainerStyle={styles.menuList}
           showsVerticalScrollIndicator={false}
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={onRefresh}
+              colors={['#FF4500']}
+            />
+          }
         />
+      )}
       </TouchableOpacity>
 
       <Animated.View style={[styles.fab, animatedStyles]}>
@@ -270,6 +410,63 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#F8F9FA',
   },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  loadingText: {
+    marginTop: 10,
+    fontSize: 16,
+    color: '#555',
+  },
+  errorContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  errorText: {
+    marginTop: 10,
+    fontSize: 16,
+    color: '#555',
+    textAlign: 'center',
+    marginBottom: 20,
+  },
+  retryButton: {
+    backgroundColor: '#FF4500',
+    paddingHorizontal: 30,
+    paddingVertical: 10,
+    borderRadius: 5,
+  },
+  retryButtonText: {
+    color: 'white',
+    fontWeight: 'bold',
+  },
+  emptyContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  emptyText: {
+    marginTop: 10,
+    fontSize: 16,
+    color: '#555',
+    textAlign: 'center',
+    marginBottom: 20,
+  },
+  addFirstButton: {
+    backgroundColor: '#FF4500',
+    paddingHorizontal: 30,
+    paddingVertical: 10,
+    borderRadius: 5,
+  },
+  addFirstButtonText: {
+    color: 'white',
+    fontWeight: 'bold',
+  },
   header: {
     marginBottom: 20,
   },
@@ -297,6 +494,18 @@ const styles = StyleSheet.create({
   menuList: {
     padding: 16,
     paddingBottom: 80, // Add padding to avoid FAB overlap
+  },
+  menuItemCard: {
+    backgroundColor: '#FFF',
+    borderRadius: 12,
+    marginBottom: 15,
+    overflow: 'hidden',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+    flexDirection: 'row',
   },
   menuItem: {
     backgroundColor: '#FFF',
@@ -342,6 +551,13 @@ const styles = StyleSheet.create({
     marginLeft: 8,
     backgroundColor: '#ffe0cc',
     borderRadius: 8,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  actionText: {
+    fontSize: 12,
+    marginLeft: 4,
+    fontWeight: '500',
   },
   fab: {
     position: 'absolute',
@@ -421,6 +637,38 @@ const styles = StyleSheet.create({
   },
   screenPressable: {
     flex: 1,
+  },
+  menuItemImageContainer: {
+    width: 120,
+    height: 120,
+    position: 'relative',
+  },
+  inactiveOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  inactiveText: {
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: 14,
+  },
+  menuItemHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 4,
+  },
+  menuItemCategory: {
+    fontSize: 12,
+    color: '#888',
+    marginBottom: 4,
+    textTransform: 'capitalize',
   },
 });
 

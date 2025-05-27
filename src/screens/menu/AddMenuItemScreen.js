@@ -12,10 +12,14 @@ import {
   KeyboardAvoidingView,
   TouchableWithoutFeedback,
   Keyboard,
+  ActivityIndicator,
 } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import * as ImagePicker from 'expo-image-picker';
 import { createMenu } from '../../services/menuService';
+import { uploadImageToCloudinary } from '../../services/cloudinaryService';
+import { Icon } from 'react-native-elements';
+import * as Permissions from 'expo-permissions';
 
 const AddMenuItemScreen = ({ navigation }) => {
   const [itemName, setItemName] = useState('');
@@ -27,26 +31,86 @@ const AddMenuItemScreen = ({ navigation }) => {
   const [isVegetarian, setIsVegetarian] = useState(false);
   const [isSpicy, setIsSpicy] = useState(false);
   const [errors, setErrors] = useState({});
+  const [isUploading, setIsUploading] = useState(false);
+
+  const checkPermissions = async () => {
+    if (Platform.OS !== 'web') {
+      const { status: cameraStatus } = await ImagePicker.requestCameraPermissionsAsync();
+      const { status: libraryStatus } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      
+      if (cameraStatus !== 'granted' || libraryStatus !== 'granted') {
+        Alert.alert(
+          'Permissions Required',
+          'Sorry, we need camera and gallery permissions to upload images.',
+          [{ text: 'OK' }]
+        );
+        return false;
+      }
+      return true;
+    }
+    return true;
+  };
+
+  const takePhoto = async () => {
+    try {
+      const result = await ImagePicker.launchCameraAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 1,
+      });
+
+      if (!result.canceled) {
+        setImage(result.assets[0].uri);
+      }
+    } catch (error) {
+      console.error('Error taking photo:', error);
+      Alert.alert('Error', 'Failed to take photo');
+    }
+  };
+
+  const pickFromGallery = async () => {
+    try {
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaType.Images,
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 1,
+      });
+
+      if (!result.canceled) {
+        setImage(result.assets[0].uri);
+      }
+    } catch (error) {
+      console.error('Error picking image:', error);
+      Alert.alert('Error', 'Failed to pick image from gallery');
+    }
+  };
 
   const pickImage = async () => {
-    if (Platform.OS !== 'web') {
-      const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-      if (status !== 'granted') {
-        Alert.alert('Permission needed', 'Sorry, we need camera roll permissions to upload images.');
-        return;
-      }
-    }
+    const hasPermissions = await checkPermissions();
+    
+    if (!hasPermissions) return;
 
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaType.Images,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
-
-    if (!result.canceled) {
-      setImage(result.assets[0].uri);
-    }
+    Alert.alert(
+      'Choose Image',
+      'Would you like to take a photo or choose from gallery?',
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: 'Take Photo',
+          onPress: takePhoto,
+        },
+        {
+          text: 'Choose from Gallery',
+          onPress: pickFromGallery,
+        },
+      ],
+      { cancelable: true }
+    );
   };
 
   const validateForm = () => {
@@ -56,66 +120,35 @@ const AddMenuItemScreen = ({ navigation }) => {
     if (!description) tempErrors.description = 'Description is required';
     if (!price) tempErrors.price = 'Price is required';
     else if (isNaN(parseFloat(price))) tempErrors.price = 'Price must be a number';
-    // if (!image) tempErrors.image = 'Please upload an image';
+    if (!image) tempErrors.image = 'Please upload an image';
 
     setErrors(tempErrors);
     return Object.keys(tempErrors).length === 0;
   };
 
-  // const handleSubmit = () => {
-  //   if (validateForm()) {
-  //     const menuItem = {
-  //       name: itemName,
-  //       description,
-  //       price: parseFloat(price),
-  //       category,
-  //       image,
-  //       preparationTime: preparationTime ? parseInt(preparationTime) : 0,
-  //       isVegetarian,
-  //       isSpicy,
-  //     };
-
-  //     console.log('Submitting menu item:', menuItem);
-
-  //     Alert.alert(
-  //       'Success',
-  //       'Menu item added successfully!',
-  //       [
-  //         {
-  //           text: 'Add Another',
-  //           onPress: () => {
-  //             setItemName('');
-  //             setDescription('');
-  //             setPrice('');
-  //             setCategory('main');
-  //             setImage(null);
-  //             setPreparationTime('');
-  //             setIsVegetarian(false);
-  //             setIsSpicy(false);
-  //             setErrors({});
-  //           },
-  //         },
-  //         {
-  //           text: 'Go to Menu',
-  //           onPress: () => navigation.navigate('Menu'),
-  //         },
-  //       ]
-  //     );
-  //   }
-  // };
-
   const handleSubmit = async () => {
     if (validateForm()) {
-      const menuItem = {
-        name: itemName,
-        description,
-        price: parseFloat(price),
-        category,
-        is_available: true, // You had this in your example JSON
-      };
-
+      setIsUploading(true);
       try {
-        const response = await createMenu(menuItem); // API call
+        let imageUrl = null;
+        if (image) {
+          const uploadResult = await uploadImageToCloudinary(image);
+          if (!uploadResult.success) {
+            throw new Error(uploadResult.error || 'Failed to upload image');
+          }
+          imageUrl = uploadResult.imageUrl;
+        }
+
+        const menuItem = {
+          name: itemName,
+          description,
+          price: parseFloat(price),
+          category,
+          image: imageUrl,
+          is_available: true,
+        };
+
+        const response = await createMenu(menuItem);
         console.log("Menu item created:", response);
 
         Alert.alert("Success", "Menu item added successfully!", [
@@ -144,6 +177,8 @@ const AddMenuItemScreen = ({ navigation }) => {
           "Error",
           error.message || "Something went wrong. Please try again."
         );
+      } finally {
+        setIsUploading(false);
       }
     }
   };
@@ -163,16 +198,31 @@ const AddMenuItemScreen = ({ navigation }) => {
           </View>
 
           <View style={styles.formContainer}>
-            {/* <TouchableOpacity style={styles.imageUpload} onPress={pickImage}>
+            <TouchableOpacity style={styles.imageUpload} onPress={pickImage}>
               {image ? (
-                <Image source={{ uri: image }} style={styles.uploadedImage} />
+                <View style={styles.imageContainer}>
+                  <Image source={{ uri: image }} style={styles.uploadedImage} />
+                  {isUploading && (
+                    <View style={styles.uploadingOverlay}>
+                      <ActivityIndicator size="large" color="#FFFFFF" />
+                      <Text style={styles.uploadingText}>Uploading...</Text>
+                    </View>
+                  )}
+                </View>
               ) : (
                 <View style={styles.uploadPlaceholder}>
+                  <Icon
+                    name="add-photo-alternate"
+                    type="material"
+                    size={40}
+                    color="#FF8C42"
+                    style={styles.uploadIcon}
+                  />
                   <Text style={styles.uploadText}>Tap to upload image</Text>
                 </View>
               )}
             </TouchableOpacity>
-            {errors.image && <Text style={styles.errorText}>{errors.image}</Text>} */}
+            {errors.image && <Text style={styles.errorText}>{errors.image}</Text>}
 
             <View style={styles.inputGroup}>
               <Text style={styles.label}>Item Name*</Text>
@@ -182,7 +232,6 @@ const AddMenuItemScreen = ({ navigation }) => {
                 onChangeText={setItemName}
                 placeholder="Enter item name"
                 placeholderTextColor="#999"
-                multiline
               />
               {errors.itemName && <Text style={styles.errorText}>{errors.itemName}</Text>}
             </View>
@@ -230,40 +279,16 @@ const AddMenuItemScreen = ({ navigation }) => {
               </View>
             </View>
 
-            {/* <View style={styles.inputGroup}>
-              <Text style={styles.label}>Preparation Time (minutes)</Text>
-              <TextInput
-                style={styles.input}
-                value={preparationTime}
-                onChangeText={setPreparationTime}
-                placeholder="Enter preparation time"
-                placeholderTextColor="#999"
-                keyboardType="numeric"
-              />
-            </View> */}
-
-            {/* <View style={styles.attributesContainer}>
-              <TouchableOpacity
-                style={[styles.attributeButton, isVegetarian && styles.attributeButtonActive]}
-                onPress={() => setIsVegetarian(!isVegetarian)}
-              >
-                <Text style={[styles.attributeText, isVegetarian && styles.attributeTextActive]}>
-                  Vegetarian
-                </Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                style={[styles.attributeButton, isSpicy && styles.attributeButtonActive]}
-                onPress={() => setIsSpicy(!isSpicy)}
-              >
-                <Text style={[styles.attributeText, isSpicy && styles.attributeTextActive]}>
-                  Spicy
-                </Text>
-              </TouchableOpacity>
-            </View> */}
-
-            <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
-              <Text style={styles.submitButtonText}>Add Menu Item</Text>
+            <TouchableOpacity 
+              style={[styles.submitButton, isUploading && styles.submitButtonDisabled]} 
+              onPress={handleSubmit}
+              disabled={isUploading}
+            >
+              {isUploading ? (
+                <ActivityIndicator color="#FFFFFF" />
+              ) : (
+                <Text style={styles.submitButtonText}>Add Menu Item</Text>
+              )}
             </TouchableOpacity>
           </View>
         </ScrollView>
@@ -279,6 +304,7 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     flexGrow: 1,
+    paddingBottom: 30,
   },
   header: {
     backgroundColor: '#FF8C42',
@@ -305,6 +331,7 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: '#FF8C42',
     borderStyle: 'dashed',
+    backgroundColor: '#FFF',
   },
   uploadPlaceholder: {
     flex: 1,
@@ -321,6 +348,11 @@ const styles = StyleSheet.create({
     color: '#FF8C42',
     fontSize: 16,
     fontWeight: '500',
+    textAlign: 'center',
+    marginTop: 8,
+  },
+  uploadIcon: {
+    marginBottom: 8,
   },
   inputGroup: {
     marginBottom: 16,
@@ -401,6 +433,29 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontSize: 18,
     fontWeight: 'bold',
+  },
+  submitButtonDisabled: {
+    opacity: 0.7,
+  },
+  imageContainer: {
+    width: '100%',
+    height: '100%',
+    position: 'relative',
+  },
+  uploadingOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  uploadingText: {
+    color: '#FFFFFF',
+    marginTop: 10,
+    fontSize: 16,
   },
 });
 
